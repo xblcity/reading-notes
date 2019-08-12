@@ -211,7 +211,7 @@ getTime// 返回毫秒数, getFullYear, getMounth, getDay, getHours...
 #### 5.4.1 RegExp实例属性
 
 #### 5.4.2 RegExp实例方法
-- exec('要检测的字符串') // 返回数组
+- exec('要检测的字符串') // 返回数组，查找不到返回null
 - test('要检测的字符串') // 返回布尔值
 
 #### 5.4.3 RegExp构造函数属性
@@ -224,5 +224,59 @@ getTime// 返回毫秒数, getFullYear, getMounth, getDay, getHours...
 - 后面的函数会覆盖前面的函数，ts有函数重载
 
 #### 5.5.2 函数声明与函数表达式
+- 函数声明比函数表达式先被读取，即函数提升
 
+#### 5.5.3 作为值的函数
+- 访问函数而不执行函数，需要去掉函数名后面的括号
+- 函数可以作为参数
+- 函数内部返回函数
+```js
+function createComparisonFunction(propertyName) {
+  return function(object1, object2) {
+    var value1 = object1[propertyName]
+    var value2 = object2[propertyName]
+    if (value1 < value2) {
+      return -1
+    } else if (value1 > value2) {
+      return 1
+    } else {
+      return 0
+    }
+  }
+}
+var data = [{name: 'li', age: 28}, {name: 'nico', age: 21}]
+data.sort(createComparisonFunction('name')) // 依据name进行排序
+```
+
+#### 5.5.4 函数内部属性
+- arguments
+- callee
+- this
+
+#### 5.5.5 函数属性和方法
+构造函数属性  
+- length 是函数希望接收到的参数个数
+- prototype
+原型上方法
+- apply/call/bind 改变函数执行作用域/上下文环境/this
+
+
+### 5.6 基本包装类型
+特殊的引用类型  
+- Boolean
+- Number
+- String  
+当上述基本值被读取的时候，后台会创建对应的基本包装类型的对象，从而我们可以调用方法来操作这些数据
+```js
+var s1 = 'some text'
+var s2 = s1.substring(2)
+
+// 基本类型值不是对象，不该有方法，当访问s1时，实际执行了下面操作
+// 1.创建实例2.在实例上面调用方法3.销毁这个实例
+var s1 = new String('some text')
+var s2 = s1.substring(2)
+s1 = null
+```
+
+#### 5.6.1 Boolean类型
 
