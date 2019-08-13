@@ -280,3 +280,76 @@ s1 = null
 
 #### 5.6.1 Boolean类型
 
+#### 5.6.2 Number类型
+- toFixed()
+
+#### 5.6.3 String类型
+- 属性 length
+- concat 大部分还是使用 `+`号
+- slice, substring, substr,对原始字符无影响
+- slice,substring第一个参数是起始位置，第二个是结束位置，substr第二个参数是返回字符个数
+- indexOf，lastIndexOf, `'myname'.indexOf(n)`结果为3，找不到返回-1
+- trim,删除前后位置所有空格，`'  sc  '.trim()` 结果 'sc'
+- toLowerCase, toUpperCase，大小写转换
+- match，与RegExp的exec相同，match只接收正则表达式，`'cat, fat'.match(/.at/)`,返回数组...
+- search同match，返回索引或-1
+- replace,两个参数，用于替换字符串，`'cat, bat'.replace(/at/g, 'ond')` 返回 `'cond, bond'`
+- split，传入要根据分割的符号，不传的分割单个字母，如`'me'.split()` 返回 `'m','e'`
+- localeCompare,比较字符串
+
+### 5.7 单体内置对象
+#### 5.7.1 Global对象
+- encodeURI, encodeURICompoent,后者会对任何非标准字符进行编码，用的更多
+- decodeURI, decodeURIComponent,后者可以解码任何特殊字符编码
+- eval，传入字符串，但会被当做js语句执行，容易被脚本注入，非常危险
+##### Golbal属性
+- 特殊值：undefined,NaN,Infinity,构造函数：Object,Array,Function,Boolean,String,Number
+- 构造函数：Date, RegExp, Error, EvalError, RangeError, ReferenceError, SyntaxError, TypeError, URIError
+##### ECMAScript虽然没有指出如何访问Global对象，但web浏览器都是将这个全局对象作为window对象的一部分实现的
+
+#### 5.7.2 Math对象
+##### Math对象属性
+- Math.PI等
+##### Math方法
+- Math.min(), Math.max() 传入多个number类型值
+- 找到数组中最大值，`var values = [1,2,5,7,8]; var max = Math.max.bind(Math, values)`
+- 舍入方法，Math.ceil, Math.floor, Math.round
+- Math.random, `Math.floor(Math.random()*10 + 1)`
+- 还有其他方法，如Math.abs(num)绝对值, Math.exp(num)n次幂, Math.sqrt(num)平方根，Math.cos(x)余弦值，等等。。。
+
+### 5.8 小结
+- Object是基础类型，其他引用类型都从Object继承
+- Array,Date,RegExp,Function以及三个包装类型 String,Number,Boolean,
+- 内置对象Global以及Math
+
+## 第6章 面向对象的程序设计
+### 6.1 理解对象
+#### 6.1.1 属性类型
+##### 数据属性
+- 有四个描述其行为的特性：
+- Configurable,是否可通过delete删除属性重新定义，Enumerable,是否可以通过for-in循环返回属性
+- Writeale,属性值是否可被修改，Value属性的数据值  
+修改属性默认特性，需要使用Object.defineProperty(), 接收三个参数
+##### 访问器属性
+- 不包含数据值，包含一对getter,setter函数，读取访问器属性，会调用getter函数，这个函数负责返回值，写入访问器属性时，会调用setter函数并传入新值，这个函数决定如何处理数据
+- configurable, enumrable, get, set
+```js
+var book = {
+  _year: 2004,
+  edition: 1
+}
+Object.defineProperty(book, 'year', {
+  get: function() {
+    return this._year
+  },
+  set: function(newValue) {
+    if(newValue > 2004) {
+      this._year = newValue
+      this.edition += newValue - 2004
+    }
+  }
+})
+book.year = 2005
+console.log(book.edition) // 2
+console.log(book.year) // 2005
+```
