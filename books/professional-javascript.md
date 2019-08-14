@@ -142,6 +142,7 @@ console.log(person.name) // 'nicocity'
 
 #### 5.2.2 转换方法
 - 所有对象都具备的 toString() toLocaleString() valueOf()
+- join, 逆向 String.split()
 
 #### 5.2.3 栈方法
 - LIFO, Last-In-First-Out  
@@ -169,7 +170,7 @@ sort()传入回调函数return 正值 则说明第一个参数应该位于第二
 #### 5.2.6 操作方法
 - concat() aArray.concat(bArray)
 - slice(begin) 或者 slice(begin, end)
-- splice() 功能强大但是会改变原数组 splce(beigin, 截取长度, 替换)
+- splice() 功能强大但是会改变原数组 splice(beigin, 截取长度, 替换)
 
 #### 5.2.7 位置方法
 - indexOf() lastIndexOf() 参数是要查找的项
@@ -181,6 +182,8 @@ sort()传入回调函数return 正值 则说明第一个参数应该位于第二
 
 #### 5.2.9 归并方法
 reduce, reduceRight
+
+**ES6新增**: Array.from(),Array.of(),copeWithin(),find,findIndex,fill,includes(ES7)
 
 ### 5.3 Date类型
 - new Date() 输出时间格式的字符串
@@ -353,3 +356,99 @@ book.year = 2005
 console.log(book.edition) // 2
 console.log(book.year) // 2005
 ```
+#### 6.1.2 定义多个属性
+```js
+var book = {}
+Object.defineProperties(book, {
+  _year: {
+    writable: true,
+    value: 2004
+  },
+  year: {
+    get: function() {
+      return this._year
+    },
+    set: function newValue() {
+      if(newValue > 2004) {
+        this._year = newValue
+      }
+    }
+  }
+})
+```
+
+#### 6.1.3 获取属性的特性
+`Object.getOwnPropertyDescriptor(book, '_year')` 得到一个对象，包括'configurable, enumerable, get, set/ writable, value'
+
+### 6.2 创建对象
+
+#### 6.2.1 工厂模式
+```js
+function createPerson(name, age, job) {
+  var o = new Object()
+  o.name = name
+  o.age = age
+  o.job = job
+  o.sayName = function() {
+    alert(this.name)
+  }
+  return o
+}
+var person1 = createPerson('Nicholas', 29, 'Software Engineer')
+person1.sayName()
+```
+
+#### 6.2.2 构造函数模式
+```js
+function Person(name, age, job) {
+  this.name = name
+  this.age = age
+  this.job = job
+  this.sayName = function() {
+    alert(this.name)
+  }
+}
+var person1 = new Person('Nicholas', 29, 'Software Engineer')
+var person2 = new Person('Greg', 23, 'Doctor')
+person1.sayName()
+```
+与工厂函数的区别，没有显式创建对象，直接将属性的方法赋给了this对象，没有return语句  
+创建构造函数的实例，必须使用new操作符  
+new做了一下操作，创建一个新对象，this指向新对象，新对象原型指向构造函数原型，执行代码，返回这个对象
+```js
+person1.constructor === Person // 原型链查找 true
+person2.constructor === Person // 原型链查找 true
+person1.__proto__.constructor === Person // true
+person1 instanceof Person // true 原型链匹配
+person1.sayName === Person2.sayName  // false
+```
+构造函数缺点，每个方法都要在实例上面重新创建一遍
+
+#### 6.2.3 原型模式
+```js
+function Person() {
+
+}
+Person.prototype.name = 'Nicholas'
+Person.prototype.age = 29
+Person.prototype.job = 'Software Engineer'
+Person.prototype.sayNmae = function() {
+  alert(this.name)
+}
+var person1 = new Person()
+person1.sayName() // 'Nicholas'
+var person2 = new Person()
+person2.sayName() // 'Nicholas'
+alert(person1.sayName === Person2.sayName) // true
+```
+**创建一个函数，函数会自动创建一个proto属性，这个属性指向原型对象，原型对象会自动化获得一个constructor属性，constructor指向构造函数**
+
+#### 6.2.4 组合使用构造函数模式和原型模式
+
+#### 6.2.5 动态原型模式
+
+#### 6.2.6 寄生构造函数模式
+
+#### 6.2.7 稳妥构造函数模式
+
+### 6.3 继承
