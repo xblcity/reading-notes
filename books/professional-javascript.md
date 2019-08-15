@@ -188,10 +188,10 @@ reduce, reduceRight
 ### 5.3 Date类型
 - new Date() 输出时间格式的字符串
 - new Date(2131231) 传入毫秒数，也会输出时间格式字符串  
-构造器上面的方法，即Date函数/constructor，或者可以说是prototype的constructor属性上面的方法
+**构造器上面的方法，即Date函数/constructor，或者可以说是prototype的constructor属性上面的方法**  
 - Date.parse(new Date()) 传入时间格式字符串，返回毫秒数
 - Date.now() 返回毫秒数  
-原型上面的方法，即Date实例的原型(prototype)上面的方法  
+**原型上面的方法，即Date实例的原型(prototype)上面的方法**   
 - 例如, new Date().getTime()
 
 #### 5.3.1 继承的方法
@@ -199,7 +199,8 @@ reduce, reduceRight
 toLocaleString()会根据地区的时间格式返回相应时间
 
 #### 5.3.2 日期格式化方法
-toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, toUTCString
+- toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, toUTCString
+- toLocaleTimeString,toLocaleDateString和toLocaleString之间的区别
 
 #### 5.3.3 日期/时间组件方法
 Date类型  
