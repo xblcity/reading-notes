@@ -441,13 +441,79 @@ var person2 = new Person()
 person2.sayName() // 'Nicholas'
 alert(person1.sayName === Person2.sayName) // true
 ```
-**创建一个函数，函数会自动创建一个proto属性，这个属性指向原型对象，原型对象会自动化获得一个constructor属性，constructor指向构造函数**
+**创建一个函数，函数会自动创建一个proto属性，这个属性指向原型对象，原型对象会自动化获得一个constructor属性，constructor指向构造函数**  
+从实例开始查找，找不到则向原型链上查找  
+判断是不是实例上面的属性，用xxx.hasOwnProperty('xxx')
+单独使用 In 操作符，用 'name' in Person 可以判断属性是否在 原型||实例 上  
+可枚举实例属性，Object.keys()  
+重写原型的方法  
+```js
+function Person() {}
+Person.prototype = {
+  name: 'xx',
+  sayName: function() {
+    console.log('sayNmae')
+  }
+  // 手动设置constructor: Person
+}
+// constructor属性不再指向Person了，等于重写了prototype
+```
+下面这个例子
+```js
+function Person() {}
+var friend = new Person()
+Person.prototype = {
+  constructor: Person,
+  name: 'nico',
+  sayName: function() {
+    console.log(this.name)
+  }
+}
+var friend2 = new Person()
+friend.sayName()  // typeError: friend.sayName is not a function， friend的prototype是之前的那个
+friend2.sayName()  // 'nico'
+// 重写原型对象切断了现有原型与任何执勤啊已经存在的对象实例之间的联系
+```
+构造函数缺陷：省略了构造函数传递初始化参数这一环节，结果所有实例在默认情况下都取得了相同的值  
+原型中很多属性是共享的，对于函数来说比较合适，对于基本值，甚至是对象，问题比较突出，因为是同一个引用，所以改变这个对象，所有实例上面的这个属性都会改变
 
 #### 6.2.4 组合使用构造函数模式和原型模式
 
 #### 6.2.5 动态原型模式
+```js
+function Person(name, age, job) {
+  // 属性
+  this.name = name
+  this.age = age
+  this.job = job
+  // 方法
+  if (typeof this.sayName !== 'function') {
+    Person.prototype.sayName = function() {
+      console.log(this.name)
+    }
+  }
+}
+var friend = new Person('nico', 29, 'Software Engineer')
+friend.sayName()
+```
+只有在sayName方法不存在情况下，才会将它添加到原型中，这段代码会在初次调用构造函数时执行
 
 #### 6.2.6 寄生构造函数模式
+```js
+function createPerson(name, age, job) {
+  var o = new Object()
+  o.name = name
+  o.age = age
+  o.job = job
+  o.sayName = function() {
+    alert(this.name)
+  }
+  return o
+}
+var person1 = new createPerson('Nicholas', 29, 'Software Engineer')
+person1.sayName()
+```
+与工厂函数相比，使用了new操作符
 
 #### 6.2.7 稳妥构造函数模式
 
