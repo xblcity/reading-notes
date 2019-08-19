@@ -534,3 +534,11 @@ person1.sayName()
 #### 6.2.7 稳妥构造函数模式
 
 ### 6.3 继承
+#### 6.3.1 原型链
+```js
+Son.prototype = new Father()
+```
+Son构造函数的原型指向Fatcher的实例  
+Son prototype 的 原型是 Father
+Son构造函数的原型上没有construtor，因为原型被赋值语句改变了指针  
+通过 instanceof 或者 isPrototype来判断原型链
