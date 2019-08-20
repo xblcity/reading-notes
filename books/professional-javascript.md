@@ -542,3 +542,115 @@ Son构造函数的原型指向Fatcher的实例
 Son prototype 的 原型是 Father
 Son构造函数的原型上没有construtor，因为原型被赋值语句改变了指针  
 通过 instanceof 或者 isPrototype来判断原型链
+
+###### 原型链实现继承
+```js
+function SuperType() {
+  this.property = true
+}
+superType.prototype.getSuperValue = function() {
+  return this.property
+}
+
+function SubType() {
+  this.subProperty = false
+}
+// 继承
+subType.prototype = new SuperType()
+
+var instance = new SubType()
+alert(instance.getSuperValue()) // false
+```
+原型链存在的问题
+```js
+function SuperType() {
+  this.colors = ['red', 'blue', 'green']
+}
+function SubType() {
+}
+
+// 继承
+SubType.prototype = new SuperType()
+
+var instance1 = new SubType()
+instance1.colors.push('black')
+alert(instance1.colors)  // ['red', 'blue', 'green', 'black']
+
+var instance2 = new SubType()
+alert(instance2.colors)  // ['red', 'blue', 'green', 'black']
+```
+原型链继承缺点很明显，原型链上的属性值由所有SubType实例继承，更改其中一个实例的属性(其实就是原型链上的属性)，会影响到所有实例上的属性(其实也是原型链上的属性)
+
+#### 6.3.2 借用构造函数
+```js
+function SuperType() {
+  this.colors = ['red', 'blue', 'green']
+}
+function SubType() {
+  Super.call(this) // 执行构造函数，只继承SuperType构造器上的属性(没有使用new调用，所以不存在原型继承哦)
+}
+
+var instance1 = new SubType()
+instance1.colors.push('black')
+alert(instance1.colors)  // ['red', 'blue', 'green', 'black']
+
+var instance2 = new SubType()
+alert(instance2.colors)  // ['red', 'blue', 'green']
+```
+因为SubType每次生成实例，都会先调用SuperType的构造函数，所以每个实例的color属性互相不影响
+
+###### 传递参数
+```js
+function SuperType(name) {
+  this.name = name
+}
+function SubType(name, age) {
+  SuperType.call(this, name)
+  this.age = age
+}
+var instance = new SubType('nico', 19)
+alert(instance.name, instance.age) // nico 19
+```
+缺点也很明显，属性，方法都在构造函数中定义，那函数复用也就无从谈起了
+
+#### 6.3.3 组合继承
+又称伪经典继承，指的是将原型链和借用构造函数的技术组合到一块，从而发挥二者之长的一种继承模式
+```js
+function SuperType(name) {
+  this.name = name
+  this.colors = ['red', 'blue', 'green']
+}
+
+SuperType.prototype.sayName = function() {
+  alert(this.name)
+}
+
+function SubType(name, age) {
+  // 继承属性
+  SuperType.call(this, name) // 仅仅继承了实例属性(因为没有用new 调用)
+  this.age = age
+}
+
+// 继承方法
+SubType.prototype = new SuperType() // 继承构造函数实例，包括原型上的方法和实例属性（属性没有用到，造成一次浪费）
+SubType.prototype.constructor = SubType
+SubType.prototype.sayAge = function() {
+  alert(this.age)
+}
+
+var instance1 = new SubType('nico', 22)
+instance1.colors.push('black')
+alert(instance1.colors)  // ['red', 'blue', 'green']
+instance1.sayName() // 'nico'
+instance1.sayAge() // 22
+```
+避免了原型链和借用构造函数的缺陷，instanceof 和 isPropertyof() 能够用于识别基于组合继承创建的对象  
+缺点，两次调用了构造函数，有一次造成了属性的浪费
+
+#### 6.3.4 原型式继承
+
+#### 6.3.5 寄生式继承
+
+#### 6.3.6 寄生组合式继承
+
+### 6.4 总结
