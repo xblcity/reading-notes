@@ -652,5 +652,238 @@ instance1.sayAge() // 22
 #### 6.3.5 寄生式继承
 
 #### 6.3.6 寄生组合式继承
+通过构造函数继承属性，通过原型链混成的形式继承方法（利用object.create方法）
+```js
+function inheritPrototype(subType, superType) {
+  var prototype = object.create(superType.prototype) // prototype对象的原型指向了superType的原型
+  prototype.constructor = subType  // 子类拥有自己的构造器
+  subType.prototype = prototype  // 子类的原型指向prototype, 而prototype的原型又指向了superType的原型
+}
+```
+```js
+function SuperType(name) {
+  this.name = name
+  this.colors = ['red', 'blue', 'green']
+}
+SuperType.prototype.sayName = function() {
+  alert(this.name)
+}
+
+function SubType(name, age) { 
+  SuperType.call(this, name) // 只继承SuperType的实例属性，并传参
+  this.age = age
+}
+inheritPrototype(SubType, SuperType) // 自定义原型链的指向
+SubType.sayAge = function() {
+  alert(this.age)
+}
+```
 
 ### 6.4 总结
+
+## 第7章 函数表达式
+函数声明，函数声明存在函数提升
+```js
+function sayName (name) {
+  console.log(name)
+} 
+// function 是关键字， sayName是标识符
+sayName.name // sayName
+```
+函数表达式
+```js
+var sayName = function (name) {
+  console.log(name)
+}
+```
+这种形式看起来像常规的变量赋值语句，即创建一个函数，并把它赋值给变量sayName  
+这种情况下创建的函数叫做匿名函数(anonymous function), 因为function 关键字后面没有标识符(匿名函数有时候也叫拉达姆函数)  
+
+**函数声明，如果重复声明，后面的声明会覆盖前面的声明**
+**在把函数当成值来使用的时候，都可以使用匿名函数，但这并不是匿名函数的唯一用途**
+
+### 7.1 递归
+递归函数是在一个函数通过名字调用自身的情况下构成的
+```js
+function factorial(num) {  // factorial是阶乘的意思
+  if (num <= 1) {
+    return 1
+  } else {
+    return num * factorial(num - 1)
+  }
+}
+```
+这是一个经典的递归阶乘
+```js
+var anotherFactorial = factorial
+factorial = null
+alert(anotherFactorial(4)) // 出错
+```
+在调用anotherFactorial时，必须要执行factorial，但是factorial已经是null了，所以报错  
+上述赋值赋值语句，即声明了 一个  函数表达式  
+
+可以用arguments.callee解决函数调用自身出错的情况
+```js
+function factorial(num) {
+  if (num <= 1) {
+    return 1
+  } else {
+    return num * arguments.callee(num - 1)
+  }
+}
+```
+
+### 7.2 闭包
+以下述代码为例  
+比较两个对象的属性值，并进行排序
+```js
+function createComparisonFunction(propertyName) {
+  return function (object1, object2) {
+    var value1 = object1(propertyName)
+    var value2 = object2(propertyName)
+    if (value1 < value2) {
+      return -1  // 小在大前面，不交换顺序，升序排序
+    } else (value > value) {
+      return 1
+    } else {
+      return 0
+    }
+  }
+}
+```
+即便在别的地方调用了这个函数，我们仍然能够获取到PropertyName这个变量
+
+**当函数第一次被调用时，会创建一个执行环境(execution context) 及相应的作用域链，并把作用域链赋值给一个特殊的属性[[scope]]，然后，使用this， arguments和其他命名参数的值来初始化函数的活动对象(activation object), 在作用域链中，外部函数的活动对象始终处于第二位，外部函数的外部函数的活动对象处于第三位，...... 直到作用域链终点的全局执行环境(即变量的查找过程)**
+
+在函数执行过程中，为了读取和写入变量的值，就需要在作用域链查找变量
+
+```js
+var compare = createComparisonFunction('name')
+var result = compare({name: 'nico'}, {name: 'luffy'})
+```
+在匿名函数从 createComparisonFunction() 中被返回后，它的作用域链被初始化为包含createComparisonFunction() 函数的活动对象和全局变量对象，这样，匿名函数就可以访问在 createComparisonFunction() 中定义的所有变量，更为重要的是，createComparisonFunction() 函数在执行完毕后，其活动对象也不会被销毁，因为匿名函数的作用域链仍然在引用这个活动对象。换句话说，当createComparisonFunction() 函数返回后，其执行环境的作用域链会被销毁，但它的活动对象仍然留在内存中，直到匿名函数被销毁后，createComparisonFunction()的活动对象才会被销毁，例如:
+```js
+// 创建函数
+var compareNames = createComparisonFunction('name')
+// 调用函数
+var result = compareNames({name: 'nico'}, {name: 'luffy'})
+// 解除对匿名函数的引用(以便释放内存)
+compareNames = null
+```
+
+#### 7.2.1 闭包与变量
+
+#### 7.2.2 关于this对象
+this是基于函数的执行环境绑定的，
+```js
+var name = 'The Window'
+var object = {
+  name: 'My Object',
+  getNameFunc: function() {
+    return function() {
+      return this.name
+    }
+  }
+}
+alert(object. getNameFunc()()) // 'The Window'，在非严格模式下
+```
+object包括一个方法getNameFunc，这个函数返回一个匿名函数，而匿名函数又返回this.name  
+执行` object.getNameFunc() ` 会立即返回一个函数,因此调用`object.getNameFunc()()`就会立即调用它返回的函数，结果就是返回一个字符串  
+这个例子返回的是`The Window`，即全局name的值，为什么匿名函数没有取得包含作用域(或外部作用域)的this对象呢？  
+
+**每个函数被调用的时候，其活动对象都会自动取得两个特殊变量: this和arguments，内部函数在搜寻这两个变量时，只会搜到其活动变量为止，因为返回的匿名函数外部的活动变量是window?**
+改造：
+```js
+var name = 'The Window'
+var object = {
+  name: 'My Object',
+  getNameFunc: function() {
+    var that = this
+    return function() {
+      return that.name
+    }
+  }
+}
+alert(object. getNameFunc()()) 
+```
+在定义匿名函数之前，我们把this对象赋给了一个名叫that的变量，即使在函数返回之后，闭包也可访问这个变量，因为它是我们包含函数中特意声明的一个变量，即便在函数返回之后，that依然引用着object，所以调用`object. getNameFunc()()`就返回了'My Object'
+
+#### 7.2.3 内存泄漏
+
+### 7.3 模仿块级作用域
+匿名函数
+```js
+(function() {
+  // 这里是块级作用域
+})()
+```
+```js
+var someFunction = function() {
+  // 这里是块级作用域
+}
+someFunction()
+```
+```js
+function () {
+  // 这里是块级作用域
+}() // 报错
+```
+这段代码会报语法错误，因为Javascript将function关键字当作一个函数声明的开始，而函数声明后面不能跟圆括号，然而，函数表达式的后面可以跟圆括号，要将函数声明转换成函数表达式，只需要像下面这样给它加上圆括号即可
+```js
+(function() {
+  // 这里是块级作用域
+})()
+```
+无论在什么地方，只要临时需要一些变量，就可以使用私有作用域，例如
+```js
+function outputNumbers(count) {
+  (function() {
+    for(var i = 0; i < count; i ++) {
+      alert(i)
+    }
+  })()
+  alert(i) // 报错
+}
+```
+
+### 7.4 私有变量
+js中没有私有成员的概念，所有对象属性都是公有的，不过有私有变量的概念，任何函数中定义的变量，都可以认为是私有变量，因为不能在函数的外部访问这些变量  
+私有变量包括函数的参数，局部变量和函数内部定义的其他函数
+```js
+function add(num1, num2) {
+  var sum = num1 + num2
+  return sum
+}
+```
+add函数包括三个局部变量，num1,num2,sum，在函数内部可以访问这些变量，但在函数外部访问不到  
+如果在函数内部创建一个闭包，那么闭包通过自己的作用域链也可以访问这些变量，利用这一点，就可以创建用于访问私有变量的公有方法  
+我们把有权访问私有变量和私有函数的公有方法成为特权方法  
+有两种在对象上创建特权方法的方式，第一种是在构造函数中定义特权方法，基本模式如下： (第二种是私有作用域方式)
+```js
+function MyObject() {
+  // 私有变量和私有函数
+  var privateVariable = 10
+  function privateFunction() {
+    return false
+  }
+  // 特权方法
+  this.publicMethod = function () {
+    privateVariable ++
+    return privateFunction()
+  }
+}
+```
+对于这个例子，变量privateVariable和函数privateFunction()只能通过特权方法publicMethod()来访问
+
+#### 7.4.1 静态私有变量
+```js
+(function() {
+
+})()
+```
+
+#### 7.4.2 模块模式
+
+#### 7.4.3 增强的模块模式
+
+### 7.5 小结
