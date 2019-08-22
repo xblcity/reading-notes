@@ -1093,6 +1093,7 @@ location.href, hash, host, hostname, port, search 等等都会在浏览器产生
 ### 8.3 navigator对象
 |属性或方法  | 说明
 |--------- | ---------
+| userAgent | 浏览器的用户代理字符串
 |... | ...
 
 #### 8.3.1 检测插件
@@ -1131,3 +1132,38 @@ history.length // 历史记录的条数 ？？
 ```
 
 ### 8.6 小结
+
+## 第9章 客户端检测
+由于浏览器之间的差异
+
+### 9.1 能力检测
+识别浏览器的能力
+
+### 9.2 怪癖检测(quirks detection)
+
+### 9.3 用户代理检测
+navigator.userAgent
+Mozilla/版本号 [语言] (平台：加密类型) 
+`"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36"`
+
+### 9.4 总结
+
+## 第10章 DOM
+
+### 10.1 节点层次
+`<html>`元素称之为文档元素
+![文档树解构](../images/document_tree.jpg)
+
+### 10.1.1 Node类型
+*nodeName和nodeValue属性*  
+节点关系使用childNodes属性，其中包含一个NodeList对象，类数组对象，可以使用`Array.prototype.slice(xxx, 0)` 或`Array.from()`将其转换成数组对象  
+每个节点都有parentNode, previousSibling, nextSibling属性  
+父节点的firstChild和 lastChild分别指向父节点的第一个和最后一个节点
+```js
+someNode.childNodes[0]
+someNode.previousSibling()
+```
+
+操作节点
+`appendChild()` 末尾增加节点
+`insertBefore()` 插入到指定节点  
