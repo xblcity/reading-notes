@@ -755,6 +755,8 @@ function createComparisonFunction(propertyName) {
 
 **当函数第一次被调用时，会创建一个执行环境(execution context) 及相应的作用域链，并把作用域链赋值给一个特殊的属性[[scope]]，然后，使用this， arguments和其他命名参数的值来初始化函数的活动对象(activation object), 在作用域链中，外部函数的活动对象始终处于第二位，外部函数的外部函数的活动对象处于第三位，...... 直到作用域链终点的全局执行环境(即变量的查找过程)**
 
+![执行环境与作用域链](../images/execution_context.jpg)
+
 在函数执行过程中，为了读取和写入变量的值，就需要在作用域链查找变量
 
 ```js
