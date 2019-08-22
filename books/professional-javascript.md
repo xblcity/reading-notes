@@ -755,7 +755,6 @@ function createComparisonFunction(propertyName) {
 
 **当函数第一次被调用时，会创建一个执行环境(execution context) 及相应的作用域链，并把作用域链赋值给一个特殊的属性[[scope]]，然后，使用this， arguments和其他命名参数的值来初始化函数的活动对象(activation object), 在作用域链中，外部函数的活动对象始终处于第二位，外部函数的外部函数的活动对象处于第三位，...... 直到作用域链终点的全局执行环境(即变量的查找过程)**
 
-![执行环境与作用域链](../images/execution_context.jpg)
 
 在函数执行过程中，为了读取和写入变量的值，就需要在作用域链查找变量
 
@@ -772,6 +771,10 @@ var result = compareNames({name: 'nico'}, {name: 'luffy'})
 // 解除对匿名函数的引用(以便释放内存)
 compareNames = null
 ```
+
+![执行环境与作用域链](../images/execution_context.jpg)
+
+上图展示了调用compareNames()的过程中产生的作用域链之间的关系，compareNames的执行环境中有三个变量，object1,object2,arguments，但同时又引用了createComparisonFunction作用域的值，因此，createComparisonFunction的活动对象也被推进了执行环境，，而所有函数的作用域链末端都有个全局执行的环境
 
 #### 7.2.1 闭包与变量
 
@@ -808,9 +811,48 @@ var object = {
 }
 alert(object. getNameFunc()()) 
 ```
-在定义匿名函数之前，我们把this对象赋给了一个名叫that的变量，即使在函数返回之后，闭包也可访问这个变量，因为它是我们包含函数中特意声明的一个变量，即便在函数返回之后，that依然引用着object，所以调用`object. getNameFunc()()`就返回了'My Object'
+在定义匿名函数之前，我们把this对象赋给了一个名叫that的变量，即使在函数返回之后，闭包也可访问这个变量，  
+通过`that = this`这个赋值语句，匿名函数的活动对象的变量`that`引用着`getNameFunc()`，因此，匿名函数的执行环境就延伸到了`getNameFunc()`，因此可以获得`getNameFunc`的`this`变量  
+
+> 在几种特殊的情况下，this的值可能会意外的改变
+```js
+var name = 'The Window'
+var object = {
+  name: 'My Object',
+  getName: function() {
+    return this.name
+  }
+}
+// 调用
+object.getName()
+(object.getName)()
+(object.getName = object.getName)()
+```
+第一行代码像平常一样调用了object.getName()，返回的是My Object  
+第二行代码在调用这个方法之前加了括号，加上括号之后，就好像在引用一个函数，但this的值得到了维持，因为object.getName和(object.getName)的定义是相同的  
+第三行代码先执行了一条赋值语句，然后再调用赋值后的结果，因为这个函数表达式的值是函数本身，所以this的值不可能得到维持，所以就返回了`The Window` ？？？
 
 #### 7.2.3 内存泄漏
+```js
+function assignHandler() {
+  var element = document.getElementById('someElement')
+  element.onClick = function() {
+    alert(element.id)
+  }
+}
+```
+以上代码创建了作为element元素事件处理的闭包，而这个闭包又创建了循环引用？？？(事件在第13章)，匿名函数保存了一个对assignHandler活动对象的引用，因此导致无法减少element的引用数，只要匿名函数存在，element的引用数至少为1，因此它所占用的内存就永远不会被回收
+```js
+function assignHandler() {
+  var element = document.getElementById('someElement')
+  var id = element.id
+  element.onClick = function() {
+    alert(id)
+  }
+  element = null 
+}
+```
+稍微改造一下，但是并不能完全解决内存泄漏问题
 
 ### 7.3 模仿块级作用域
 匿名函数
@@ -885,9 +927,207 @@ function MyObject() {
 ```
 
 #### 7.4.2 模块模式
+```js
+var singleton = function() {  // singleton是单例的意思
+  // 私有变量和私有函数
+  var privateVariable = 10
+  function privateFunction() {
+    return false
+  }
+  // 特权/公有方法和属性
+  return {
+    publicProperty: true,
+    publicMethod: function() {
+      privateVariable ++
+      return privateFunction()
+    }
+  }
+}
+```
+这个函数返回的对象字面量只包含公开的属性和方法
 
 #### 7.4.3 增强的模块模式
 
 ### 7.5 小结
+- 函数表达式不同于函数声明，函数声明要求有名字，但是函数表达式并不需要，没有名字的函数表达式也叫匿名函数
+- 在函数内部定义了其他函数时，就创建了闭包，闭包有权访问包含函数内部的所有变量
+- 通常，函数的作用域及其所有变量都会在函数执行结束后被销毁，但是，当一个函数返回了一个闭包时，这个函数的作用域将一直在内存中保存到闭包不存在为止
 
 ## 第8章 BOM
+### 8.1 window对象
+BOM核心是window，它表示浏览器的一个实例，在浏览器中，window扮演着双重角色，它既是javascript访问浏览器窗口的一个接口，又是ECMAScript规定的Global对象(?)，这意味着在网页中定义的任何一个对象，变量和函数，都已window作为其Global对象，因此有权访问parseInt()等方法
+#### 8.1.1 全局作用域
+```js
+var age = 22
+function sayAge() {
+  alert(this.age)
+}
+alert(window.age) // 29
+sayAge() // 29
+window.sayAge() // 29
+```
+
+#### 8.1.2 窗口关系及框架
+
+#### 8.1.3 窗口位置
+```js
+screenTop screenLeft ?
+screenX screenY ?
+```
+
+#### 8.1.4 窗口大小
+```js
+innerHeight innerWidth
+outerHeight outerWidth
+调整窗口 window.resizeTo(100, 100) ?
+```
+
+#### 8.1.5 导航和打开窗口
+`window.open()`  
+接收四个参数，要加载的URL，窗口目标，一个特性字符串，一个表示新页面是否取代浏览器历史记录中当前加载页面的布尔值  
+如果给window.open传递的第二个参数并不是一个已经存在的窗口或者框架，那么该方法会对第三个参数上传入的字符串创建一个新窗口或标签页  
+第三个参数包含` left top width height resizable scrollbars ` 等等，如
+```js
+window.open('http://baidu.com', 'height=500, width=200, top=10, left=20, resizable=yes')
+// 打开与关闭
+var newWindow = window.open('http://baidu.com', 'height=500, width=200, top=10, left=20, resizable=yes')
+newWindow.resizeTo(500, 500) // 调整大小
+newWindow.moveTo(10,10) // 移动位置
+newWindow.close() // 关闭窗口，仅限通过window.open()打开的窗口
+```
+安全限制：曾经有一段时间，广告商经常会把弹出窗口打扮成系统对话框的模样，引诱用户去点击其中的广告，浏览器有各自的屏蔽策略
+
+#### 8.1.6 间歇调用与超时调用
+```js
+// 不推荐
+setTimeout('alert("hello word")', 1000)  // 如果第一个参数传入字符串，则会像eval()函数表现一致，即执行字符串里的代码
+// 推荐的写法
+setTimeout(function() {
+  alert('hello world')
+}, 1000)
+```
+setTimeout第二个参数是一个表示等待多长事件的毫秒数，但经过该时间的指定的代码并不一定会执行，js是单线程解释器，因此一段时间只能执行一段代码，为了控制要执行的代码，就有一个javascript任务队列，这些任务会按照它们被添加的顺序执行，setTimeout第二个参数告诉js再过多长时间把当前任务添加的js任务队列，如果队列是空的，那么添加的代码会立即执行，如果队列不是空的，那么它就要等前面的代码执行完了以后再执行  
+
+调用setTimeout之后，该方法会返回一个数值ID，这个超时ID是计划执行代码的唯一标识符，可以通过它取消超时调用。要取消尚未调用的超时调用计划，可以调用clearTimeout()方法并将相应的超时ID作为参数传递给它
+```js
+// 设置超时调用
+var timeId = setTimeout(function() {
+  alert('hello world')
+})
+// 把它取消
+clearTimeout(timeoutId)
+```
+在设置超时调用之前调用clearTimeout，就像什么都没有发生一样  
+
+间歇调用setInterval,接收参数与setTimeout相同  
+调用setInterval也同样会返回一个间歇调用ID，该ID可用于在将来某个时间取消间歇调用  
+取消间歇调用的重要性要远远超过取消超时调用，因为在不加干涉的情况下，间歇调用会一直执行到页面卸载
+```js
+var num = 0
+var max = 10
+var interval = null
+
+function incrementNumber() {
+  num ++
+  // 执行次数达到max指定值，则取消尚未执行的调用
+  if (num === max) {
+    clearInterval(intervalId)
+    alert('Done')
+  }
+}
+
+intervalId = setInterval(incrementNumber, 500)
+```
+可以使用超时调用，模拟间歇调用，最好不要使用间歇调用
+
+#### 8.1.7 系统对话框
+`alert() confirm() prompt()`可以调用系统对话框向用户展示信息，外观由操作系统或浏览器决定，通过这几个方法打开的对话框都是同步和模态的，显示这些对话框的时候代码hui停止执行，关掉这些对话框代码又恢复执行  
+异步执行的对话框
+```js
+window.print() // 打印
+window.find() // 查找页面中的值
+```
+
+### 8.2 location对象
+location对象是一个很特别的对象，因为它既是window对象的属性，也是document对象的属性
+| 属性名 | 例子 | 说明 |
+| ----- | ---------- | ------------- |
+| hash  | #mine
+| host  | m.com:80
+| hostname | m.com
+| href | m.com/user
+| pathname | /user
+| port | 80
+| protocol | http:
+| search | ?name=li
+
+#### 8.2.1 查询字符串参数
+search属性并不能逐个访问其中的每个查询字符串参数，我们可以创建一个函数，用以解析查询字符串，然后返回包含所有参数的一个对象
+```js
+function getQueryStringArgs() {
+  // 取得查询字符串并去掉开头的?
+  var qs = location.search.length > 0 ? location.search.substring(1) : ''
+  var args = {} // 保存数据的对象
+  // 取得每一项，即保存到数组
+  var items = qs.length > 0 ? qs.split('&') : []
+  var len = items.length
+
+  for (var i = 0; i < len; i ++) {
+    var item = items[i].split('=') // item也是一个被分割的数组
+    var name = decodeURIComponent(item[0]) // 字符串是被编码过的
+    var value = decodeURIComponent(item[1])
+    if (name.length) {
+      args[name] = value
+    } 
+  }
+
+  return args
+}
+```
+
+#### 8.2.2 位置操作
+location.href, hash, host, hostname, port, search 等等都会在浏览器产生历史记录，可以通过后退返回  
+要禁用这种行为，可以使用`replace`  
+`reload` 可以重新加载当前页面
+
+### 8.3 navigator对象
+|属性或方法  | 说明
+|--------- | ---------
+|... | ...
+
+#### 8.3.1 检测插件
+```js
+function hasPlugin(name) {
+  name = name.toLowerCase()
+  for (var i = 0; i < navigator.plugins.length; i ++) {
+    if (navigator.plugins[i].name.toLowerCase().indexOf(name) > -1) {
+      return true
+    }
+  }
+  return false
+}
+alert(hasPlugin('Chrome PDF Plugin'))
+```
+
+#### 8.3.2 注册处理程序
+
+### 8.4 screen对象
+获取的是设备屏幕相关属性
+| 属性 | 说明
+| -------- | ---------
+| width |
+| height |
+
+### 8.5 history对象
+```js
+history.go(1)
+history.go(-1)
+history.go(2)
+history.go('baidu.com') // 只要浏览器历史记录里有这个值，就会跳转
+// 代替go
+history.forward()
+history.back()
+history.length // 历史记录的条数 ？？
+```
+
+### 8.6 小结
