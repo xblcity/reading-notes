@@ -1370,4 +1370,64 @@ DOM2级事件规定的事件流包括三个阶段，事件捕获阶段，处于�
 ### 13.2 事件处理程序
 事件就是用户或者浏览器自身执行的某种动作，如click, load和mouseover都是事件的名字，而相应某个事件的函数就叫做事件处理程序(或事件监听器)，事件处理程序的名字以“on”开头，因此click事件的处理程序就是onclick, load的事件处理程序就是onload
 #### 13.2.1 HTML事件处理程序
+```js
+// 通过指定onclick特性并将一些Javascript代码作为它的值来定义的，因为这个值是Js,所以不能再其中使用未经转义的HTML语法字符，如&，双引号"", <或>
+<input type="button" value="Click Me" onclick="alert('clicked !')">
+
+// 调用在其他页面定义的脚本
+<input type="button" value="Click Me" onclick="showMessage()">
+  <script>
+    function showMessage() {
+      alert('Hello World')
+    }
+  </script>
+```
+指定事件处理程序会创建一个封装着元素属性值的函数，这个函数有一个局部变量event，也就是事件对象  
+如果用户在解析showMessage函数之前就单击了按钮，就会引发错误，可以使用try...catch把showMessage包裹起来  
+HTML指定事件处理程序一个缺点是HTML与JS代码紧密耦合，如果要更换事件处理程序，要同时改动HTML代码和Javascript代码，更多转而使用JS指定事件处理程序
+
+#### 13.2.2 DOM0级事件处理程序
+每个元素都有自己的事件处理程序属性，这些属性通常小写，如onclick，将这种属性的值设置为一个函数，就可以指定事件处理程序
+```js
+var btn = document.getElementById('myBtn')
+btn.onclick = function() {
+  alert('Clicked')
+}
+```
+使用DOM0级方法指定的事件处理程序是在元素的作用域中执行，换句话说，程序中的this引用当前元素
+```js
+var btn = document.getElementById('myBtn')
+btn.onclick = function() {
+  alert(this) // myBtn
+}
+btn.onclick = null // 删除事件处理程序
+```
+
+#### 13.2.3 DOM2级事件处理程序
+"DOM2级事件处理程序"定义了两个方法，用于指定和删除事件处理程序的操作：addEventListener() 和 removeEventListener()，所有DOM节点都包含这两个方法，他们接收三个参数，要处理的事件名，作为事件处理的函数，一个布尔值，布尔值如果是true，表示在捕获阶段调用事件处理程序，若为false，则在冒泡阶段调用事件处理程序，默认是false
+```js
+var btn = document.getElementById('myBtn')
+btn.addEventListener("click", function() {
+  alert(this.id)
+}, false)
+btn.removeEventListener("click", function() { // 没有用， 参数必须要与传入addEventListener相同
+  alert(this.id)
+}, false)
+```
+```js
+var btn = document.getElementById('myBtn')
+var handler = function() {
+  alert(this.id)
+}
+btn.addEventListener("click", handler, false)
+btn.removeEventListener("click", handler, false) // 有效
+```
+
+#### 13.2.4 IE事件处理程序
+attachEvent, detachEvent, 两个参数，第一个参数加on
+
+#### 13.2.5 跨浏览器的事件处理程序
+
+### 13.3 事件对象
+触发DOM的某个事件时，会产生一个事件对象event, 这个对象包含着所有与事件相关的信息，包括导致事件的元素，事件的类型，及其他与特定事件相关的信息，例如，鼠标操作导致的事件对象中，会包含鼠标位置的信息，而键盘操作导致的事件对象中，会包含与按下的键有关的信息
 
