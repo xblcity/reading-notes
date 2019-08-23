@@ -1,15 +1,29 @@
 # Javascript高级程序设计(第三版)读书笔记
+- [第1章 Javascript简介](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第1章-Javascript简介)
+- [第2章 在HTML中使用javascript](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第2章-在HTML中使用javascript)
+- [第3章 基本概念](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第3章-基本概念)
+- [第4章 变量、作用域和内存问题](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第4章-变量、作用域和内存问题)
+- [第5章 引用类型](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第5章-引用类型)
+- [第6章 面向对象的程序设计](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第6章-面向对象的程序设计)
+- [第7章 函数表达式](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第7章-函数表达式)
+- [第8章 BOM](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第8章-BOM)
+- [第9章 客户端检测](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第9章-客户端检测)
+- [第10章 DOM](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第10章-DOM)
+- [第11章 DOM扩展](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第11章-DOM扩展)
+- [第12章 DOM2和DOM3](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第12章-DOM2和DOM3)
+- [第13章 事件](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第13章-事件)
 
-## 第一章 Javascript简介
+
+## 第1章 Javascript简介
 - 最初是为了处理客户端简单验证
 - JS实现包含 ECMAScript, DOM, BOM
 
-## 第二章 "在HTML中使用javascript"
+## 第2章 在HTML中使用javascript
 - `<script>`标签
 - 使用defer,async异步加载脚本
 - 使用`script`实现jsonp
 
-## 第三章 "基本概念"
+## 第3章 基本概念
 ### 3.1 语法
 #### 3.1.1 区分大小写
 
@@ -91,7 +105,7 @@
 ### 3.8 小结
 
 
-## 第四章 "变量、作用域和内存问题"
+## 第4章 变量、作用域和内存问题
 
 ### 4.1 基本类型和引用类型的值
 
@@ -142,7 +156,7 @@ console.log(person.name) // 'nicocity'
 
 ### 4.4 小结
 
-## 第五章 "引用类型"
+## 第5章 引用类型
 
 ### 5.1 Object类型
 - new Object() 或者 对象字面量 创建对象实例
