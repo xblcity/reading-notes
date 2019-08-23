@@ -1154,7 +1154,7 @@ Mozilla/版本号 [语言] (平台：加密类型)
 `<html>`元素称之为文档元素
 ![文档树解构](../images/document_tree.jpg)
 
-### 10.1.1 Node类型
+#### 10.1.1 Node类型
 *nodeName和nodeValue属性*  
 节点关系使用childNodes属性，其中包含一个NodeList对象，类数组对象，可以使用`Array.prototype.slice(xxx, 0)` 或`Array.from()`将其转换成数组对象  
 每个节点都有parentNode, previousSibling, nextSibling属性  
@@ -1164,6 +1164,210 @@ someNode.childNodes[0]
 someNode.previousSibling()
 ```
 
-操作节点
-`appendChild()` 末尾增加节点
-`insertBefore()` 插入到指定节点  
+操作节点  
+`appendChild()` 末尾增加节点  
+`insertBefore()` 插入到指定节点   
+`replaceChild()`接收两个参数，要插入的节点和要替换的节点  
+`cloneNode()`  
+
+#### 10.1.2 Document类型  
+Document对象是window对象的一个属性   
+Document节点具有以下特征：  
+nodeType为9，nodeName为'#document',nodeValue为null,parentNode为null,ownerDocument为null
+
+文档的子节点：
+```js
+var html = document.documentElement  // 取得对<html>的引用
+var body = document.body  // 取得对<body>的引用
+var doctype = document.doctype  // 取得对<!DOCTYPE>的引用
+var originTitle = document.title // 取得文档标题
+document.title = 'New Page' // 设置文档标题
+var url = document.URL // 取得完整的URL
+var domain = document.domain // 取得域名
+```
+
+查找元素  
+getElementById,getElementByTagName......  
+文档写入  
+write,open
+
+#### 10.1.3 Element类型
+Element节点具有以下特征：  
+nodeType, nodeName, nodeValue值为null, parentNode可能是Document或者Element  
+```js
+if (element.tagName.toLowerCase() === 'div') {
+  // 在此执行某些操作
+}
+``` 
+##### 1.HTML元素
+##### 2.取得属性
+```js
+var  div = document.getElementById('myDiv')
+alert(div.getAttribute('id')) // 获取id属性的值
+```
+##### 3.设置属性
+`setAttribute`
+##### 4.Attributes属性
+##### 5.创建元素
+`document.createElement`
+##### 6.元素的子元素
+`childNodes`  
+`nodeType === 1`表明是元素节点
+
+#### 10.1.4 Text类型
+nodeType是3，nodeName是'#text', nodeValue的值为节点所包含的文本，parentNode是一个Element，没有子节点
+- 创建文本节点，规范化文本节点，分割文本节点
+
+#### 10.1.5 Comment类型
+#### 10.1.6 CDATASection类型
+#### 10.1.7 DocumentType类型
+#### 10.1.8 DocumentFragment类型
+#### 10.1.9 Attr类型
+
+### 10.2 DOM操作技术
+#### 10.2.1 动态脚本
+`<script>`
+#### 10.2.2 动态样式
+`<style>``<link>`
+#### 10.2.3 操作表格
+`<table>`元素是HTML中最复杂的结构之一
+```html
+<table>
+  <tbody>
+    <tr>
+      <td>Cell 1,1</td>
+      <td>Cell 2,1</td>
+    </tr>
+    <tr>
+      <td>Cell 1,2</td>
+      <td>Cell 2,2</td>
+    </tr>
+  </tbody>
+</table>
+```
+
+#### 10.2.4 使用NodeList
+
+### 10.3 小结
+
+## 第11章 DOM扩展
+### 11.1 选择符API
+#### 11.1.1 querySelector()方法
+#### 11.1.2 querySelectorAll()方法
+#### 11.1.3 matchesSelector()方法
+
+### 11.2 元素遍历
+### 11.3 HTML5
+#### 11.3.1 与类相关的扩充
+getElementsByClassName
+#### 11.3.2 焦点管理
+#### 11.3.3 HTMLDocument的变化
+#### 11.3.4 字符集属性
+#### 11.3.5 自定义数据属性
+要添加前缀 data-
+#### 11.3.6 插入标记
+innerHTML outerHTML
+#### 11.3.7  scrollIntoView()方法
+
+### 11.4 专有扩展
+#### 11.4.1 文档模式
+#### 11.4.2 children属性
+#### 11.4.3 contains()方法
+#### 11.4.4 插入文本
+innerText outText
+#### 11.4.5 滚动
+
+### 11.5 小结
+
+## 第12章 DOM2和DOM3
+### 12.1 DOM的变化
+### 12.2 样式
+#### 12.2.1 访问元素的样式
+支持style属性的HTML元素在JS中都有一个对应的style属性，对于使用短划线-的属性要使用驼峰命名法  
+虽然style对象能够提供支持style特性的任何元素的样式信息，但它不包含那些从其他样式表层叠而来并影响到当前元素的样式信息  
+DOM2级样式提供了getComputedStyle()方法，可以传入两个参数
+```js
+let elem1 = document.getElementById("elemId");
+let style = window.getComputedStyle(elem1, null);
+
+// 它等价于
+// let style = document.defaultView.getComputedStyle(elem1, null);
+```
+#### 12.2.2 操作样式表
+#### 12.2.3 元素大小
+偏移量(offset dimension)
+```js
+offsetHeight // 垂直方向
+offsetWidth // 水平方向，包括元素宽度，滚动条，左右边框宽度
+offsetLeft // 左外边框至元素左内边框距离
+offsetTop // 元素上外边框至元素上内边框距离
+```
+![图示](../images/offset.jpg)  
+
+客户区大小(client dimension)
+```js
+clientHeight // 不包含边框的元素高度
+clientWidth
+```
+![client dimension](../images/client_dimension.jpg)
+
+滚动大小(scroll dimension)
+```js
+scrollHeight // 没有滚动条情况下(不包含滚动条)，元素内容总高度
+scrollWidth
+scrollLeft // 包含滚动条
+scrollTop
+document.documentElement.scrollHeight // 带有滚动条的页面总高度 <html>
+document.documentElement.scrollTop  // 视口
+document.body.scrollHeight // 带有滚动条的页面总高度 <body> , 可以替代上面的方式
+document.body.scrollTop // 视口
+```
+![client dimension](../images/scroll_dimension.jpg)
+
+元素大小  
+getBoundingClientRect(), 这个方法会返回一个矩形对象，包含四个属性: left,top,right,bottom, 获取元素在页面中相对于视口(视觉区域)的位置
+
+### 12.3 遍历
+dom节点的遍历
+#### 12.3.1 NodeIterator
+#### 12.3.2 TreeWalker
+
+### 12.4 范围
+#### 12.4.1 DOM中的范围
+#### 12.4.2 IE8及更早版本的范围
+
+### 12.5 小结
+DOM2级规范定义了一些模块，用于增强DOM1级  
+DOM2级样式模块主要针对操作元素的样式信息而开发，其特性简洁总结如下：  
+- 每个元素有一个关联的style对象，用来确定和修改元素的行内样式
+- 确定某个元素的计算样式，使用getComputedStyle()
+
+## 第13章 事件
+### 13.1 事件流
+#### 13.1.1 事件冒泡(event bubbling)
+事件开始由最具体的元素(文档嵌套层次最深的那个节点)接收，然后逐级向上传播到较为不具体的节点(文档)
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Document</title>
+</head>
+<body>
+  <div>Click me</div>
+</body>
+</html>
+```
+当点击了div元素，那么这个click事件会按照下面顺序传播：div -> body -> html -> document
+
+#### 13.1.2 事件捕获(event capturing)
+事件捕获的思想是不太具体的节点更早接收事件，而具体的节点应该最后接收到事件，事件捕获的用意在于在事件到达预定目标之前捕获它  
+当点击了div元素，会以下面顺序触发click事件：document -> html -> body -> div  
+不过大部分浏览器是从window对象开始的
+
+#### 13.1.3 DOM事件流
+DOM2级事件规定的事件流包括三个阶段，事件捕获阶段，处于目标阶段和事件捕获阶段
+
+### 13.2 事件处理程序
+事件就是用户或者浏览器自身执行的某种动作，如click, load和mouseover都是事件的名字，而相应某个事件的函数就叫做事件处理程序(或事件监听器)，事件处理程序的名字以“on”开头，因此click事件的处理程序就是onclick, load的事件处理程序就是onload
+#### 13.2.1 HTML事件处理程序
+
