@@ -1443,5 +1443,122 @@ attachEvent, detachEvent, 两个参数，第一个参数加on
 #### 13.2.5 跨浏览器的事件处理程序
 
 ### 13.3 事件对象
-触发DOM的某个事件时，会产生一个事件对象event, 这个对象包含着所有与事件相关的信息，包括导致事件的元素，事件的类型，及其他与特定事件相关的信息，例如，鼠标操作导致的事件对象中，会包含鼠标位置的信息，而键盘操作导致的事件对象中，会包含与按下的键有关的信息
+触发DOM的某个事件时，会产生一个事件对象event, 这个对象包含着所有与事件相关的信息，包括导致事件的元素，事件的类型，及其他与特定事件相关的信息，例如，鼠标操作导致的事件对象中，会包含鼠标位置的信息，而键盘操作导致的事件对象中，会包含与按下的键有关的信息   
+只有在事件处理程序执行期间，event
+
+#### 13.3.1 DOM中的事件对象
+| 属性/方法  |  类型  | 读/写  | 说明
+| -------  | ----------  | ----------- | ---------
+| bubbles  |  Boolean   |  只读   | 表示事件是否冒泡
+| cancelable  | Boolean  |  只读   |  表示是否可以取消事件的默认行为
+| currentTarget | Element  |  只读  | 其事件处理程序当前正在处理事件的那个元素
+| detail  |  Integer  | 只读  |  与事件相关的细节信息
+| eventPhase  | Integer  |  只读  | 调用事件处理程序的阶段，1表示捕获，2表示处理目标，3表示冒泡阶段
+| preventDefault  |  Function  | 只读  | 取消事件默认行为，cancelable是true，可以使用这个方法
+| stopPropagation  |  Function  |  只读  |  取消事件的进一步捕获或冒泡，如果bubbles为true，可以使用这个方法
+| stopImmediatePropagation |  Function  | 只读  |  取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用(DOM3级事件中新增)
+| target | Element | 只读 | 事件的目标
+| type  |  String  |  只读  |  触发事件的类型
+
+在事件处理程序内部，对象this始终等于currentTarget的值，而target只包含事件的实际目标，如果直接将事件处理程序指定给了目标元素，则this, currentTarget, target包含相同的值
+```js
+var btn = document.getElementById('myBtn')
+btn.onclick = function(event) {
+  alert(event.currentTarget === this)  // true
+  alert(event.target === this)  // true
+}
+```
+由于click事件的目标是按钮，因此这三个值是相等的  
+如果事件处理程序在父元素body上面，但是点击了btn元素
+```js
+document.body.onclick = function() {
+  alert(event.currentTarget === document.body) // true
+  alert(this === document.body) // true
+  alert(event.target === document.getElementById('myBtn')) // true
+}
+```
+this和currentTarget等于document 因为事件处理程序是注册到这个元素上的，而target却等于按钮元素，因为它是target的真正目标  
+当需要通过一个函数处理多个事件时，可以使用type属性
+```js
+var btn = document.getElementById('myBtn')
+var handler = function(event) {
+  switch(event.type) {
+    case "click":
+      alert('Clicked!')
+      break
+    case "mouseover":
+      event.target.style.backgroundColor = 'red'
+      break
+    case "mouseout":
+      event.target.style.backgroundColor = ''
+      break
+  }
+}
+btn.onclick = handler
+btn.mouseover = handler
+btn.mouseout = handler
+```
+阻止事件默认行为，如链接的默认行为  
+阻止事件的传播，即取消事件的冒泡与捕获
+
+#### 13.3.2 IE中的事件对象
+#### 13.3.3 跨浏览器的事件对象
+
+### 13.4 事件类型
+DOM3级事件规定了以下几类事件
+- UI(User Interface，用户界面)事件，当用户与界面上的元素交互时触发
+- 焦点事件，当元素获得或者失去焦点时触发
+- 鼠标事件，当用户通过鼠标在页面执行操作时触发
+- 滚轮事件
+- 文本事件
+- 键盘事件
+- 合成事件，输入法输入字符时触发
+- 变动事件，底层DOM结构发生变化时触发
+
+#### 13.4.1 UI事件
+- load 页面加载完，在window上面触发，包括所有图像,js,css
+- unload 页面完全卸载在window上面触发
+- error JS发生错误时在window上触发
+- resize
+- scroll 
+
+#### 13.4.2 焦点事件
+- blur 元素失去焦点时触发，这个事件不会冒泡
+- focus 元素获得焦点时触发，这个事件不会冒泡
+- focusin 元素获得焦点时触发，这个事件会冒泡
+- focusout
+
+#### 13.4.3 鼠标与滚轮事件
+- click
+- dbclick
+- mousedown
+- mouseenter
+- mouseleave
+- mousemove
+- mouseout
+- mouseover
+- mouseup   
+
+鼠标事件的事件对象
+- 客户区坐标位置，clientX, clientY，在视口中的位置
+- 页面坐标位置， pageX, pageY，页面本身包括滚动区域，pageX = clientX + document.documentElement.scrollLeft/document.body.scrollLeft
+- 屏幕坐标位置，相对于整个电脑屏幕的位置，screenX, screenY
+- 修改键？
+- 相关元素？
+- 鼠标按钮
+- 更多的事件信息
+
+#### 13.4.4 键盘与文本事件
+- keydown 用户按键盘任意键触发，按住不发会重复触发
+- keypress 用户按键盘字符键触发，按住不放会重复触发
+- keyup 用户释放键盘上的键触发  
+
+键码，keydown,keyup事件发生时，event对象keyCode属性会包含一个代码，与键盘上一个特定的键对应
+
+###### textInput事件
+event对象有一个inputMethod属性，1表示键盘输入，2表示粘贴的，手写，语音...
+
+#### 13.4.5 复合事件(composition event)
+#### 13.4.6 变动事件
+
 
