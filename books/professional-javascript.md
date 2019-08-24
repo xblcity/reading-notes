@@ -1560,5 +1560,51 @@ event对象有一个inputMethod属性，1表示键盘输入，2表示粘贴的�
 
 #### 13.4.5 复合事件(composition event)
 #### 13.4.6 变动事件
+#### 13.4.7 HTML5事件
+- ...hashchange
+#### 13.4.8 设备事件
+监听设备方向变化与移动
+#### 13.4.9 触摸与手势事件
+##### 1.触摸事件
+- touchstart, touchmove, touchend, touchcancel 
+- 触摸事件也有event对象
+##### 2.手势事件
 
+### 13.5 内存和性能
+添加过多事件处理程序会影响页面的整体运行性能，导致这一问题的原因是多方面的，首先，每个函数都是对象，都会占用内存，内存中对象越多，性能就越差，其次，必须事先指定所有事件处理程序而导致的DOM访问次数，会延迟整个页面的交互就绪时间，从如何利用好事件处理程序的角度来说，还是有一些方法可以提高性能的
+
+#### 13.5.1 事件委托
+事件委托利用事件冒泡原理，将事件处理程序添加到最外面的元素
+```js
+<ul id="myList">
+  <li id="something">Go somewhere</li>
+  <li id="somewhere">Do something</li>
+  <li id="sayHi">Say Hi</li>
+</ul>
+var list = document.getElementById("myList")
+list.addEventListener("click", function(event) {
+  var target = event.target  // target 捕获到触发事件的最小元素
+  switch(target.id) {
+    case "something":
+      document.title = "change the document title"
+      break
+    case "somewhere":
+      location.href = "xblcity.com"
+      break
+    case "sayHi":
+      alert("hi")
+      break
+  }
+})
+```
+由于事件会冒泡，最终都会由这个函数处理
+
+#### 13.5.2 移除事件处理程序
+当你知道某个元素即将被移除，最好手动移除事件处理程序
+
+### 13.6 模拟事件
+#### 13.6.1 DOM中的事件模拟
+#### 13.6.2 IE中的事件模拟
+
+### 13.7 小结
 
