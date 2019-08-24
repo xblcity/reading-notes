@@ -12,7 +12,9 @@
 - [第11章 DOM扩展](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第11章-DOM扩展)
 - [第12章 DOM2和DOM3](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第12章-DOM2和DOM3)
 - [第13章 事件](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第13章-事件)
+- [第14章 表单脚本](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第14章-表单脚本)
 
+:sunny; :sparkles;
 
 ## 第1章 Javascript简介
 - 最初是为了处理客户端简单验证
@@ -1607,4 +1609,6 @@ list.addEventListener("click", function(event) {
 #### 13.6.2 IE中的事件模拟
 
 ### 13.7 小结
+
+## 第14章 表单脚本
 
