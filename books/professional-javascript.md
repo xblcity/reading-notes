@@ -14,7 +14,7 @@
 - [第13章 事件](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第13章-事件)
 - [第14章 表单脚本](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第14章-表单脚本)
 
-:sunny; :sparkles;
+:sunny: :sparkles:
 
 ## 第1章 Javascript简介
 - 最初是为了处理客户端简单验证
