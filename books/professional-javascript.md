@@ -1449,18 +1449,18 @@ attachEvent, detachEvent, 两个参数，第一个参数加on
 只有在事件处理程序执行期间，event
 
 #### 13.3.1 DOM中的事件对象
-| 属性/方法  |  类型  | 读/写  | 说明
-| -------  | ----------  | ----------- | ---------
-| bubbles  |  Boolean   |  只读   | 表示事件是否冒泡
-| cancelable  | Boolean  |  只读   |  表示是否可以取消事件的默认行为
-| currentTarget | Element  |  只读  | 其事件处理程序当前正在处理事件的那个元素
-| detail  |  Integer  | 只读  |  与事件相关的细节信息
-| eventPhase  | Integer  |  只读  | 调用事件处理程序的阶段，1表示捕获，2表示处理目标，3表示冒泡阶段
-| preventDefault  |  Function  | 只读  | 取消事件默认行为，cancelable是true，可以使用这个方法
-| stopPropagation  |  Function  |  只读  |  取消事件的进一步捕获或冒泡，如果bubbles为true，可以使用这个方法
-| stopImmediatePropagation |  Function  | 只读  |  取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用(DOM3级事件中新增)
-| target | Element | 只读 | 事件的目标
-| type  |  String  |  只读  |  触发事件的类型
+| 属性/方法      |  类型       | 读/写   | 说明
+| -------       | ----------  | ----------- | ---------
+| bubbles       |  Boolean    |  只读   | 表示事件是否冒泡
+| cancelable    | Boolean     |  只读   |  表示是否可以取消事件的默认行为
+| currentTarget | Element     |  只读   | 其事件处理程序当前正在处理事件的那个元素
+| detail        |  Integer    | 只读    |  与事件相关的细节信息
+| eventPhase    | Integer     |  只读   | 调用事件处理程序的阶段，1表示捕获，2表示处理目标，3表示冒泡阶段
+| preventDefault  |  Function  | 只读   | 取消事件默认行为，cancelable是true，可以使用这个方法
+| stopPropagation |  Function  |  只读  |  取消事件的进一步捕获或冒泡，如果bubbles为true，可以使用这个方法
+| stopImmediatePropagation   |  Function  | 只读  |  取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用(DOM3级事件中新增)
+| target        | Element     | 只读    | 事件的目标
+| type          |  String     |  只读   |  触发事件的类型
 
 在事件处理程序内部，对象this始终等于currentTarget的值，而target只包含事件的实际目标，如果直接将事件处理程序指定给了目标元素，则this, currentTarget, target包含相同的值
 ```js
@@ -1611,4 +1611,146 @@ list.addEventListener("click", function(event) {
 ### 13.7 小结
 
 ## 第14章 表单脚本
+### 14.1 表单的基本知识
+在HTML中，表单是由`<form>`元素来表示的，而在javascript中，表单对应的是HTMLFormElement类型，HTMLFormElement继承了HTMLElement，因而与其他HTML元素有相同的默认属性，但是,HTMLFormElement也有自己独有的方法和属性
+|属性/方法   |  说明 
+| ------  | ------
+| action  |  接收请求的URL
+| method  |  要发送的HTTP请求类型，通常是get或者post
+| name    |  表单的名称
+| submit() | 提交表单
+| reset()  | 将所有表单域重置为默认值
 
+#### 14.1.1 提交表单
+使用input或者button都可以定义提交按钮，只要把type设置为submit即可
+```js
+<input type="submit" value="Submit Form"/>
+<button type="submit">Submit Form</button>
+// 图像按钮
+<input type="image" src="button.gif">
+```
+校验表单数据，并阻止默认行为
+```js
+var form = document.getElementById("myForm")
+form.addEventListener('submit', function(e) {
+  // 阻止默认事件
+  e.preventDefault()
+})
+// 或者
+form.submit() // 不会触发submit事件，
+```
+
+#### 14.1.2 重置表单
+表单控件type时reset或者添加reset事件或者给formElement调用reset()方法
+
+#### 14.1.3 表单字段
+###### 1.共有的表单字段属性
+|  属性  |  作用
+|  ----- | ------
+| disabled | 布尔值，当前字段是否被禁用
+| name    | 当前字段的属性
+| type  |  当前字段的类型
+| value  | 当前字段被提交给服务器的值，对文件字段来说，这个属性是只读的，包含着文件在计算机中的路径
+
+也可以通过js动态修改属性值
+```js
+input.disabled = true
+```
+###### 2.共有的表单字段方法
+focus()和blur()  
+focus方法用于将浏览器的焦点设置到表单字段，即激活表单字段，使其可以响应键盘事件  
+在页面加载完毕后，将焦点转移到表单的第一个字段，为此，可以监听表单的load事件，并在该事件发生时在表单的第一个字段调用focus方法
+```js
+window.addEventListener('load', function() {
+  inputElement.focus()
+})
+```
+HTML5增加了autofocus属性(布尔值)，设置该属性，不用js就可以自动把焦点移动到相应字段
+```html
+<input type="text" autofocus>
+```
+blur()使表单元素失去焦点
+
+###### 2.共有的表单字段方法
+blur,change,focus，change对于`<input/>`和`<textarea/>`元素，在他们失去焦点且value值改变时触发，对于`<select/>`元素，在其选项改变时触发  
+focus和blur事件以某种方式改变用户界面，如文本框显示一个下拉选项菜单，或者在focus或者blur的时候改变它的样式  
+change用于验证表单
+
+### 14.2 文本框脚本
+`<input/>`以及`<textarea/>`
+```html
+<input type="text" size="25" maxlength="50" value="initial value" />
+```
+size表示能显示的最大字符数，maxlength表示能输入的最大字符数，value用于设置文本框的初始值  
+`<textarea/>`可以使用rows和cols属性，初始值必须要放在`<textarea>init value</textarea>`闭合标签内
+
+#### 14.2.1 选择文本
+select()，在文本框获得焦点时选择其所有文本
+###### 1.select事件
+###### 2.取得选择的文本
+两个属性selectionStart，selectionEnd
+```js
+function getSelectedText(textbox) {
+  return textbox.value.substring(textbox.selectionStart, textbox.selectionEnd)
+}
+```
+
+#### 14.2.2 过滤输入
+###### 1.屏蔽字符
+```js
+textbox.addEventListener('keypress', function(event) {
+  if(!/\d/.test(value)) {  // 如果测试失败，屏蔽默认提交事件
+    event.preventDefault()
+  }
+})
+```
+###### 1.操作粘贴板
+| 剪贴板事件 | 作用
+| --------   | ------
+| beforecopy | 复制操作前触发
+| copy       | 发生复制时触发
+| beforecut  | 发生剪切操作前触发
+| cut        |
+| beforepaste|
+| paste      |
+
+#### 14.2.3 自动切换焦点
+在用户填写完当前字段，自动将焦点切换到下一字段  
+监听input的length值，达到某一临界点则将下一个input元素focus
+
+#### 14.2.4 HTML5约束验证API
+###### 1.必填字段
+required
+###### 2.其他输入类型
+type = email/url
+###### 3.数值范围
+```html
+<input type="number"  min="0" max="100" step="5" name="count" />
+```
+数值范围0-100，每次加减5，也可以用js限制
+```js
+input.stepUp()
+input.stepUp(5)
+input.stepDown()
+input.stepDown(5)
+```
+###### 4.输入模式
+pattern属性，这个属性是一个正则表达式，用于匹配文本框中的值  
+例如，如果只想允许在文本字段中输入数值
+```js
+<input type="text" pattern="\d+" name="count" />
+```
+
+###### 5.检测有效性
+```js
+if (value.checkValidity()) {
+  // 字段有效，继续
+} else {
+  // 字段无效
+}
+```
+checkValidity()方法可以简单的告诉你字段是否有效，validity属性会告诉为什么有效或无效，这个对象包含一系列属性，每个属性返回一个布尔值，如  
+valid,rangeOverflow,tooLong 等等
+
+###### 6.禁用验证
+novalidate属性
