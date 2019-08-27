@@ -1068,14 +1068,14 @@ window.find() // 查找页面中的值
 location对象是一个很特别的对象，因为它既是window对象的属性，也是document对象的属性
 | 属性名 | 例子 | 说明 
 | ----- | ---------- | ------------- 
-| hash  | #mine
-| host  | m.com:80
-| hostname | m.com
-| href | m.com/user
-| pathname | /user
-| port | 80
-| protocol | http:
-| search | ?name=li
+| hash  | #mine |
+| host  | m.com:80 |
+| hostname | m.com |
+| href | m.com/user |
+| pathname | /user |
+| port | 80 |
+| protocol | http: |
+| search | ?name=li |
 
 #### 8.2.1 查询字符串参数
 search属性并不能逐个访问其中的每个查询字符串参数，我们可以创建一个函数，用以解析查询字符串，然后返回包含所有参数的一个对象
