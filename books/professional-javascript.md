@@ -1330,10 +1330,10 @@ clientWidth
 
 滚动大小(scroll dimension)
 ```js
-scrollHeight // 没有滚动条情况下(不包含滚动条)，元素内容总高度
+scrollHeight // 元素内容总高度(真实高度，>=scrollTop)
 scrollWidth
-scrollLeft // 包含滚动条
-scrollTop
+scrollLeft 
+scrollTop  // 当前元素页面显示区域距离顶部距离，包含滚动条，<= scrollHeight
 document.documentElement.scrollHeight // 带有滚动条的页面总高度 <html>
 document.documentElement.scrollTop  // 视口
 document.body.scrollHeight // 带有滚动条的页面总高度 <body> , 可以替代上面的方式
@@ -1450,18 +1450,18 @@ attachEvent, detachEvent, 两个参数，第一个参数加on
 只有在事件处理程序执行期间，event
 
 #### 13.3.1 DOM中的事件对象
-| 属性/方法      |  类型       | 读/写   | 说明
-| -------       | ----------  | ----------- | ---------
-| bubbles       |  Boolean    |  只读   | 表示事件是否冒泡
-| cancelable    | Boolean     |  只读   |  表示是否可以取消事件的默认行为
-| currentTarget | Element     |  只读   | 其事件处理程序当前正在处理事件的那个元素
-| detail        |  Integer    | 只读    |  与事件相关的细节信息
-| eventPhase    | Integer     |  只读   | 调用事件处理程序的阶段，1表示捕获，2表示处理目标，3表示冒泡阶段
-| preventDefault  |  Function  | 只读   | 取消事件默认行为，cancelable是true，可以使用这个方法
-| stopPropagation |  Function  |  只读  |  取消事件的进一步捕获或冒泡，如果bubbles为true，可以使用这个方法
-| stopImmediatePropagation   |  Function  | 只读  |  取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用(DOM3级事件中新增)
-| target        | Element     | 只读    | 事件的目标
-| type          |  String     |  只读   |  触发事件的类型
+| 属性/方法      |  类型      | 读/写   | 说明
+| -------       | ---------- | ----------- | ---------
+| bubbles       |  Boolean   |  只读   | 表示事件是否冒泡
+| cancelable    | Boolean    |  只读   |  表示是否可以取消事件的默认行为
+| currentTarget | Element    |  只读   | 其事件处理程序当前正在处理事件的那个元素
+| detail        |  Integer   |  只读   |  与事件相关的细节信息
+| eventPhase    | Integer    |  只读   | 调用事件处理程序的阶段，1表示捕获，2表示处理目标，3表示冒泡阶段
+| preventDefault  |  Function | 只读   | 取消事件默认行为，cancelable是true，可以使用这个方法
+| stopPropagation |  Function |  只读  |  取消事件的进一步捕获或冒泡，如果bubbles为true，可以使用这个方法
+| stopImmediatePropagation  |  Function  | 只读  |  取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用(DOM3级事件中新增)
+| target        | Element    | 只读    | 事件的目标
+| type          |  String    |  只读   |  触发事件的类型
 
 在事件处理程序内部，对象this始终等于currentTarget的值，而target只包含事件的实际目标，如果直接将事件处理程序指定给了目标元素，则this, currentTarget, target包含相同的值
 ```js
@@ -1613,8 +1613,9 @@ list.addEventListener("click", function(event) {
 
 ## 第14章 表单脚本
 ### 14.1 表单的基本知识
-在HTML中，表单是由`<form>`元素来表示的，而在javascript中，表单对应的是HTMLFormElement类型，HTMLFormElement继承了HTMLElement，因而与其他HTML元素有相同的默认属性，但是,HTMLFormElement也有自己独有的方法和属性
-|属性/方法   |  说明 
+在HTML中，表单是由`<form>`元素来表示的，而在javascript中，表单对应的是HTMLFormElement类型，HTMLFormElement继承了HTMLElement，因而与其他HTML元素有相同的默认属性，但是,HTMLFormElement也有自己独有的方法和属性  
+
+| 属性/方法 |  说明 
 | ------  | ------
 | action  |  接收请求的URL
 | method  |  要发送的HTTP请求类型，通常是get或者post
