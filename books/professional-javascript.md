@@ -13,6 +13,8 @@
 - [第12章 DOM2和DOM3](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第12章-DOM2和DOM3)
 - [第13章 事件](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第13章-事件)
 - [第14章 表单脚本](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第14章-表单脚本)
+- [第15章 使用Canvas绘图](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第15章-使用Canvas绘图)
+- [第16章 HTML5脚本编程](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第16章-HTML5脚本编程)
 
 :smile: :smiley: :innocent:
 
@@ -1796,3 +1798,144 @@ getSelection方法,document.getSelection()返回一个对象
 #### 14.5.3 表单与富文本
 
 ### 14.6 小结
+
+## 第15章 使用Canvas绘图
+### 15.1 基本用法
+先设置width与height属性值，单位px，然后获取绘图上下文(调用getContext()并传入上下文的名字)
+```js
+<canvas id="drawing" width="200" height="200"></canvas>
+var drawing = document.getElementById("drawing")
+var context = drawing.getContext("2d")
+```
+
+### 15.2 2D上下文
+#### 15.2.1 填充和描边
+填充，就是用指定的样式(颜色，渐变或图像)填充图形，描边，就是只在图形的边缘描线  
+设置fillStyle以及strokeStyle
+
+#### 15.2.2 绘制矩形
+矩形是唯一一种可以直接在2D上下文中绘制的图形，方法包括`fillRect()``strokeRect()``clearRect()`，这三个方法都能接收四个参数，矩形的x坐标，y坐标，宽度，高度。单位都是像素
+```js
+var drawing = document.getElementById("drawing")
+var context = drawing.getContext("2d")
+// 绘制红色矩形
+context.fillStyle = "#ff0000"
+context.fillRect(10, 10, 50, 50)
+// 绘制半透明蓝色矩形,两个矩形会有重叠
+context.fillStyle = "rgba(0,0,255,0.5)"
+context.fillRect(30, 30, 50, 50)
+// 清除一部分矩形
+context.clearRect(40,40,10,10)
+```
+
+#### 15.2.3 绘制路径
+通过路径可以创建复杂的形状和线条，要绘制路径，首先要调用beginPath()方法，然后再调用下列方法实际的绘制路径  
+
+|  方法  |  作用
+|  ----- | -------
+| arc(x,y,radius,startAngle,endAngle,counterclockwise) | 以(x,y)为圆心绘制弧线，半径为radius，设置起始终止角，最后一个是否按逆时针计算，false表示顺时针
+| arcTo(x1,y1,x2,y2,radius) | 从上一点开始绘制一条弧线，到(x2,y2)为止，并且以给定的半径radius穿过(x1,y1)
+| bezierCurveTo(clx,cly,c2x,c2y,x,y) | 从上一点开始绘制一条曲线，到(x,y)为止，并且(c1x,c1y)和(c2x,c2y)为控制点
+| lineTo(x,y) | 从上一点绘制一条直线，到(x,y)为止
+| moveTo(x,y) | 将绘图游标移动到(x,y)，不画线
+| quadraticCurveTo(cx,cy,x,y) | 从上一点绘制一条二次曲线，到(x,y)为止，并且以(cx,cy)为控制点
+| rect(x,y,width,height) | 从点(x,y)开始绘制一个矩形，这个方法绘制的是矩形路径，而不是strokeRect()和fillRect()所绘制的独立的形状
+
+创建路径之后，接下来有几种可能的选择，如果想绘制一条连接到路径起点的线条，可以调用closePath()，如果路径已经完成，你想用fillStyle()填充它，可以调用fill()方法。另外，还可以调用stroke()方法对路径进行描边，描边使用的是strokeStyle。最后还可以调用clip()，这个方法可以在路径上创建一个剪切区域。
+```js
+var drawing = document.getElementById("drawing")
+var context = drawing.getContext("2d")
+// 开始路径
+context.beginPath()
+// 绘制外圆
+context.arc(100, 100, 99, 0, 2*Math.PI, false)
+// 绘制内圆
+context.moveTo(194, 100)
+context.arc(100, 100, 94, 0, 2*Math.PI, false)
+// 绘制分针
+context.moveTo(100, 100)
+context.lineTo(100, 15)
+// 绘制时针
+context.moveTo(100, 100)
+context.lineTo(35, 100)
+// 描边路径
+context.stroke()
+```
+
+#### 15.2.4 绘制文本
+绘制文本主要有两个方法 `fillText()`和`strokeText()`,两个方法都接收四个参数: 要绘制的文本字符串，x坐标, y坐标, 可选的最大像素宽度，这两个方法都以下列三个属性为基础：font,textAlign,textBaseline，他们都有默认初始值
+```js
+// 在上面代码基础上
+context.font = "bold 14px Arial"
+context.textAlign = "center" // 中间对齐
+context.textBaseline = "middle" // 中间对齐
+context.fillText("12", 100, 20)
+```
+
+#### 15.2.5 变换
+通过如下方法改变矩阵: rotate(angle), scale(scaleX, scaleY), translate(x,y), transform(...)
+
+#### 15.2.6 绘制图像
+drawImage(), 传入一个HTML图片元素，并传入图像起点的x,y坐标
+
+#### 15.2.7 阴影
+shadowColor shadowOffsetX shadowOffsetY shadowBlur
+
+#### 15.2.8 渐变
+创建渐变对象，gradient, `context.createLinearGradient()`
+```js
+var drawing = document.getElementById("drawing")
+var context = drawing.getContext("2d")
+// 渐变
+var gradient = context.createLinearGradient(10, 10, 50, 50) // 起始坐标与终点坐标
+gradient.addColorStop(0, "white")
+gradient.addColorStop(1, "black")
+// 绘制渐变色矩形
+context.fillStyle = gradient
+context.fillRect(10, 10, 50, 50)
+```
+
+#### 15.2.9 模式
+重复的图像  
+```js
+var pattern = context.createPattern(image, "repeat") 
+// 绘制图形
+context.fillStyle = pattern
+context.fillRect(10,10,150,150)
+```
+
+#### 15.2.10 使用图像数据
+通过getImageData()获得原始图像数据，接收四个参数
+
+#### 15.2.11 合成
+globalAlpha和globalCompositionOperation,前者用于设置透明度
+
+### 15.3 WebGL
+WebGL是针对canvas的3d上下文
+#### 15.3.1 类型化数组
+WebGL涉及的复杂计算需要提前知道数值的精度，而标准的javascript无法满足需求，为此，WebGL引入了一个概念，叫做类型化数组(typed arrays)  
+类型化数组的核心就是一个叫ArrayBuffer的类型
+
+#### 15.3.2 WebGL上下文
+```js
+<canvas id="drawing" width="200" height="200"></canvas>
+var drawing = document.getElementById("drawing")
+var gl = drawing.getContext()
+```
+
+#### 15.3.3 支持
+浏览器 WebGL API, 计算机的显示驱动程序
+
+### 15.4 小结
+
+## 第16章 HTML5脚本编程
+### 16.1 跨文档消息传递
+cross-document messaging, 有时简称XDM,指的是不同域的页面间传递信息  
+核心是postMessage()方法，接收两个参数，一条消息和一个表示接收方来自哪个域的字符串
+
+### 16.2 原生拖放
+#### 16.2.1 拖放事件
+拖动某元素时，依次触发下列事件：dragstart, drag, dragend  
+当某个元素被拖动到一个有效的防止目标时，下列事件会依次发生: dragenter, dragover, dragleave/drop
+
+#### 16.2.2 自定义放置目标
