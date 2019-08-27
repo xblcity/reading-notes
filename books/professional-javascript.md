@@ -1756,3 +1756,43 @@ valid,rangeOverflow,tooLong 等等
 
 ###### 6.禁用验证
 novalidate属性
+
+### 14.3 选择框脚本
+`<select/>`与`<option/>`  
+HTMLSelectElement还提供了下面属性和方法    
+multiple，selectedIndex, size, options(是一个包含子元素的数组), add(newOption, relOption)  
+HTMLOptionElement还有下面属性和方法
+index, label, selected(布尔值,true表示被选中), value, text(选项的文本)
+
+#### 14.3.1 选择选项
+selected属性
+#### 14.3.2 添加选项
+```js
+var newOption = document.createElement("option")
+newOption.appendChild(document.createTextNode("Option Text"))
+newOption.setAttribute("value", "Option Value")
+
+selectbox.appendChild(newOption)
+```
+#### 14.3.3 移动和重排选项
+
+### 14.4 表单序列化
+表单提交期间，浏览器是怎样将数据发送给浏览器的  
+- 对表单的名称和值进行URL编码，使用和号(&)分割
+- 不发送禁用的表单字段
+- 只发送勾选的复选框和单选按钮
+- 不发送type为reset的button按钮
+- 多选选择框中的每个选中的值单独一个条目
+- 在单击提交按钮提交表单情况下，也会发送提交按钮，否则，不发送提交按钮
+- select元素的值，就是选中的option的value特性的值
+
+### 14.5 富文本编辑
+在页面内嵌入一个包含空HTML页面的iframe  
+designMode设置为on，整个文档就变得可编辑
+#### 14.5.1 使用contenteditable属性
+#### 14.5.2 操作富文本
+#### 14.5.3 富文本选区
+getSelection方法,document.getSelection()返回一个对象
+#### 14.5.3 表单与富文本
+
+### 14.6 小结
