@@ -484,7 +484,7 @@ function Person() {}
 Person.prototype = {
   name: 'xx',
   sayName: function() {
-    console.log('sayNmae')
+    console.log('sayName')
   }
   // 手动设置constructor: Person
 }
@@ -504,7 +504,7 @@ Person.prototype = {
 var friend2 = new Person()
 friend.sayName()  // typeError: friend.sayName is not a function， friend的prototype是之前的那个
 friend2.sayName()  // 'nico'
-// 重写原型对象切断了现有原型与任何执勤啊已经存在的对象实例之间的联系
+// 重写原型对象切断了现有原型与任何已经存在的对象实例之间的联系
 ```
 构造函数缺陷：省略了构造函数传递初始化参数这一环节，结果所有实例在默认情况下都取得了相同的值  
 原型中很多属性是共享的，对于函数来说比较合适，对于基本值，甚至是对象，问题比较突出，因为是同一个引用，所以改变这个对象，所有实例上面的这个属性都会改变
@@ -603,7 +603,7 @@ function SuperType() {
   this.colors = ['red', 'blue', 'green']
 }
 function SubType() {
-  Super.call(this) // 执行构造函数，只继承SuperType构造器上的属性(没有使用new调用，所以不存在原型继承哦)
+  SuperType.call(this) // 执行构造函数，只继承SuperType构造器上的属性(没有使用new调用，所以不存在原型继承哦)
 }
 
 var instance1 = new SubType()
@@ -1066,8 +1066,8 @@ window.find() // 查找页面中的值
 
 ### 8.2 location对象
 location对象是一个很特别的对象，因为它既是window对象的属性，也是document对象的属性
-| 属性名 | 例子 | 说明 |
-| ----- | ---------- | ------------- |
+| 属性名 | 例子 | 说明 
+| ----- | ---------- | ------------- 
 | hash  | #mine
 | host  | m.com:80
 | hostname | m.com
