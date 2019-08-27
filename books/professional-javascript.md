@@ -1065,7 +1065,8 @@ window.find() // 查找页面中的值
 ```
 
 ### 8.2 location对象
-location对象是一个很特别的对象，因为它既是window对象的属性，也是document对象的属性
+location对象是一个很特别的对象，因为它既是window对象的属性，也是document对象的属性    
+
 | 属性名 | 例子 | 说明 
 | ----- | ---------- | ------------- 
 | hash  | #mine |
