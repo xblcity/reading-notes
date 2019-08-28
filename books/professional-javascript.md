@@ -15,6 +15,7 @@
 - [第14章 表单脚本](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第14章-表单脚本)
 - [第15章 使用Canvas绘图](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第15章-使用Canvas绘图)
 - [第16章 HTML5脚本编程](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第16章-HTML5脚本编程)
+- [第17章 错误处理与调试](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第17章-错误处理与调试)
 
 :smile: :smiley: :innocent:
 
