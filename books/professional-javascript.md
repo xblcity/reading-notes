@@ -2012,3 +2012,194 @@ HTML5除了定义新的标记规则，还定义了一些js API, 这些api是为�
 - 原生拖放功能让我们可以方便的指定某个元素可拖动，并在操作系统要放置时做出响应，还可以创建自定义的可拖动元素及放置目标
 - 新的媒体元素`audio`与`video`拥有自己的视频与音频交互的API
 - 历史状态管理让我们可以不必卸载当前页面即可修改浏览器的历史状态栈，有了这种机制，用户就可以通过“前进”，“后退”按钮在页面状态间切换，这些状态完全由js控制
+
+## 第17章 错误处理与调试
+### 17.1 浏览器报告的错误
+#### 17.1.1 IE
+#### 17.1.2 Firefox
+#### 17.1.3 Safari
+#### 17.1.4 Opera
+#### 17.1.5 Chrome
+
+### 17.2 错误处理
+#### 17.2.1 try-catch语句
+```js
+// 与java相似
+try {
+  // 可能会导致错误的代码
+} catch(error) {
+  // 在错误发生时怎么处理
+}
+```
+###### 1.finally子句，即使出错，依然会执行
+```js
+function testFinally() {
+  try {
+    return 2
+  } catch(catch) {
+    return 1
+  } finally {
+    return 0
+  }
+}
+// 最终会返回0
+```
+###### 2. 错误类型
+7种错误类型(构造函数)
+| 错误类型
+| -----
+| Error
+| EvalError
+| RangeError
+| ReferenceError
+| SyntaxError
+| TypeError
+| URIError
+
+```js
+try {
+  someFunc()
+} catch(error) {
+  if (error instanceof TypeError) {
+    // 处理类型错误
+  } else if(error instanceof ReferenceError) {
+    // 处理引用错误
+  } else {
+    // 处理其他类型的错误
+  }
+}
+```
+包含在message的属性的错误会因浏览器而异
+
+#### 17.2.2 抛出错误
+与try-catch语句相配的还有一个throw操作符，用于随时抛出自定义错误，这个值是什么类型，没有要求，下面代码都是有效的
+```js
+throw 123456
+throw true
+```
+在遇到throw操作符时，代码会立即停止执行。仅当有try-catch语句捕获到被抛出的值时，代码才会继续执行  
+`throw new Error('something wrong')`，这个代码抛出了一个通用错误，带有一条自定义错误消息，浏览器会像处理自己生成的错误一样，来处理这行代码抛出的错误  
+```js
+throw new SyntaxError("I don't like your syntax")
+throw new ReferenceError("haha")
+```
+在创建自定义错误类型时，最常用的是Error, RangeError, ReferenceError, TypeError
+###### 1. 抛出错误的时机
+```js
+function process(values) {
+  values.sort()
+  for(var i = 0; i < values.length; i ++) {
+    if (values[i] > 100) {
+      return values[i]
+    }
+  }
+  return -1
+}
+```
+如果给这个函数传递一个字符串参数，sort()调用就会失败，各个浏览器的报错信息可能不一样，这种情况下，带有适当信息的自定义错误能够显著提升代码的可维护性
+```js
+function process(values) {
+  if(!(values instanceof Array)) {
+    throw new Error("process(): Argument must be an array")
+  }
+  values.sort()
+  for(var i = 0; i < values.length; i ++) {
+    if (values[i] > 100) {
+      return values[i]
+    }
+  }
+  return -1
+}
+```
+如果values不是数组，就会抛出错误
+
+#### 17.2.3 错误(error)事件
+任何没有通过try-catch处理的错误都会触发window对象的error事件。onerror事件处理程序不会创建event对象，但它可以接收三个参数，错误消息，错误所在的URL和行号。多数情况下，只有错误信息有用
+```js
+// 好像没用？
+window.onerror = function(message, url, line) {
+  alert(message)
+  return false // 阻止浏览器默认处理错误行为，相当于全局的try-catch
+}
+```
+
+#### 17.2.4 处理错误的策略
+#### 17.2.5 常见的错误类型
+一般来说，需要关注三种错误：类型转换错误，数据类型错误，通信错误。
+###### 1.类型转换错误
+在使用`==`以及`!=`以及`if()`会出现类型转换错误
+###### 2.数据类型错误
+```js
+function getQueryString(url) {
+  var pos = url.indexOf("?")
+  if(pos > -1) {
+    return url.substring(pos + 1)
+  }
+  return ""
+}
+```
+如果传入其他数据就会导致错误，添加一个简单的类型检测语句，就可以确保函数不那么容易报错
+```js
+function getQueryString(url) {
+  if (typeof url === "string") {
+    var pos = url.indexOf("?")
+    if(pos > -1) {
+      return url.substring(pos + 1)
+    }
+  }
+  return ""
+}
+```
+###### 3.通信错误
+随着Ajax编程的兴起，Web应用程序在其声明周期内动态加载信息或功能，已经成为一件司空见惯的事，但是，js与服务器之间的任何一次通信，都有可能产生错误
+
+#### 17.2.6 区分致命错误和非致命错误
+区分的主要依据是看它们对用户的影响
+```js
+for (var i = 0; i < mods.length; i ++) {
+  mods[i].init() // 可能导致致命错误
+}
+```
+对每个模块调用init方法，任何模块的init方法如果出错，都会导致后续模块无法初始化
+```js
+for (var i = 0; i < mods.length; i ++) {
+  try {
+    mods[i].init()
+  } catch(error) {
+    // 在这里处理错误
+  }
+}
+```
+#### 17.2.7 把错误记录到服务器
+在`catch`的时候做相应的处理
+
+### 17.3 调试技术
+alert?!
+#### 17.3.1 将消息记录到控制台
+通过console对象向JS控制台写入消息，这个对象具有下面方法  
+error,info,log,warn,dir...
+#### 17.3.2 将消息记录到当前页面
+#### 17.3.3 抛出错误
+```js
+function divide(num1, num2) {
+  if (typeof num1 !== 'number' || typeof num2 !== 'number') {
+    throw new Error("divide(): Both arguments must be numbers")
+  }
+  return num1/num2
+}
+```
+
+### 17.4 常见的IE错误
+#### 17.4.1 操作终止
+#### 17.4.2 无效字符
+#### 17.4.3 未找到成员
+#### 17.4.4 未知运行时错误
+#### 17.4.5 语法错误
+#### 17.4.6 系统无法找到指定资源
+
+### 17.5 小结
+避免浏览器响应js错误的方法
+- 在可能发生错误的地方使用try-catch语句，这样你还有机会以适当的方式对错误进行响应，而不必沿用浏览器处理错误的机制  
+分析错误来源，并指定错误处理的方案
+- 致命错误与非致命错误
+- 判断可能发生的错误
