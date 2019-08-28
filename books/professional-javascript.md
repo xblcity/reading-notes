@@ -1335,7 +1335,7 @@ clientWidth
 scrollHeight // 元素内容总高度(真实高度，>=scrollTop)
 scrollWidth
 scrollLeft 
-scrollTop  // 当前元素页面显示区域距离顶部距离，包含滚动条，<= scrollHeight
+scrollTop  // 当前元素页面显示区域距离顶部距离，包含滚动条，<= scrollHeight，除了html元素其他为0？
 document.documentElement.scrollHeight // 带有滚动条的页面总高度 <html>
 document.documentElement.scrollTop  // 视口
 document.body.scrollHeight // 带有滚动条的页面总高度 <body> , 可以替代上面的方式
@@ -1384,7 +1384,7 @@ DOM2级样式模块主要针对操作元素的样式信息而开发，其特性�
 不过大部分浏览器是从window对象开始的
 
 #### 13.1.3 DOM事件流
-DOM2级事件规定的事件流包括三个阶段，事件捕获阶段，处于目标阶段和事件捕获阶段
+DOM2级事件规定的事件流包括三个阶段，事件捕获阶段，处于目标阶段和事件冒泡阶段
 
 ### 13.2 事件处理程序
 事件就是用户或者浏览器自身执行的某种动作，如click, load和mouseover都是事件的名字，而相应某个事件的函数就叫做事件处理程序(或事件监听器)，事件处理程序的名字以“on”开头，因此click事件的处理程序就是onclick, load的事件处理程序就是onload
@@ -1818,7 +1818,7 @@ var context = drawing.getContext("2d")
 ```js
 var drawing = document.getElementById("drawing")
 var context = drawing.getContext("2d")
-// 绘制红色矩形
+// 绘制红色矩形, 注意，fillStyle要在fillRect前面，否则不生效，canvas默认颜色是黑色
 context.fillStyle = "#ff0000"
 context.fillRect(10, 10, 50, 50)
 // 绘制半透明蓝色矩形,两个矩形会有重叠
@@ -1826,6 +1826,9 @@ context.fillStyle = "rgba(0,0,255,0.5)"
 context.fillRect(30, 30, 50, 50)
 // 清除一部分矩形
 context.clearRect(40,40,10,10)
+// 绘制线矩形边
+context.strokeStyle = "#ddd"
+context.strokeRect(10, 10, 50, 50)
 ```
 
 #### 15.2.3 绘制路径
@@ -1841,7 +1844,9 @@ context.clearRect(40,40,10,10)
 | quadraticCurveTo(cx,cy,x,y) | 从上一点绘制一条二次曲线，到(x,y)为止，并且以(cx,cy)为控制点
 | rect(x,y,width,height) | 从点(x,y)开始绘制一个矩形，这个方法绘制的是矩形路径，而不是strokeRect()和fillRect()所绘制的独立的形状
 
-创建路径之后，接下来有几种可能的选择，如果想绘制一条连接到路径起点的线条，可以调用closePath()，如果路径已经完成，你想用fillStyle()填充它，可以调用fill()方法。另外，还可以调用stroke()方法对路径进行描边，描边使用的是strokeStyle。最后还可以调用clip()，这个方法可以在路径上创建一个剪切区域。
+创建路径之后，接下来有几种可能的选择，如果想绘制一条连接到路径起点的线条，可以调用closePath()，如果路径已经完成，你想用fillStyle()填充它，可以调用fill()方法。另外，还可以调用stroke()方法对路径进行描边，描边使用的是strokeStyle。最后还可以调用clip()，这个方法可以在路径上创建一个剪切区域。  
+
+closePath()会创建一个起始点到终点的线
 ```js
 var drawing = document.getElementById("drawing")
 var context = drawing.getContext("2d")
@@ -1859,6 +1864,19 @@ context.lineTo(100, 15)
 context.moveTo(100, 100)
 context.lineTo(35, 100)
 // 描边路径
+context.stroke()
+```
+绘制一个简单的Q  
+```js
+context.beginPath()
+context.arc(100, 100, 50, 0, 2 * Math.PI, true)
+context.strokeStyle = "#cdf"
+context.stroke()
+context.moveTo(120, 120)
+context.lineTo(150, 150)
+context.lineWidth = 10
+context.lineCap = "round"
+context.strokeStyle = "#cee"
 context.stroke()
 ```
 
