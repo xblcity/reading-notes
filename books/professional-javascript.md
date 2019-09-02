@@ -16,6 +16,10 @@
 - [第15章 使用Canvas绘图](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第15章-使用Canvas绘图)
 - [第16章 HTML5脚本编程](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第16章-HTML5脚本编程)
 - [第17章 错误处理与调试](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第17章-错误处理与调试)
+- [第18章 JavaScript与XML](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第18章-JavaScript与XML)
+- [第19章 E4X](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第19章-E4X)
+- [第20章 JSON](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第20章-JSON)
+- [第21章 Ajax与Comet](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第21章-Ajax与Comet)
 
 :smile: :smiley: :innocent:
 
@@ -2205,3 +2209,107 @@ function divide(num1, num2) {
 分析错误来源，并指定错误处理的方案
 - 致命错误与非致命错误
 - 判断可能发生的错误
+
+## 第18章 JavaScript与XML
+### 18.1 浏览器对XML DOM的支持
+#### 18.1.1 DOM2的核心?
+#### 18.1.2 DOMParser类型
+#### 18.1.3 XMLSerializer类型
+#### 18.1.4 IE8及之前版本的XML
+#### 18.1.5 跨浏览器处理XML
+### 18.2 浏览器对Xpath的支持
+#### 18.2.1 DOM3级Xpath
+#### 18.2.2 IE中的Xpath
+#### 18.2.3 跨浏览器使用Xpath
+### 18.3 浏览器对XSLT的支持
+#### 18.3.1 IE中的XSLT
+#### 18.3.2 XSLTProcessor类型
+#### 18.3.3 跨浏览器使用XSLT
+### 18.3 小结
+
+## 第19章 E4X
+E4X目的是为操作XML数据提供与标准ECMAScript更相近的语法
+
+## 第20章 JSON
+JSON是一种数据格式，不是一种编程语言
+### 20.1 语法
+JSON语法可以标识下面三种类型的值：简单值，对象，数组
+#### 20.1.1 简单值
+字符串必须使用双引号，简单值也可以是数值，布尔值，null
+#### 20.1.2 对象
+属性要加双引号
+#### 20.1.3 数组
+采用js数组的字面量形式
+
+### 20.2 解析与序列化
+#### 20.2.1 JSON对象
+早期使用js的eval函数，但是会有风险  
+JSON对象有两个方法， `stringify()`和`parse()`
+#### 20.2.2 序列化选项
+第二个参数是一个数组或函数
+#### 20.2.3 解析选项
+也可以传第二个参数函数，在解析Date函数时可能会用到
+
+### 20.3 小结
+
+## 第21章 Ajax与Comet
+Asynchronous JavaScript + XML 的简写  
+
+Ajax技术的核心是XMLHttpRequest对象，简称XHR
+
+### 21.1 XMLHttpRequest对象
+#### 21.1.1 XHR的用法
+使用XHR对象时，要调用的第一个方法是open()，接收三个参数，请求类型(如'get','post')，请求的URL路径，是否异步(默认true)  
+
+`xhr.open('get', 'cc.com/cc')`,这行代码会启动一个针对cc.com/cc的GET请求，调用open方法并不会真正发送请求，而只是启动一个请求以备发送  
+
+要发送请求，必须要使用`send()`方法，接收一个参数，即要发送的数据,没有数据则传null 
+
+在收到响应后，响应数据会自动填充XHR对象的属性，相关属性如下  
+
+| 属性  | 说明
+| ----  | ------
+| responseText  | 返回的文本
+| status  |  响应的HTTP状态
+
+发送异步请求时，可以检测XHR的readyState属性，该属性表示请求/响应过程的当前活动阶段  
+
+| 值 | 说明
+| 0 | 未初始化
+| 1 | 启动，已调用open()方法，但尚未调用send()方法
+| 2 | 发送，已调用send()方法，但尚未收到响应
+| 3 | 接收，已收到部分响应数据
+| 4 | 完成。已经接收到全部响应数据，而且已经可以在客户端使用了
+
+只要readyState属性的值由一个值变成另一个值，就会触发一次readystatechange事件，可以用这个事件来检测每次状态变化之后的readyState的值，通常我们只对readyState为4的值感兴趣
+```js
+var xhr = new XMLHttpRequest()
+xhr.onreadystatechange = function() {
+  if(xhr.readyState === 4) {
+    if (xhr.state >= 200 && xhr.state < 300 || xhr.state = 304) {
+      alert(xhr.responseText)
+    } else {
+      alert('request was unsuccessful' + xhr.status)
+    }
+  }
+}
+xhr.open('get', 'cc.com')
+xhr.send(null)
+```
+
+#### 21.1.2 HTTP头部信息
+| 值 | 说明
+| ----- | -----
+| Accept | 浏览器能够处理的内容类型
+| Accept-Charset |
+| Accept-Encoding |
+| Accept-Language | 
+| Connection | 浏览器与服务器之间的连接类型
+| Cookie | 当前页面设置的任何cookie
+| Host | 发出请求的页面所在的域
+| Referer |
+| User-Agent | 浏览器的用户代理字符串
+
+在调用`open`之后`send`之前调用`setRequestHeader`
+
+
