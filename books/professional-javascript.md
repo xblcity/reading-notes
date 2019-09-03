@@ -20,6 +20,7 @@
 - [第19章 E4X](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第19章-E4X)
 - [第20章 JSON](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第20章-JSON)
 - [第21章 Ajax与Comet](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第21章-Ajax与Comet)
+- [第22章 高级技巧](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第22章-高级技巧)
 
 :smile: :smiley: :innocent:
 
@@ -2472,10 +2473,39 @@ socket.onclose = function() {
 下面防范CSRF攻击不起作用
 - 要求发送POST而不是GET请求--很容易改变
 - 检查来源URL以确定是否可信--来源记录很容易伪造
-- 基于cookie信息进行验证--同样很容易伪造
+- 基于cookie信息进行验证--同样很容易伪造 
 
 ### 21.7 小结
 
-
-
+## 第22章 高级技巧
+### 22.1 高级函数
+#### 22.1.1 安全的类型检测
+#### 22.1.2 作用域安全的构造函数
+构造函数执行的时候如果不写`new`操作符，this会意外的指向window对象
+#### 22.1.3 惰性载入函数
+#### 22.1.4 函数绑定
+将函数绑定到指定环境的函数 bind apply
+#### 函数柯里化
+与函数绑定密切相关的主题是函数柯里化(function currying),它用于创建已经设置好一个或多个参数的函数。函数柯里化的基本方法和函数绑定是一样的：使用一个闭包返回一个函数。两者的区别在于，当函数被调用时，返回的函数还需要设置一些传入的参数。
+```js
+function add(num1, num2) {
+  return num1 + num2
+}
+function curriedAdd(num2) {
+  return add(5, num2)
+}
+alert(add(2,3)) // 5
+alert(curriedAdd(3)) // 8
+```
+柯里化函数通常由以下步骤动态创建：调用另一个函数并为它传入要柯里化的函数和必要参数，下面是创建柯里化函数的通用方法
+```js
+function curry(fn) {
+  var args = Array.prototype.slice.call(arguments, 1) // 从第一个截取参数数组，因为第一个参数是要进行柯里化的函数
+  return function() {
+    var innerArgs = Array.prototype.call(arguments) // 获取内部匿名函数的参数
+    var finalArgs = args.concat(innerArgs)
+    return fn.apply(null, finalArgs) // 传入最终参数
+  }
+}
+```
 
