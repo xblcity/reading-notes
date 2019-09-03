@@ -2312,4 +2312,170 @@ xhr.send(null)
 
 在调用`open`之后`send`之前调用`setRequestHeader`
 
+#### 21.1.3 GET请求
+
+#### 21.1.4 POST请求
+```js
+function submitData() {
+  var xhr = new XMLHttpRequest()
+  xhr.onreadystatechange = function() {
+    if (xhr.readystate === 4) {
+      if (xhr.stateCode >= 200 && xhr.stateCode < 300 || xhr.stateCode === 304) {
+        console.log(xhr.responseText)
+      } else {
+        alert(`request is unsuccessful`, xhr.status)
+      }
+    }
+  }
+  xhr.open("post", "ex.com")
+  xhr.setRequestHeader("Content-Type", " application/x-www-form-urlencoded") // form表单会被编译成key-value发送到服务端
+  xhr.send("// from表单的数据")
+}
+```
+
+### 21.2 XMLHttpRequest 2级
+#### 21.2.1 FormData
+用于表单数据的序列化  
+```js
+var data = new FormData()
+data.append("name", "nico")
+```
+
+#### 21.2.2 超时设定
+ie8为xhr对象添加了一个timeout属性，表示在等待多少毫秒之后就终止，给定timeout属性后，如果在规定时间内没有收到响应，就会触发timeout事件，进而调用ontimeout事件处理程序
+```js
+var xhr = new XMLHttpRequest()
+xhr.onreadystatechange = ...
+xhr.open(...)
+xhr.timeout = 1000
+xhr,ontimeout = function() {
+  alert('request did not return in a second')
+}
+xhr.send()
+```
+未避免浏览器报错，可以把检查status属性的语句封装在一个try-catch语句中
+
+#### 21.2.3 overrideMimeType()方法
+
+### 21.3 进度事件
+6个进度事件：loadstart, progress, error, about, load, loadend
+#### 21.3.1 load事件
+#### 21.3.2 progress事件
+
+### 21.4 跨源资源共享
+通过XHR实现Ajax通信的一个主要限制，来源于跨域安全策略。默认情况下，XHR对象只能访问与包含它的页面位于同一个域中的资源，这种安全策略可以预防某些恶意行为。但是，实现合理的跨域请求对开发某些浏览器的应用也是至关重要的。
+CORS(cross-origin resource sharing,跨域资源共享)，定义访问跨域资源时，浏览器域服务器因该如何沟通，CORS背后的思想，就是使用自定义的HTTP头部让浏览器与服务器进行沟通，从而决定请求或响应是否应该成功  
+
+如发送请求，自定义Origin
+```js
+Origin: http://ex.com
+```
+服务器如果认为这个请求可以接受，就在Access-Control-Allow-Origin头部回发相同的源信息，如果是公共资源，可以发*
+```js
+Access-Control-Allow-Origin: http://ex.com
+```
+如果没有这个头部，或者有这个头部但源信息不匹配，浏览器就会驳回请求
+
+#### 21.4.1 IE对CORS的实现
+#### 21.4.2 其他浏览器对CORS的实现
+#### 21.4.3 Preflighted Requests
+服务器通过在响应中发送如下头部与浏览器进行沟通
+```js
+Access-Control-Allow-Origin:
+Access-Control-Allow-Methods: 允许的方法
+Access-Control-Allow-Headers: 允许的头部
+Access-Control-Max-Age: 应该将这个preflight请求缓存多长时间(以秒表示)
+```
+#### 21.4.4 带凭据的请求
+默认情况下，跨域请求不提供凭据，如cookie，HTTP认证及客户端SSL证明等，通过将withCredentials属性设置为true,可以指定某个请求应该发送凭据  
+如果服务器接收这样的请求，需设置：
+```js
+Access-Control-Allow-Credentials: true
+```
+
+#### 21.4.5 跨浏览器的CORS
+
+### 21.5 其他跨域技术
+#### 21.5.1 图像Ping
+#### 21.5.2 JSONP
+JSONP是JSON with padding的简写，是应用JSON的一种新方法，JSONP是被包含在函数调用的JSON,如`callback({"name": "nico"})`  
+JSONP由两部分组成：回调函数和数据，回调函数的名字一般是在请求中指定的，而数据就是传入回调函数的JSON数据
+```js
+
+function handleResponse(response) {
+  alert(response)
+}
+var script = document.createElement("script")
+script.src = 'http://ex.com/json/？callback=handleResponse'
+document.body.insertBefore(script, document.body.firstChild)
+```
+JSONP优点：简单易用  
+缺点：JSONP是在其他域中执行，如果其他域不安全，可能相应会夹带一些恶意代码。同时,要确定JSONP请求是否失败并不容易，需要使用计时器检测指定时间内是否收到了响应
+#### 21.5.3 Comet
+Comet指的是一种更高级的ajax技术(经常也有人称为“服务器推送”)，ajax是一种页向服务器请求的技术，而Comet则是一种服务器向页面推送数据的技术。Comet能够让信息近乎实时的被推送到页面上，非常适合处理体育比赛的分数和股票报价。  
+
+Comet实现方式有两种：长轮询和流。  
+传统轮询又叫短轮询，即浏览器定时向服务器发送请求，看有没有更新的数据。长轮询把传统轮询颠倒了一下，页面发送一个到服务器的请求，然后服务器一直保持连接打开，直到有数据可发送。发送完数据之后，浏览器关闭连接，随机又发送一个到服务器的新请求，这一过程在页面打开期间一致持续不断。  
+第二种流行的Comet实现是HTTP流，浏览器向服务器发送一个请求，而服务器保持连接打开，然后周期性的向浏览器发送数据
+#### 21.5.4 服务器发送事件
+#### 21.5.5 Web Sockets
+在持久连接上提供双向通信，在js中创建了websocket之后，会有一个HTTP请求发送到浏览器以发送连接，再取得服务器响应后，建立的连接会使用HTTP升级从HTTP协议交换为Web Socket协议。也就是说，标准的HTTP服务器无法实现Web Socket，只有支持这种协议的专门服务器才能正常工作。
+```js
+// 建立websocket
+var socket = new WebSocket("city.com")
+```
+同源策略对websocket不适用，因此可以通过它打开到任何站点的连接，至于是否会与某个域中的页面通信，则完全取决于服务器  
+
+WebSocket也有一个表示当前状态的readyState属性   
+| 值  |  说明
+| ----- | ------
+| WebSocket.OPENING(0) | 正在建立连接
+| WebSocket.OPEN(1) | 已经建立连接
+| WebSocket.CLOSING(2) | 正在关闭连接
+| WebSocket.CLOSE(3) | 已经关闭连接
+
+关闭WebSocket 连接，使用`close()`方法  
+
+发送数据，使用`send()`,只能发送纯文本数据，复杂数据结构需要先进行序列化  
+
+服务端发来消息时，websocket对象会触发message事件，返回的数据保存在event.data里面
+```js
+socket.onmessage = function(event) {
+  var data = event.data
+  // 处理数据
+}
+```
+websocket对象还有其他三个事件，在连接生命周期的不同阶段触发，`open, error, close`,websocket不支持DOM2事件监听器
+```js
+var socket = new WebSocket("city.com")
+socket.onopen = function() {
+  alert('Connection established')
+}
+socket.onerror = function() {
+  alert('Connection error')
+}
+socket.onclose = function() {
+  alert('Connection closed')
+}
+```
+其中，只有close的事件对象(event)有额外信息，事件对象有三个额外属性: wasClean(是否明确关闭) code(服务器状态码) reason(服务器发回的消息)
+
+#### 21.5.6 SSE与Web Sockets
+
+### 21.6 安全
+对于未被授权系统有权访问某个资源的情况，称之为CSRF(Cross-Site Request Forgery, 跨站点请求伪造)，未被授权系统会伪装自己，让处理请求的服务器认为它是合法的  
+
+通常做法
+- 要求以SSL连接来访问可以通过XHR请求的资源
+- 要求每一次请求都要附带经过相应算法计算得到的验证码
+
+下面防范CSRF攻击不起作用
+- 要求发送POST而不是GET请求--很容易改变
+- 检查来源URL以确定是否可信--来源记录很容易伪造
+- 基于cookie信息进行验证--同样很容易伪造
+
+### 21.7 小结
+
+
+
 
