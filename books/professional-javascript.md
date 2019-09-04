@@ -2483,7 +2483,7 @@ socket.onclose = function() {
 构造函数执行的时候如果不写`new`操作符，this会意外的指向window对象
 #### 22.1.3 惰性载入函数
 #### 22.1.4 函数绑定
-将函数绑定到指定环境的函数 bind apply
+将函数绑定到指定环境的函数 bind apply bind 等等
 #### 函数柯里化
 与函数绑定密切相关的主题是函数柯里化(function currying),它用于创建已经设置好一个或多个参数的函数。函数柯里化的基本方法和函数绑定是一样的：使用一个闭包返回一个函数。两者的区别在于，当函数被调用时，返回的函数还需要设置一些传入的参数。
 ```js
@@ -2498,7 +2498,7 @@ alert(curriedAdd(3)) // 8
 ```
 柯里化函数通常由以下步骤动态创建：调用另一个函数并为它传入要柯里化的函数和必要参数，下面是创建柯里化函数的通用方法
 ```js
-function curry(fn) {
+function curry(fn) { // 可传入多个参数，其中第一个是函数
   var args = Array.prototype.slice.call(arguments, 1) // 从第一个截取参数数组，因为第一个参数是要进行柯里化的函数
   return function() {
     var innerArgs = Array.prototype.call(arguments) // 获取内部匿名函数的参数
@@ -2507,4 +2507,122 @@ function curry(fn) {
   }
 }
 ```
+函数的调用
+```js
+function add(num1, num2) {
+  return num1 + num2
+}
+var curriedAdd = curry(add, 5) // 返回一个函数，这个函数可以传参，参数包含5以及调用时传入的其他参数
+alert(curriedAdd(3))  // 8,  3成为了add的第二个参数
+// 或者 等同于下面
+var curriedAdd = curry(add, 5, 13)  
+alert(curriedAdd()) // 18
+```
+bind函数的使用
+```js
+function bind(fn, context) {  // 第一个参数是要绑定的函数，第二个是执行上下文(this)
+  var args = Array.prototype.slice.call(arguments, 2)
+  return function() {
+    var innerArgs = Array.prototype.slice.call(arguments)
+    var finalArgs = args.concat(innerArgs)
+    return fn.apply(context, finalArgs)
+  }
+}
+```
+es5的bind函数，简单实现
+```js
+Function.prototype.bind = function(context) { // 传入要绑定的this和一些参数
+  var self = this // this指的是调用Bind函数的这个函数
+  var args = Array.prototype.slice.call(arguments, 1) // args是要传入的参数
+  return function() {
+    self.apply(context, args)
+  }
+}
+```
+
+### 22.2 防篡改对象(tamper-proof object)
+#### 22.2.1 不可扩展对象
+#### 22.2.2 密封的对象(sealed object)
+#### 22.2.3 冻结的对象(frozen object)
+
+### 22.3 高级定时器
+定时器队列的工作方式是，当特定时间后将代码插入，给队列添加代码并不意味着对它立即执行，而只能表示它会尽快执行，设定一个。设定一个150ms后执行的定时器不代表到150ms代码就立刻执行，它表示代码会在150ms后被加入到队列中，如果在这个时间点上，队列中没有其他东西，那么这段代码就会被执行，表面上看好像代码在精确指定的时间点上执行了，其他情况下，代码可能等待更长时间才会执行
+
+#### 22.3.1 重复的定时器
+#### 22.3.2 Yielding Processes
+#### 22.3.3 函数节流
+函数节流背后的思想是，某些代码不可以在没有间断的情况连续重复执行，第一次调用函数，创建一个定时器，在指定的时间间隔之后运行代码，当第二次调用该函数时，会清除前一次的定时器并设置另一个。如果前一个定时器已经执行过了，这个操作就没有任何意义。然而，如果前一个定时器尚未执行，其实就是将其替换为一个新的定时器。目的是只有在执行函数的请求停止了一段时间之后才执行  
+
+基本形式
+```js
+var processor =  {
+  timeoutId: null,
+
+  // 实际进行处理的方法
+  performProcessing: function() {
+    // 实际执行的代码
+  }
+
+  // 初始处理调用的代码
+  process: function() {
+    clearTimeout(this.timeoutId)
+    var that = this
+    this.timeoutId = setTimeout(function() {
+      that.performProcessing()
+    }, 100)
+  }
+}
+
+// 尝试开始执行
+processor.process()
+```
+processor对象有两个方法，processor()和performProcessing()，前者是初始化必须调用的，后者则进行实际应完成的处理。当调用process()，第一步是清除timeoutId，来阻止之前的调用被执行，然后创建一个新的定时器调用performProcessing()，由于setTimeout()中用到的函数的环境总是window,所以必须保存this的引用以方便以后使用。
+
+使用throttle()函数来简化，
+```js
+function throttle(method, context) { // 要执行的函数，以及在哪个作用域执行
+  clearTimeout(method.tId)
+  method.tId = setTimeout(function() {
+    method.call(context)
+  }, 100)
+}
+
+window.onresize = function() {
+  throttle()
+}
+```
+注：现在比较流行的防抖
+```js
+function debounce(fn, delay) {
+  let timerId = null
+
+  return function() {
+    let context = this
+    let args = arguments
+    if (timer) {
+      clearTimeout(timerId)
+    }
+    timerId = setTimeout(function() {
+      fn.apply(context, args)
+    }, delay)
+  }
+}
+
+const better_scroll = debounce(function() {
+  console.log('触发了滚动事件')
+}, 100)
+document.addEventListener('scroll', better_scroll)
+```
+
+### 22.4 自定义事件
+观察者模式由两类对象组成：主题和观察者，主体负责发布事件，同时观察者通过订阅这些事件来观察主体  
+事件是与DOM交互的最常见的方式
+
+### 22.5 拖放
+#### 22.5.1 修缮拖动功能
+#### 22.5.2 添加自定义事件
+
+### 22.6 小结
+JS中的函数非常强大，因为他们是第一类对象，使用闭包和函数环境切换，还可以有很多使用函数的强大方法
+- 函数绑定与柯里化
 
