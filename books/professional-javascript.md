@@ -13,6 +13,16 @@
 - [第12章 DOM2和DOM3](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第12章-DOM2和DOM3)
 - [第13章 事件](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第13章-事件)
 - [第14章 表单脚本](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第14章-表单脚本)
+- [第15章 使用Canvas绘图](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第15章-使用Canvas绘图)
+- [第16章 HTML5脚本编程](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第16章-HTML5脚本编程)
+- [第17章 错误处理与调试](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第17章-错误处理与调试)
+- [第18章 JavaScript与XML](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第18章-JavaScript与XML)
+- [第19章 E4X](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第19章-E4X)
+- [第20章 JSON](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第20章-JSON)
+- [第21章 Ajax与Comet](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第21章-Ajax与Comet)
+- [第22章 高级技巧](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第22章-高级技巧)
+- [第23章 离线应用与客户端存储](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第23章-离线应用与客户端存储)
+- [第24章 最佳实践](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第24章-最佳实践)
 
 :smile: :smiley: :innocent:
 
@@ -484,7 +494,7 @@ function Person() {}
 Person.prototype = {
   name: 'xx',
   sayName: function() {
-    console.log('sayNmae')
+    console.log('sayName')
   }
   // 手动设置constructor: Person
 }
@@ -504,7 +514,7 @@ Person.prototype = {
 var friend2 = new Person()
 friend.sayName()  // typeError: friend.sayName is not a function， friend的prototype是之前的那个
 friend2.sayName()  // 'nico'
-// 重写原型对象切断了现有原型与任何执勤啊已经存在的对象实例之间的联系
+// 重写原型对象切断了现有原型与任何已经存在的对象实例之间的联系
 ```
 构造函数缺陷：省略了构造函数传递初始化参数这一环节，结果所有实例在默认情况下都取得了相同的值  
 原型中很多属性是共享的，对于函数来说比较合适，对于基本值，甚至是对象，问题比较突出，因为是同一个引用，所以改变这个对象，所有实例上面的这个属性都会改变
@@ -603,7 +613,7 @@ function SuperType() {
   this.colors = ['red', 'blue', 'green']
 }
 function SubType() {
-  Super.call(this) // 执行构造函数，只继承SuperType构造器上的属性(没有使用new调用，所以不存在原型继承哦)
+  SuperType.call(this) // 执行构造函数，只继承SuperType构造器上的属性(没有使用new调用，所以不存在原型继承哦)
 }
 
 var instance1 = new SubType()
@@ -767,10 +777,9 @@ function createComparisonFunction(propertyName) {
   }
 }
 ```
-即便在别的地方调用了这个函数，我们仍然能够获取到PropertyName这个变量
+即便在别的地方调用了这个返回的函数，我们仍然能够获取到PropertyName这个变量
 
 **当函数第一次被调用时，会创建一个执行环境(execution context) 及相应的作用域链，并把作用域链赋值给一个特殊的属性[[scope]]，然后，使用this， arguments和其他命名参数的值来初始化函数的活动对象(activation object), 在作用域链中，外部函数的活动对象始终处于第二位，外部函数的外部函数的活动对象处于第三位，...... 直到作用域链终点的全局执行环境(即变量的查找过程)**
-
 
 在函数执行过程中，为了读取和写入变量的值，就需要在作用域链查找变量
 
@@ -788,7 +797,7 @@ var result = compareNames({name: 'nico'}, {name: 'luffy'})
 compareNames = null
 ```
 
-![执行环境与作用域链](../images/execution_context.jpg)
+![执行环境与作用域链](../images/pro_js/execution_context.jpg)
 
 上图展示了调用compareNames()的过程中产生的作用域链之间的关系，compareNames的执行环境中有三个变量，object1,object2,arguments，但同时又引用了createComparisonFunction作用域的值，因此，createComparisonFunction的活动对象也被推进了执行环境，，而所有函数的作用域链末端都有个全局执行的环境
 
@@ -1065,17 +1074,18 @@ window.find() // 查找页面中的值
 ```
 
 ### 8.2 location对象
-location对象是一个很特别的对象，因为它既是window对象的属性，也是document对象的属性
-| 属性名 | 例子 | 说明 |
-| ----- | ---------- | ------------- |
-| hash  | #mine
-| host  | m.com:80
-| hostname | m.com
-| href | m.com/user
-| pathname | /user
-| port | 80
-| protocol | http:
-| search | ?name=li
+location对象是一个很特别的对象，因为它既是window对象的属性，也是document对象的属性    
+
+| 属性名 | 例子 | 说明 
+| ----- | ---------- | ------------- 
+| hash  | #mine |
+| host  | m.com:80 |
+| hostname | m.com |
+| href | m.com/user |
+| pathname | /user |
+| port | 80 |
+| protocol | http: |
+| search | ?name=li |
 
 #### 8.2.1 查询字符串参数
 search属性并不能逐个访问其中的每个查询字符串参数，我们可以创建一个函数，用以解析查询字符串，然后返回包含所有参数的一个对象
@@ -1168,7 +1178,7 @@ Mozilla/版本号 [语言] (平台：加密类型)
 
 ### 10.1 节点层次
 `<html>`元素称之为文档元素
-![文档树解构](../images/document_tree.jpg)
+![文档树解构](../images/pro_js/document_tree.jpg)
 
 #### 10.1.1 Node类型
 *nodeName和nodeValue属性*  
@@ -1318,27 +1328,27 @@ offsetWidth // 水平方向，包括元素宽度，滚动条，左右边框宽�
 offsetLeft // 左外边框至元素左内边框距离
 offsetTop // 元素上外边框至元素上内边框距离
 ```
-![图示](../images/offset.jpg)  
+![图示](../images/pro_js/offset.jpg)  
 
 客户区大小(client dimension)
 ```js
 clientHeight // 不包含边框的元素高度
 clientWidth
 ```
-![client dimension](../images/client_dimension.jpg)
+![client dimension](../images/pro_js/client_dimension.jpg)
 
 滚动大小(scroll dimension)
 ```js
-scrollHeight // 没有滚动条情况下(不包含滚动条)，元素内容总高度
+scrollHeight // 元素内容总高度(真实高度，>=scrollTop)
 scrollWidth
-scrollLeft // 包含滚动条
-scrollTop
+scrollLeft 
+scrollTop  // 当前元素页面显示区域距离顶部距离，包含滚动条，<= scrollHeight，除了html元素其他为0？
 document.documentElement.scrollHeight // 带有滚动条的页面总高度 <html>
 document.documentElement.scrollTop  // 视口
 document.body.scrollHeight // 带有滚动条的页面总高度 <body> , 可以替代上面的方式
 document.body.scrollTop // 视口
 ```
-![client dimension](../images/scroll_dimension.jpg)
+![client dimension](../images/pro_js/scroll_dimension.jpg)
 
 元素大小  
 getBoundingClientRect(), 这个方法会返回一个矩形对象，包含四个属性: left,top,right,bottom, 获取元素在页面中相对于视口(视觉区域)的位置
@@ -1381,7 +1391,7 @@ DOM2级样式模块主要针对操作元素的样式信息而开发，其特性�
 不过大部分浏览器是从window对象开始的
 
 #### 13.1.3 DOM事件流
-DOM2级事件规定的事件流包括三个阶段，事件捕获阶段，处于目标阶段和事件捕获阶段
+DOM2级事件规定的事件流包括三个阶段，事件捕获阶段，处于目标阶段和事件冒泡阶段
 
 ### 13.2 事件处理程序
 事件就是用户或者浏览器自身执行的某种动作，如click, load和mouseover都是事件的名字，而相应某个事件的函数就叫做事件处理程序(或事件监听器)，事件处理程序的名字以“on”开头，因此click事件的处理程序就是onclick, load的事件处理程序就是onload
@@ -1449,18 +1459,18 @@ attachEvent, detachEvent, 两个参数，第一个参数加on
 只有在事件处理程序执行期间，event
 
 #### 13.3.1 DOM中的事件对象
-| 属性/方法  |  类型  | 读/写  | 说明
-| -------  | ----------  | ----------- | ---------
-| bubbles  |  Boolean   |  只读   | 表示事件是否冒泡
-| cancelable  | Boolean  |  只读   |  表示是否可以取消事件的默认行为
-| currentTarget | Element  |  只读  | 其事件处理程序当前正在处理事件的那个元素
-| detail  |  Integer  | 只读  |  与事件相关的细节信息
-| eventPhase  | Integer  |  只读  | 调用事件处理程序的阶段，1表示捕获，2表示处理目标，3表示冒泡阶段
-| preventDefault  |  Function  | 只读  | 取消事件默认行为，cancelable是true，可以使用这个方法
-| stopPropagation  |  Function  |  只读  |  取消事件的进一步捕获或冒泡，如果bubbles为true，可以使用这个方法
-| stopImmediatePropagation |  Function  | 只读  |  取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用(DOM3级事件中新增)
-| target | Element | 只读 | 事件的目标
-| type  |  String  |  只读  |  触发事件的类型
+| 属性/方法      |  类型      | 读/写   | 说明
+| -------       | ---------- | ----------- | ---------
+| bubbles       |  Boolean   |  只读   | 表示事件是否冒泡
+| cancelable    | Boolean    |  只读   |  表示是否可以取消事件的默认行为
+| currentTarget | Element    |  只读   | 其事件处理程序当前正在处理事件的那个元素
+| detail        |  Integer   |  只读   |  与事件相关的细节信息
+| eventPhase    | Integer    |  只读   | 调用事件处理程序的阶段，1表示捕获，2表示处理目标，3表示冒泡阶段
+| preventDefault  |  Function | 只读   | 取消事件默认行为，cancelable是true，可以使用这个方法
+| stopPropagation |  Function |  只读  |  取消事件的进一步捕获或冒泡，如果bubbles为true，可以使用这个方法
+| stopImmediatePropagation  |  Function  | 只读  |  取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用(DOM3级事件中新增)
+| target        | Element    | 只读    | 事件的目标
+| type          |  String    |  只读   |  触发事件的类型
 
 在事件处理程序内部，对象this始终等于currentTarget的值，而target只包含事件的实际目标，如果直接将事件处理程序指定给了目标元素，则this, currentTarget, target包含相同的值
 ```js
@@ -1611,4 +1621,1083 @@ list.addEventListener("click", function(event) {
 ### 13.7 小结
 
 ## 第14章 表单脚本
+### 14.1 表单的基本知识
+在HTML中，表单是由`<form>`元素来表示的，而在javascript中，表单对应的是HTMLFormElement类型，HTMLFormElement继承了HTMLElement，因而与其他HTML元素有相同的默认属性，但是,HTMLFormElement也有自己独有的方法和属性  
 
+| 属性/方法 |  说明 
+| ------  | ------
+| action  |  接收请求的URL
+| method  |  要发送的HTTP请求类型，通常是get或者post
+| name    |  表单的名称
+| submit() | 提交表单
+| reset()  | 将所有表单域重置为默认值
+
+#### 14.1.1 提交表单
+使用input或者button都可以定义提交按钮，只要把type设置为submit即可
+```js
+<input type="submit" value="Submit Form"/>
+<button type="submit">Submit Form</button>
+// 图像按钮
+<input type="image" src="button.gif">
+```
+校验表单数据，并阻止默认行为
+```js
+var form = document.getElementById("myForm")
+form.addEventListener('submit', function(e) {
+  // 阻止默认事件
+  e.preventDefault()
+})
+// 或者
+form.submit() // 不会触发submit事件，
+```
+
+#### 14.1.2 重置表单
+表单控件type时reset或者添加reset事件或者给formElement调用reset()方法
+
+#### 14.1.3 表单字段
+###### 1.共有的表单字段属性
+|  属性  |  作用
+|  ----- | ------
+| disabled | 布尔值，当前字段是否被禁用
+| name    | 当前字段的属性
+| type  |  当前字段的类型
+| value  | 当前字段被提交给服务器的值，对文件字段来说，这个属性是只读的，包含着文件在计算机中的路径
+
+也可以通过js动态修改属性值
+```js
+input.disabled = true
+```
+###### 2.共有的表单字段方法
+focus()和blur()  
+focus方法用于将浏览器的焦点设置到表单字段，即激活表单字段，使其可以响应键盘事件  
+在页面加载完毕后，将焦点转移到表单的第一个字段，为此，可以监听表单的load事件，并在该事件发生时在表单的第一个字段调用focus方法
+```js
+window.addEventListener('load', function() {
+  inputElement.focus()
+})
+```
+HTML5增加了autofocus属性(布尔值)，设置该属性，不用js就可以自动把焦点移动到相应字段
+```html
+<input type="text" autofocus>
+```
+blur()使表单元素失去焦点
+
+###### 2.共有的表单字段方法
+blur,change,focus，change对于`<input/>`和`<textarea/>`元素，在他们失去焦点且value值改变时触发，对于`<select/>`元素，在其选项改变时触发  
+focus和blur事件以某种方式改变用户界面，如文本框显示一个下拉选项菜单，或者在focus或者blur的时候改变它的样式  
+change用于验证表单
+
+### 14.2 文本框脚本
+`<input/>`以及`<textarea/>`
+```html
+<input type="text" size="25" maxlength="50" value="initial value" />
+```
+size表示能显示的最大字符数，maxlength表示能输入的最大字符数，value用于设置文本框的初始值  
+`<textarea/>`可以使用rows和cols属性，初始值必须要放在`<textarea>init value</textarea>`闭合标签内
+
+#### 14.2.1 选择文本
+select()，在文本框获得焦点时选择其所有文本
+###### 1.select事件
+###### 2.取得选择的文本
+两个属性selectionStart，selectionEnd
+```js
+function getSelectedText(textbox) {
+  return textbox.value.substring(textbox.selectionStart, textbox.selectionEnd)
+}
+```
+
+#### 14.2.2 过滤输入
+###### 1.屏蔽字符
+```js
+textbox.addEventListener('keypress', function(event) {
+  if(!/\d/.test(value)) {  // 如果测试失败，屏蔽默认提交事件
+    event.preventDefault()
+  }
+})
+```
+###### 1.操作粘贴板
+| 剪贴板事件 | 作用
+| --------   | ------
+| beforecopy | 复制操作前触发
+| copy       | 发生复制时触发
+| beforecut  | 发生剪切操作前触发
+| cut        |
+| beforepaste|
+| paste      |
+
+#### 14.2.3 自动切换焦点
+在用户填写完当前字段，自动将焦点切换到下一字段  
+监听input的length值，达到某一临界点则将下一个input元素focus
+
+#### 14.2.4 HTML5约束验证API
+###### 1.必填字段
+required
+###### 2.其他输入类型
+type = email/url
+###### 3.数值范围
+```html
+<input type="number"  min="0" max="100" step="5" name="count" />
+```
+数值范围0-100，每次加减5，也可以用js限制
+```js
+input.stepUp()
+input.stepUp(5)
+input.stepDown()
+input.stepDown(5)
+```
+###### 4.输入模式
+pattern属性，这个属性是一个正则表达式，用于匹配文本框中的值  
+例如，如果只想允许在文本字段中输入数值
+```js
+<input type="text" pattern="\d+" name="count" />
+```
+
+###### 5.检测有效性
+```js
+if (value.checkValidity()) {
+  // 字段有效，继续
+} else {
+  // 字段无效
+}
+```
+checkValidity()方法可以简单的告诉你字段是否有效，validity属性会告诉为什么有效或无效，这个对象包含一系列属性，每个属性返回一个布尔值，如  
+valid,rangeOverflow,tooLong 等等
+
+###### 6.禁用验证
+novalidate属性
+
+### 14.3 选择框脚本
+`<select/>`与`<option/>`  
+HTMLSelectElement还提供了下面属性和方法    
+multiple，selectedIndex, size, options(是一个包含子元素的数组), add(newOption, relOption)  
+HTMLOptionElement还有下面属性和方法
+index, label, selected(布尔值,true表示被选中), value, text(选项的文本)
+
+#### 14.3.1 选择选项
+selected属性
+#### 14.3.2 添加选项
+```js
+var newOption = document.createElement("option")
+newOption.appendChild(document.createTextNode("Option Text"))
+newOption.setAttribute("value", "Option Value")
+
+selectbox.appendChild(newOption)
+```
+#### 14.3.3 移动和重排选项
+
+### 14.4 表单序列化
+表单提交期间，浏览器是怎样将数据发送给浏览器的  
+- 对表单的名称和值进行URL编码，使用和号(&)分割
+- 不发送禁用的表单字段
+- 只发送勾选的复选框和单选按钮
+- 不发送type为reset的button按钮
+- 多选选择框中的每个选中的值单独一个条目
+- 在单击提交按钮提交表单情况下，也会发送提交按钮，否则，不发送提交按钮
+- select元素的值，就是选中的option的value特性的值
+
+### 14.5 富文本编辑
+在页面内嵌入一个包含空HTML页面的iframe  
+designMode设置为on，整个文档就变得可编辑
+#### 14.5.1 使用contenteditable属性
+#### 14.5.2 操作富文本
+#### 14.5.3 富文本选区
+getSelection方法,document.getSelection()返回一个对象
+#### 14.5.3 表单与富文本
+
+### 14.6 小结
+
+## 第15章 使用Canvas绘图
+### 15.1 基本用法
+先设置width与height属性值，单位px，然后获取绘图上下文(调用getContext()并传入上下文的名字)
+```js
+<canvas id="drawing" width="200" height="200"></canvas>
+var drawing = document.getElementById("drawing")
+var context = drawing.getContext("2d")
+```
+
+### 15.2 2D上下文
+#### 15.2.1 填充和描边
+填充，就是用指定的样式(颜色，渐变或图像)填充图形，描边，就是只在图形的边缘描线  
+设置fillStyle以及strokeStyle
+
+#### 15.2.2 绘制矩形
+矩形是唯一一种可以直接在2D上下文中绘制的图形，方法包括`fillRect()``strokeRect()``clearRect()`，这三个方法都能接收四个参数，矩形的x坐标，y坐标，宽度，高度。单位都是像素
+```js
+var drawing = document.getElementById("drawing")
+var context = drawing.getContext("2d")
+// 绘制红色矩形, 注意，fillStyle要在fillRect前面，否则不生效，canvas默认颜色是黑色
+context.fillStyle = "#ff0000"
+context.fillRect(10, 10, 50, 50)
+// 绘制半透明蓝色矩形,两个矩形会有重叠
+context.fillStyle = "rgba(0,0,255,0.5)"
+context.fillRect(30, 30, 50, 50)
+// 清除一部分矩形
+context.clearRect(40,40,10,10)
+// 绘制线矩形边
+context.strokeStyle = "#ddd"
+context.strokeRect(10, 10, 50, 50)
+```
+
+#### 15.2.3 绘制路径
+通过路径可以创建复杂的形状和线条，要绘制路径，首先要调用beginPath()方法，然后再调用下列方法实际的绘制路径  
+
+|  方法  |  作用
+|  ----- | -------
+| arc(x,y,radius,startAngle,endAngle,counterclockwise) | 以(x,y)为圆心绘制弧线，半径为radius，设置起始终止角，最后一个是否按逆时针计算，false表示顺时针
+| arcTo(x1,y1,x2,y2,radius) | 从上一点开始绘制一条弧线，到(x2,y2)为止，并且以给定的半径radius穿过(x1,y1)
+| bezierCurveTo(clx,cly,c2x,c2y,x,y) | 从上一点开始绘制一条曲线，到(x,y)为止，并且(c1x,c1y)和(c2x,c2y)为控制点
+| lineTo(x,y) | 从上一点绘制一条直线，到(x,y)为止
+| moveTo(x,y) | 将绘图游标移动到(x,y)，不画线
+| quadraticCurveTo(cx,cy,x,y) | 从上一点绘制一条二次曲线，到(x,y)为止，并且以(cx,cy)为控制点
+| rect(x,y,width,height) | 从点(x,y)开始绘制一个矩形，这个方法绘制的是矩形路径，而不是strokeRect()和fillRect()所绘制的独立的形状
+
+创建路径之后，接下来有几种可能的选择，如果想绘制一条连接到路径起点的线条，可以调用closePath()，如果路径已经完成，你想用fillStyle()填充它，可以调用fill()方法。另外，还可以调用stroke()方法对路径进行描边，描边使用的是strokeStyle。最后还可以调用clip()，这个方法可以在路径上创建一个剪切区域。  
+
+closePath()会创建一个起始点到终点的线
+```js
+var drawing = document.getElementById("drawing")
+var context = drawing.getContext("2d")
+// 开始路径
+context.beginPath()
+// 绘制外圆
+context.arc(100, 100, 99, 0, 2*Math.PI, false)
+// 绘制内圆
+context.moveTo(194, 100)
+context.arc(100, 100, 94, 0, 2*Math.PI, false)
+// 绘制分针
+context.moveTo(100, 100)
+context.lineTo(100, 15)
+// 绘制时针
+context.moveTo(100, 100)
+context.lineTo(35, 100)
+// 描边路径
+context.stroke()
+```
+绘制一个简单的Q  
+```js
+context.beginPath()
+context.arc(100, 100, 50, 0, 2 * Math.PI, true)
+context.strokeStyle = "#cdf"
+context.stroke()
+context.moveTo(120, 120)
+context.lineTo(150, 150)
+context.lineWidth = 10
+context.lineCap = "round"
+context.strokeStyle = "#cee"
+context.stroke()
+```
+
+#### 15.2.4 绘制文本
+绘制文本主要有两个方法 `fillText()`和`strokeText()`,两个方法都接收四个参数: 要绘制的文本字符串，x坐标, y坐标, 可选的最大像素宽度，这两个方法都以下列三个属性为基础：font,textAlign,textBaseline，他们都有默认初始值
+```js
+// 在上面代码基础上
+context.font = "bold 14px Arial"
+context.textAlign = "center" // 中间对齐
+context.textBaseline = "middle" // 中间对齐
+context.fillText("12", 100, 20)
+```
+
+#### 15.2.5 变换
+通过如下方法改变矩阵: rotate(angle), scale(scaleX, scaleY), translate(x,y), transform(...)
+
+#### 15.2.6 绘制图像
+drawImage(), 传入一个HTML图片元素，并传入图像起点的x,y坐标
+
+#### 15.2.7 阴影
+shadowColor shadowOffsetX shadowOffsetY shadowBlur
+
+#### 15.2.8 渐变
+创建渐变对象，gradient, `context.createLinearGradient()`
+```js
+var drawing = document.getElementById("drawing")
+var context = drawing.getContext("2d")
+// 渐变
+var gradient = context.createLinearGradient(10, 10, 50, 50) // 起始坐标与终点坐标
+gradient.addColorStop(0, "white")
+gradient.addColorStop(1, "black")
+// 绘制渐变色矩形
+context.fillStyle = gradient
+context.fillRect(10, 10, 50, 50)
+```
+
+#### 15.2.9 模式
+重复的图像  
+```js
+var pattern = context.createPattern(image, "repeat") 
+// 绘制图形
+context.fillStyle = pattern
+context.fillRect(10,10,150,150)
+```
+
+#### 15.2.10 使用图像数据
+通过getImageData()获得原始图像数据，接收四个参数
+
+#### 15.2.11 合成
+globalAlpha和globalCompositionOperation,前者用于设置透明度
+
+### 15.3 WebGL
+WebGL是针对canvas的3d上下文
+#### 15.3.1 类型化数组
+WebGL涉及的复杂计算需要提前知道数值的精度，而标准的javascript无法满足需求，为此，WebGL引入了一个概念，叫做类型化数组(typed arrays)  
+类型化数组的核心就是一个叫ArrayBuffer的类型
+
+#### 15.3.2 WebGL上下文
+```js
+<canvas id="drawing" width="200" height="200"></canvas>
+var drawing = document.getElementById("drawing")
+var gl = drawing.getContext()
+```
+
+#### 15.3.3 支持
+浏览器 WebGL API, 计算机的显示驱动程序
+
+### 15.4 小结
+
+## 第16章 HTML5脚本编程
+### 16.1 跨文档消息传递
+cross-document messaging, 有时简称XDM,指的是不同域的页面间传递信息  
+核心是postMessage()方法，接收两个参数，一条消息和一个表示接收方来自哪个域的字符串
+
+### 16.2 原生拖放
+#### 16.2.1 拖放事件
+拖动某元素时，依次触发下列事件：dragstart, drag, dragend  
+当某个元素被拖动到一个有效的防止目标时，下列事件会依次发生: dragenter, dragover, dragleave/drop
+
+#### 16.2.2 自定义放置目标
+#### 16.2.3 dataTransfer对象
+#### 16.2.4 dropEffect与effectAllowed
+利用dataTransfer对象，不光能够传输数据，还能通过它来确定被拖动的元素以及作为放置目标的元素能够接收什么操作，为此，需要访问dataTransfer两个属性，dropEffect和effectAllowed
+#### 16.2.5 可拖动
+默认情况下，图像，链接和文本是可以拖动的，文本只有在被选中的时候才可以拖动，而图像和链接在任何时候都可以拖动   
+让其他元素可以拖动也是可能的，HTML5为所有元素规定了一个draggable属性，表示元素是否可以拖动，图像和链接自动被设置成了true
+#### 16.2.6 其他成员
+HTML5规定dataTransfer对象还包含下面属性和方法...
+
+### 16.3 媒体元素
+`<audio>与<video/>`  
+
+#### 16.3.1 属性
+| 属性值 | 作用
+| ----   | ----
+| src   |
+| width  | 
+| height | 
+| poster | 加载内容时显示一幅图像
+| autoplay |  
+| controls  | 是否显示控件
+| readyState | 表示媒体是否就绪了
+| ... | ...
+
+#### 16.3.2 事件
+| 事件  |  触发时机
+| ----  | ------
+| canplay | 可以播放时，readyState是2
+| play  |  媒体接收指令开始播放
+| playing | 媒体已实际开始播放
+| ... | ...
+
+#### 16.3.3 自定义媒体播放器
+play和pause方法可以手动控制媒体文件的播放
+
+#### 16.3.4 检测编解码器的支持情况
+#### 16.3.5 Audio类型
+`<audio/>` 元素有一个原生的js构造函数Audio，可以在任何时候播放音频  
+```js
+var audio = new Audio("sound.mp3")
+audio.addEventListener("canplaythrough", function() {
+  audio.play()
+})
+```
+
+#### 16.4 历史状态管理
+用户的每一次操作不一定打开一个全新的页面，因此，前进后退也就失去了作用  
+history.pushState会创建新的历史状态，触发window的popstate事件
+
+### 16.5 小结
+HTML5除了定义新的标记规则，还定义了一些js API, 这些api是为了让开发人员创建出更好的，能够与桌面应用媲美的用户界面而设计的  
+- 跨文档消息传递API能够让我们在不降低同源策略安全性的前提下，在来自不同域的文档间传递消息
+- 原生拖放功能让我们可以方便的指定某个元素可拖动，并在操作系统要放置时做出响应，还可以创建自定义的可拖动元素及放置目标
+- 新的媒体元素`audio`与`video`拥有自己的视频与音频交互的API
+- 历史状态管理让我们可以不必卸载当前页面即可修改浏览器的历史状态栈，有了这种机制，用户就可以通过“前进”，“后退”按钮在页面状态间切换，这些状态完全由js控制
+
+## 第17章 错误处理与调试
+### 17.1 浏览器报告的错误
+#### 17.1.1 IE
+#### 17.1.2 Firefox
+#### 17.1.3 Safari
+#### 17.1.4 Opera
+#### 17.1.5 Chrome
+
+### 17.2 错误处理
+#### 17.2.1 try-catch语句
+```js
+// 与java相似
+try {
+  // 可能会导致错误的代码
+} catch(error) {
+  // 在错误发生时怎么处理
+}
+```
+###### 1.finally子句，即使出错，依然会执行
+```js
+function testFinally() {
+  try {
+    return 2
+  } catch(catch) {
+    return 1
+  } finally {
+    return 0
+  }
+}
+// 最终会返回0
+```
+###### 2. 错误类型
+7种错误类型(构造函数)  
+
+| 错误类型
+| -----
+| Error
+| EvalError
+| RangeError
+| ReferenceError
+| SyntaxError
+| TypeError
+| URIError
+
+```js
+try {
+  someFunc()
+} catch(error) {
+  if (error instanceof TypeError) {
+    // 处理类型错误
+  } else if(error instanceof ReferenceError) {
+    // 处理引用错误
+  } else {
+    // 处理其他类型的错误
+  }
+}
+```
+包含在message的属性的错误会因浏览器而异
+
+#### 17.2.2 抛出错误
+与try-catch语句相配的还有一个throw操作符，用于随时抛出自定义错误，这个值是什么类型，没有要求，下面代码都是有效的
+```js
+throw 123456
+throw true
+```
+在遇到throw操作符时，代码会立即停止执行。仅当有try-catch语句捕获到被抛出的值时，代码才会继续执行  
+`throw new Error('something wrong')`，这个代码抛出了一个通用错误，带有一条自定义错误消息，浏览器会像处理自己生成的错误一样，来处理这行代码抛出的错误  
+```js
+throw new SyntaxError("I don't like your syntax")
+throw new ReferenceError("haha")
+```
+在创建自定义错误类型时，最常用的是Error, RangeError, ReferenceError, TypeError
+###### 1. 抛出错误的时机
+```js
+function process(values) {
+  values.sort()
+  for(var i = 0; i < values.length; i ++) {
+    if (values[i] > 100) {
+      return values[i]
+    }
+  }
+  return -1
+}
+```
+如果给这个函数传递一个字符串参数，sort()调用就会失败，各个浏览器的报错信息可能不一样，这种情况下，带有适当信息的自定义错误能够显著提升代码的可维护性
+```js
+function process(values) {
+  if(!(values instanceof Array)) {
+    throw new Error("process(): Argument must be an array")
+  }
+  values.sort()
+  for(var i = 0; i < values.length; i ++) {
+    if (values[i] > 100) {
+      return values[i]
+    }
+  }
+  return -1
+}
+```
+如果values不是数组，就会抛出错误
+
+#### 17.2.3 错误(error)事件
+任何没有通过try-catch处理的错误都会触发window对象的error事件。onerror事件处理程序不会创建event对象，但它可以接收三个参数，错误消息，错误所在的URL和行号。多数情况下，只有错误信息有用
+```js
+// 好像没用？
+window.onerror = function(message, url, line) {
+  alert(message)
+  return false // 阻止浏览器默认处理错误行为，相当于全局的try-catch
+}
+```
+
+#### 17.2.4 处理错误的策略
+#### 17.2.5 常见的错误类型
+一般来说，需要关注三种错误：类型转换错误，数据类型错误，通信错误。
+###### 1.类型转换错误
+在使用`==`以及`!=`以及`if()`会出现类型转换错误
+###### 2.数据类型错误
+```js
+function getQueryString(url) {
+  var pos = url.indexOf("?")
+  if(pos > -1) {
+    return url.substring(pos + 1)
+  }
+  return ""
+}
+```
+如果传入其他数据就会导致错误，添加一个简单的类型检测语句，就可以确保函数不那么容易报错
+```js
+function getQueryString(url) {
+  if (typeof url === "string") {
+    var pos = url.indexOf("?")
+    if(pos > -1) {
+      return url.substring(pos + 1)
+    }
+  }
+  return ""
+}
+```
+###### 3.通信错误
+随着Ajax编程的兴起，Web应用程序在其声明周期内动态加载信息或功能，已经成为一件司空见惯的事，但是，js与服务器之间的任何一次通信，都有可能产生错误
+
+#### 17.2.6 区分致命错误和非致命错误
+区分的主要依据是看它们对用户的影响
+```js
+for (var i = 0; i < mods.length; i ++) {
+  mods[i].init() // 可能导致致命错误
+}
+```
+对每个模块调用init方法，任何模块的init方法如果出错，都会导致后续模块无法初始化
+```js
+for (var i = 0; i < mods.length; i ++) {
+  try {
+    mods[i].init()
+  } catch(error) {
+    // 在这里处理错误
+  }
+}
+```
+#### 17.2.7 把错误记录到服务器
+在`catch`的时候做相应的处理
+
+### 17.3 调试技术
+alert?!
+#### 17.3.1 将消息记录到控制台
+通过console对象向JS控制台写入消息，这个对象具有下面方法  
+error,info,log,warn,dir...
+#### 17.3.2 将消息记录到当前页面
+#### 17.3.3 抛出错误
+```js
+function divide(num1, num2) {
+  if (typeof num1 !== 'number' || typeof num2 !== 'number') {
+    throw new Error("divide(): Both arguments must be numbers")
+  }
+  return num1/num2
+}
+```
+
+### 17.4 常见的IE错误
+#### 17.4.1 操作终止
+#### 17.4.2 无效字符
+#### 17.4.3 未找到成员
+#### 17.4.4 未知运行时错误
+#### 17.4.5 语法错误
+#### 17.4.6 系统无法找到指定资源
+
+### 17.5 小结
+避免浏览器响应js错误的方法
+- 在可能发生错误的地方使用try-catch语句，这样你还有机会以适当的方式对错误进行响应，而不必沿用浏览器处理错误的机制  
+分析错误来源，并指定错误处理的方案
+- 致命错误与非致命错误
+- 判断可能发生的错误
+
+## 第18章 JavaScript与XML
+### 18.1 浏览器对XML DOM的支持
+#### 18.1.1 DOM2的核心?
+#### 18.1.2 DOMParser类型
+#### 18.1.3 XMLSerializer类型
+#### 18.1.4 IE8及之前版本的XML
+#### 18.1.5 跨浏览器处理XML
+### 18.2 浏览器对Xpath的支持
+#### 18.2.1 DOM3级Xpath
+#### 18.2.2 IE中的Xpath
+#### 18.2.3 跨浏览器使用Xpath
+### 18.3 浏览器对XSLT的支持
+#### 18.3.1 IE中的XSLT
+#### 18.3.2 XSLTProcessor类型
+#### 18.3.3 跨浏览器使用XSLT
+### 18.3 小结
+
+## 第19章 E4X
+E4X目的是为操作XML数据提供与标准ECMAScript更相近的语法
+
+## 第20章 JSON
+JSON是一种数据格式，不是一种编程语言
+### 20.1 语法
+JSON语法可以标识下面三种类型的值：简单值，对象，数组
+#### 20.1.1 简单值
+字符串必须使用双引号，简单值也可以是数值，布尔值，null
+#### 20.1.2 对象
+属性要加双引号
+#### 20.1.3 数组
+采用js数组的字面量形式
+
+### 20.2 解析与序列化
+#### 20.2.1 JSON对象
+早期使用js的eval函数，但是会有风险  
+JSON对象有两个方法， `stringify()`和`parse()`
+#### 20.2.2 序列化选项
+第二个参数是一个数组或函数
+#### 20.2.3 解析选项
+也可以传第二个参数函数，在解析Date函数时可能会用到
+
+### 20.3 小结
+
+## 第21章 Ajax与Comet
+Asynchronous JavaScript + XML 的简写  
+
+Ajax技术的核心是XMLHttpRequest对象，简称XHR
+
+### 21.1 XMLHttpRequest对象
+#### 21.1.1 XHR的用法
+使用XHR对象时，要调用的第一个方法是open()，接收三个参数，请求类型(如'get','post')，请求的URL路径，是否异步(默认true)  
+
+`xhr.open('get', 'cc.com/cc')`,这行代码会启动一个针对cc.com/cc的GET请求，调用open方法并不会真正发送请求，而只是启动一个请求以备发送  
+
+要发送请求，必须要使用`send()`方法，接收一个参数，即要发送的数据,没有数据则传null 
+
+在收到响应后，响应数据会自动填充XHR对象的属性，相关属性如下  
+
+| 属性  | 说明
+| ----  | ------
+| responseText  | 返回的文本
+| status  |  响应的HTTP状态
+
+发送异步请求时，可以检测XHR的readyState属性，该属性表示请求/响应过程的当前活动阶段  
+
+| 值 | 说明
+| 0 | 未初始化
+| 1 | 启动，已调用open()方法，但尚未调用send()方法
+| 2 | 发送，已调用send()方法，但尚未收到响应
+| 3 | 接收，已收到部分响应数据
+| 4 | 完成。已经接收到全部响应数据，而且已经可以在客户端使用了
+
+只要readyState属性的值由一个值变成另一个值，就会触发一次readystatechange事件，可以用这个事件来检测每次状态变化之后的readyState的值，通常我们只对readyState为4的值感兴趣
+```js
+var xhr = new XMLHttpRequest()
+xhr.onreadystatechange = function() {
+  if(xhr.readyState === 4) {
+    if (xhr.state >= 200 && xhr.state < 300 || xhr.state = 304) {
+      alert(xhr.responseText)
+    } else {
+      alert('request was unsuccessful' + xhr.status)
+    }
+  }
+}
+xhr.open('get', 'cc.com')
+xhr.send(null)
+```
+
+#### 21.1.2 HTTP头部信息
+| 值 | 说明
+| ----- | -----
+| Accept | 浏览器能够处理的内容类型
+| Accept-Charset |
+| Accept-Encoding |
+| Accept-Language | 
+| Connection | 浏览器与服务器之间的连接类型
+| Cookie | 当前页面设置的任何cookie
+| Host | 发出请求的页面所在的域
+| Referer |
+| User-Agent | 浏览器的用户代理字符串
+
+在调用`open`之后`send`之前调用`setRequestHeader`
+
+#### 21.1.3 GET请求
+
+#### 21.1.4 POST请求
+```js
+function submitData() {
+  var xhr = new XMLHttpRequest()
+  xhr.onreadystatechange = function() {
+    if (xhr.readystate === 4) {
+      if (xhr.stateCode >= 200 && xhr.stateCode < 300 || xhr.stateCode === 304) {
+        console.log(xhr.responseText)
+      } else {
+        alert(`request is unsuccessful`, xhr.status)
+      }
+    }
+  }
+  xhr.open("post", "ex.com")
+  xhr.setRequestHeader("Content-Type", " application/x-www-form-urlencoded") // form表单会被编译成key-value发送到服务端
+  xhr.send("// from表单的数据")
+}
+```
+
+### 21.2 XMLHttpRequest 2级
+#### 21.2.1 FormData
+用于表单数据的序列化  
+```js
+var data = new FormData()
+data.append("name", "nico")
+```
+
+#### 21.2.2 超时设定
+ie8为xhr对象添加了一个timeout属性，表示在等待多少毫秒之后就终止，给定timeout属性后，如果在规定时间内没有收到响应，就会触发timeout事件，进而调用ontimeout事件处理程序
+```js
+var xhr = new XMLHttpRequest()
+xhr.onreadystatechange = ...
+xhr.open(...)
+xhr.timeout = 1000
+xhr,ontimeout = function() {
+  alert('request did not return in a second')
+}
+xhr.send()
+```
+未避免浏览器报错，可以把检查status属性的语句封装在一个try-catch语句中
+
+#### 21.2.3 overrideMimeType()方法
+
+### 21.3 进度事件
+6个进度事件：loadstart, progress, error, about, load, loadend
+#### 21.3.1 load事件
+#### 21.3.2 progress事件
+
+### 21.4 跨源资源共享
+通过XHR实现Ajax通信的一个主要限制，来源于跨域安全策略。默认情况下，XHR对象只能访问与包含它的页面位于同一个域中的资源，这种安全策略可以预防某些恶意行为。但是，实现合理的跨域请求对开发某些浏览器的应用也是至关重要的。
+CORS(cross-origin resource sharing,跨域资源共享)，定义访问跨域资源时，浏览器域服务器因该如何沟通，CORS背后的思想，就是使用自定义的HTTP头部让浏览器与服务器进行沟通，从而决定请求或响应是否应该成功  
+
+如发送请求，自定义Origin
+```js
+Origin: http://ex.com
+```
+服务器如果认为这个请求可以接受，就在Access-Control-Allow-Origin头部回发相同的源信息，如果是公共资源，可以发*
+```js
+Access-Control-Allow-Origin: http://ex.com
+```
+如果没有这个头部，或者有这个头部但源信息不匹配，浏览器就会驳回请求
+
+#### 21.4.1 IE对CORS的实现
+#### 21.4.2 其他浏览器对CORS的实现
+#### 21.4.3 Preflighted Requests
+服务器通过在响应中发送如下头部与浏览器进行沟通
+```js
+Access-Control-Allow-Origin:
+Access-Control-Allow-Methods: 允许的方法
+Access-Control-Allow-Headers: 允许的头部
+Access-Control-Max-Age: 应该将这个preflight请求缓存多长时间(以秒表示)
+```
+#### 21.4.4 带凭据的请求
+默认情况下，跨域请求不提供凭据，如cookie，HTTP认证及客户端SSL证明等，通过将withCredentials属性设置为true,可以指定某个请求应该发送凭据  
+如果服务器接收这样的请求，需设置：
+```js
+Access-Control-Allow-Credentials: true
+```
+
+#### 21.4.5 跨浏览器的CORS
+
+### 21.5 其他跨域技术
+#### 21.5.1 图像Ping
+#### 21.5.2 JSONP
+JSONP是JSON with padding的简写，是应用JSON的一种新方法，JSONP是被包含在函数调用的JSON,如`callback({"name": "nico"})`  
+JSONP由两部分组成：回调函数和数据，回调函数的名字一般是在请求中指定的，而数据就是传入回调函数的JSON数据
+```js
+
+function handleResponse(response) {
+  alert(response)
+}
+var script = document.createElement("script")
+script.src = 'http://ex.com/json/？callback=handleResponse'
+document.body.insertBefore(script, document.body.firstChild)
+```
+JSONP优点：简单易用  
+缺点：JSONP是在其他域中执行，如果其他域不安全，可能相应会夹带一些恶意代码。同时,要确定JSONP请求是否失败并不容易，需要使用计时器检测指定时间内是否收到了响应
+#### 21.5.3 Comet
+Comet指的是一种更高级的ajax技术(经常也有人称为“服务器推送”)，ajax是一种页向服务器请求的技术，而Comet则是一种服务器向页面推送数据的技术。Comet能够让信息近乎实时的被推送到页面上，非常适合处理体育比赛的分数和股票报价。  
+
+Comet实现方式有两种：长轮询和流。  
+传统轮询又叫短轮询，即浏览器定时向服务器发送请求，看有没有更新的数据。长轮询把传统轮询颠倒了一下，页面发送一个到服务器的请求，然后服务器一直保持连接打开，直到有数据可发送。发送完数据之后，浏览器关闭连接，随机又发送一个到服务器的新请求，这一过程在页面打开期间一致持续不断。  
+第二种流行的Comet实现是HTTP流，浏览器向服务器发送一个请求，而服务器保持连接打开，然后周期性的向浏览器发送数据
+#### 21.5.4 服务器发送事件
+#### 21.5.5 Web Sockets
+在持久连接上提供双向通信，在js中创建了websocket之后，会有一个HTTP请求发送到浏览器以发送连接，再取得服务器响应后，建立的连接会使用HTTP升级从HTTP协议交换为Web Socket协议。也就是说，标准的HTTP服务器无法实现Web Socket，只有支持这种协议的专门服务器才能正常工作。
+```js
+// 建立websocket
+var socket = new WebSocket("city.com")
+```
+同源策略对websocket不适用，因此可以通过它打开到任何站点的连接，至于是否会与某个域中的页面通信，则完全取决于服务器  
+
+WebSocket也有一个表示当前状态的readyState属性   
+| 值  |  说明
+| ----- | ------
+| WebSocket.OPENING(0) | 正在建立连接
+| WebSocket.OPEN(1) | 已经建立连接
+| WebSocket.CLOSING(2) | 正在关闭连接
+| WebSocket.CLOSE(3) | 已经关闭连接
+
+关闭WebSocket 连接，使用`close()`方法  
+
+发送数据，使用`send()`,只能发送纯文本数据，复杂数据结构需要先进行序列化  
+
+服务端发来消息时，websocket对象会触发message事件，返回的数据保存在event.data里面
+```js
+socket.onmessage = function(event) {
+  var data = event.data
+  // 处理数据
+}
+```
+websocket对象还有其他三个事件，在连接生命周期的不同阶段触发，`open, error, close`,websocket不支持DOM2事件监听器
+```js
+var socket = new WebSocket("city.com")
+socket.onopen = function() {
+  alert('Connection established')
+}
+socket.onerror = function() {
+  alert('Connection error')
+}
+socket.onclose = function() {
+  alert('Connection closed')
+}
+```
+其中，只有close的事件对象(event)有额外信息，事件对象有三个额外属性: wasClean(是否明确关闭) code(服务器状态码) reason(服务器发回的消息)
+
+#### 21.5.6 SSE与Web Sockets
+
+### 21.6 安全
+对于未被授权系统有权访问某个资源的情况，称之为CSRF(Cross-Site Request Forgery, 跨站点请求伪造)，未被授权系统会伪装自己，让处理请求的服务器认为它是合法的  
+
+通常做法
+- 要求以SSL连接来访问可以通过XHR请求的资源
+- 要求每一次请求都要附带经过相应算法计算得到的验证码
+
+下面防范CSRF攻击不起作用
+- 要求发送POST而不是GET请求--很容易改变
+- 检查来源URL以确定是否可信--来源记录很容易伪造
+- 基于cookie信息进行验证--同样很容易伪造 
+
+### 21.7 小结
+
+## 第22章 高级技巧
+### 22.1 高级函数
+#### 22.1.1 安全的类型检测
+#### 22.1.2 作用域安全的构造函数
+构造函数执行的时候如果不写`new`操作符，this会意外的指向window对象
+#### 22.1.3 惰性载入函数
+#### 22.1.4 函数绑定
+将函数绑定到指定环境的函数 bind apply bind 等等
+#### 函数柯里化
+与函数绑定密切相关的主题是函数柯里化(function currying),它用于创建已经设置好一个或多个参数的函数。函数柯里化的基本方法和函数绑定是一样的：使用一个闭包返回一个函数。两者的区别在于，当函数被调用时，返回的函数还需要设置一些传入的参数。
+```js
+function add(num1, num2) {
+  return num1 + num2
+}
+function curriedAdd(num2) {
+  return add(5, num2)
+}
+alert(add(2,3)) // 5
+alert(curriedAdd(3)) // 8
+```
+柯里化函数通常由以下步骤动态创建：调用另一个函数并为它传入要柯里化的函数和必要参数，下面是创建柯里化函数的通用方法
+```js
+function curry(fn) { // 可传入多个参数，其中第一个是函数
+  var args = Array.prototype.slice.call(arguments, 1) // 从第一个截取参数数组，因为第一个参数是要进行柯里化的函数
+  return function() {
+    var innerArgs = Array.prototype.call(arguments) // 获取内部匿名函数的参数
+    var finalArgs = args.concat(innerArgs)
+    return fn.apply(null, finalArgs) // 传入最终参数
+  }
+}
+```
+函数的调用
+```js
+function add(num1, num2) {
+  return num1 + num2
+}
+var curriedAdd = curry(add, 5) // 返回一个函数，这个函数可以传参，参数包含5以及调用时传入的其他参数
+alert(curriedAdd(3))  // 8,  3成为了add的第二个参数
+// 或者 等同于下面
+var curriedAdd = curry(add, 5, 13)  
+alert(curriedAdd()) // 18
+```
+bind函数的使用
+```js
+function bind(fn, context) {  // 第一个参数是要绑定的函数，第二个是执行上下文(this)
+  var args = Array.prototype.slice.call(arguments, 2)
+  return function() {
+    var innerArgs = Array.prototype.slice.call(arguments)
+    var finalArgs = args.concat(innerArgs)
+    return fn.apply(context, finalArgs)
+  }
+}
+```
+es5的bind函数，简单实现
+```js
+Function.prototype.bind = function(context) { // 传入要绑定的this和一些参数
+  var self = this // this指的是调用Bind函数的这个函数
+  var args = Array.prototype.slice.call(arguments, 1) // args是要传入的参数
+  return function() {
+    self.apply(context, args)
+  }
+}
+```
+
+### 22.2 防篡改对象(tamper-proof object)
+#### 22.2.1 不可扩展对象
+#### 22.2.2 密封的对象(sealed object)
+#### 22.2.3 冻结的对象(frozen object)
+
+### 22.3 高级定时器
+定时器队列的工作方式是，当特定时间后将代码插入，给队列添加代码并不意味着对它立即执行，而只能表示它会尽快执行，设定一个。设定一个150ms后执行的定时器不代表到150ms代码就立刻执行，它表示代码会在150ms后被加入到队列中，如果在这个时间点上，队列中没有其他东西，那么这段代码就会被执行，表面上看好像代码在精确指定的时间点上执行了，其他情况下，代码可能等待更长时间才会执行
+
+#### 22.3.1 重复的定时器
+#### 22.3.2 Yielding Processes
+#### 22.3.3 函数节流
+函数节流背后的思想是，某些代码不可以在没有间断的情况连续重复执行，第一次调用函数，创建一个定时器，在指定的时间间隔之后运行代码，当第二次调用该函数时，会清除前一次的定时器并设置另一个。如果前一个定时器已经执行过了，这个操作就没有任何意义。然而，如果前一个定时器尚未执行，其实就是将其替换为一个新的定时器。目的是只有在执行函数的请求停止了一段时间之后才执行  
+
+基本形式
+```js
+var processor =  {
+  timeoutId: null,
+
+  // 实际进行处理的方法
+  performProcessing: function() {
+    // 实际执行的代码
+  }
+
+  // 初始处理调用的代码
+  process: function() {
+    clearTimeout(this.timeoutId)
+    var that = this
+    this.timeoutId = setTimeout(function() {
+      that.performProcessing()
+    }, 100)
+  }
+}
+
+// 尝试开始执行
+processor.process()
+```
+processor对象有两个方法，processor()和performProcessing()，前者是初始化必须调用的，后者则进行实际应完成的处理。当调用process()，第一步是清除timeoutId，来阻止之前的调用被执行，然后创建一个新的定时器调用performProcessing()，由于setTimeout()中用到的函数的环境总是window,所以必须保存this的引用以方便以后使用。
+
+使用throttle()函数来简化，
+```js
+function throttle(method, context) { // 要执行的函数，以及在哪个作用域执行
+  clearTimeout(method.tId)
+  method.tId = setTimeout(function() {
+    method.call(context)
+  }, 100)
+}
+
+window.onresize = function() {
+  throttle()
+}
+```
+注：现在比较流行的防抖
+```js
+function debounce(fn, delay) {
+  let timerId = null
+
+  return function() {
+    let context = this
+    let args = arguments
+    if (timer) {
+      clearTimeout(timerId)
+    }
+    timerId = setTimeout(function() {
+      fn.apply(context, args)
+    }, delay)
+  }
+}
+
+const better_scroll = debounce(function() {
+  console.log('触发了滚动事件')
+}, 100)
+document.addEventListener('scroll', better_scroll)
+```
+
+### 22.4 自定义事件
+观察者模式由两类对象组成：主题和观察者，主体负责发布事件，同时观察者通过订阅这些事件来观察主体  
+事件是与DOM交互的最常见的方式
+
+### 22.5 拖放
+#### 22.5.1 修缮拖动功能
+#### 22.5.2 添加自定义事件
+
+### 22.6 小结
+JS中的函数非常强大，因为他们是第一类对象，使用闭包和函数环境切换，还可以有很多使用函数的强大方法
+- 函数绑定与柯里化
+
+## 第23章 离线应用与客户端存储
+### 23.1 离线检测
+### 23.2 应用缓存
+### 23.3 数据存储
+#### 23.3.1 Cookie
+服务器响应头
+```js
+Content-type: text/html
+Set-Cookie: name=value
+...
+```
+限制：每个域的cookie数有限，尺寸小于4kb，
+
+cookie组成  
+
+| 值 | 说明
+| ---  | ----
+| 名称(name) |
+| 值(value) |
+| 域(domain) | 即域名
+| 路径(path) | 通常是 /
+| 失效时间(Expires/Max-Age) | 
+| 大小(size) |
+| HttpOnly | 是否只能服务器修改
+| 安全(Secure) |
+
+```js
+Set-Cookie: name="name"; domain=cc.com; path=/; expires= Mon,22-Jan-07 07:10:10 GMT; secure; http-only
+```
+js获取cookie:   
+document.cookie获取cookie, 也可以设置cookie(前提是服务端没有设置http-only)
+
+#### 23.3.2 IE用户数据
+#### 23.3.3 Web存储机制
+h5新增 sessionStorage localStorage 使用`setItem, removeItem, clearItem, getItem`等方法  
+
+storage事件，对storage对象进行任何修改都会触发storage事件  
+事件对象有下列属性：  
+
+| 值 | 说明
+| --- | ---
+| domain | 发生变化的存储空间的域名
+| key | 设置或者删除的域名
+| newValue | 如果是设置值，则是新值，如果是删除值，则是Null
+| oldValue | 键被更改之前的值
+
+storage限制一般是5M
+
+#### 23.3.4 IndexDB
+
+### 23.4 小结
+
+## 第24章 最佳实践
+### 24.1 可维护性
+#### 24.1.1 什么是可维护的代码
+- 可理解性：其他人可以接手代码并理解它的意图和一般途径，而无需原开发人员的完整解释
+- 直观性：代码中的东西一看就明白，不管其操作过程多么复杂
+- 可适用性：代码以一种数据上的变化不要求完全重写的方法撰写
+- 可扩展性： 在代码架构上已考虑到未来允许对核心功能进行拓展
+- 可调式性：当有地方出错时，代码可以给予你足够的信息来尽可能的直接确定问题所在
+#### 24.1.2 代码约定
+##### 1.可读性
+- 函数和方法——应当有注释，描述其目的和用于完成任务所可能使用的算法。陈述事先的假设也很重要，如参数代表什么，函数是否有返回值
+- 大段代码的注释
+- 复杂算法
+##### 2.变量和函数命名
+- 变量名应是名词，如car或person
+- 函数名应该以动词开始，如getName()，返回布尔值的函数一般以is开头，如isEnable()
+- 应使用合乎逻辑的名字
+##### 3.变量类型透明
+- 定义变量时，应该有初始值
+
+#### 24.1.3 松散耦合
