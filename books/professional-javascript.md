@@ -21,6 +21,7 @@
 - [第20章 JSON](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第20章-JSON)
 - [第21章 Ajax与Comet](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第21章-Ajax与Comet)
 - [第22章 高级技巧](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第22章-高级技巧)
+- [第23章 离线应用与客户端存储](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第23章-离线应用与客户端存储)
 
 :smile: :smiley: :innocent:
 
@@ -2626,3 +2627,54 @@ document.addEventListener('scroll', better_scroll)
 JS中的函数非常强大，因为他们是第一类对象，使用闭包和函数环境切换，还可以有很多使用函数的强大方法
 - 函数绑定与柯里化
 
+## 第23章 离线应用与客户端存储
+### 23.1 离线检测
+### 23.2 应用缓存
+### 23.3 数据存储
+#### 23.3.1 Cookie
+服务器响应头
+```js
+Content-type: text/html
+Set-Cookie: name=value
+...
+```
+限制：每个域的cookie数有限，尺寸小于4kb，
+
+cookie组成  
+
+| 值 | 说明
+| ---  | ----
+| 名称(name) |
+| 值(value) |
+| 域(domain) | 即域名
+| 路径(path) | 通常是 /
+| 失效时间(Expires/Max-Age) | 
+| 大小(size) |
+| HttpOnly | 是否只能服务器修改
+| 安全(Secure) |
+
+```js
+Set-Cookie: name="name"; domain=cc.com; path=/; expires= Mon,22-Jan-07 07:10:10 GMT; secure; http-only
+```
+js获取cookie:   
+document.cookie获取cookie, 也可以设置cookie(前提是服务端没有设置http-only)
+
+#### 23.3.2 IE用户数据
+#### 23.3.3 Web存储机制
+h5新增 sessionStorage localStorage 使用`setItem, removeItem, clearItem, getItem`等方法  
+
+storage事件，对storage对象进行任何修改都会触发storage事件  
+事件对象有下列属性：  
+
+| 值 | 说明
+| --- | ---
+| domain | 发生变化的存储空间的域名
+| key | 设置或者删除的域名
+| newValue | 如果是设置值，则是新值，如果是删除值，则是Null
+| oldValue | 键被更改之前的值
+
+storage限制一般是5M
+
+#### 23.3.4 IndexDB
+
+### 23.4 小结
