@@ -22,6 +22,7 @@
 - [第21章 Ajax与Comet](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第21章-Ajax与Comet)
 - [第22章 高级技巧](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第22章-高级技巧)
 - [第23章 离线应用与客户端存储](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第23章-离线应用与客户端存储)
+- [第24章 最佳实践](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第24章-最佳实践)
 
 :smile: :smiley: :innocent:
 
@@ -2678,3 +2679,25 @@ storage限制一般是5M
 #### 23.3.4 IndexDB
 
 ### 23.4 小结
+
+## 第24章 最佳实践
+### 24.1 可维护性
+#### 24.1.1 什么是可维护的代码
+- 可理解性：其他人可以接手代码并理解它的意图和一般途径，而无需原开发人员的完整解释
+- 直观性：代码中的东西一看就明白，不管其操作过程多么复杂
+- 可适用性：代码以一种数据上的变化不要求完全重写的方法撰写
+- 可扩展性： 在代码架构上已考虑到未来允许对核心功能进行拓展
+- 可调式性：当有地方出错时，代码可以给予你足够的信息来尽可能的直接确定问题所在
+#### 24.1.2 代码约定
+##### 1.可读性
+- 函数和方法——应当有注释，描述其目的和用于完成任务所可能使用的算法。陈述事先的假设也很重要，如参数代表什么，函数是否有返回值
+- 大段代码的注释
+- 复杂算法
+##### 2.变量和函数命名
+- 变量名应是名词，如car或person
+- 函数名应该以动词开始，如getName()，返回布尔值的函数一般以is开头，如isEnable()
+- 应使用合乎逻辑的名字
+##### 3.变量类型透明
+- 定义变量时，应该有初始值
+
+#### 24.1.3 松散耦合
