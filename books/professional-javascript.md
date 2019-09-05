@@ -23,6 +23,7 @@
 - [第22章 高级技巧](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第22章-高级技巧)
 - [第23章 离线应用与客户端存储](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第23章-离线应用与客户端存储)
 - [第24章 最佳实践](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第24章-最佳实践)
+- [第25章 新兴的API](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第25章-新兴的API)
 
 :smile: :smiley: :innocent:
 
@@ -2836,3 +2837,128 @@ JSlint
 - 2.http压缩
 
 ### 24.4 小结
+
+## 第25章 新兴的API
+### 25.1 requestAnimationFrame()
+#### 25.1.1 早期动画循环
+用setInterval方法来控制所有动画
+```js
+(function() {
+  function updateAnimation() {
+    doAnimation1()
+    doAnimation2()
+    // 其他动画
+  }
+  setInterval(updateAnimation, 100)
+})()
+```
+如果队列前面已经加入了其他任务，那动画就要等到前面的任务完成后在执行
+
+#### 25.1.2 循环间隔的问题
+浏览器计时的精度
+#### 25.1.3 mozRequestAnimationFrame
+解决js不知道动画如何开始，不知道最佳循环间隔时间的问题
+#### 25.1.4 webkitRequestAnimationFrame与msRequestAnimationFrame
+
+### 25.2 Page Visibility API
+不知道用户是不是正在与页面交互，这是困扰广大web开发人员的一个主要问题，如果页面最小化了或者隐藏在了其他标签页后面，那么有些功能是可以停下来的，比如轮询服务器或者某些动画效果
+`document.hidden` 表示页面是否隐藏的布尔值，页面隐藏包括页面在后台标签页(即不在当前屏幕显示的页)或者浏览器最小化  
+
+`document.visibilityState`由四个值构成  
+- 页面在后台标签页中或浏览器最小化
+- 页面在前台标签页中
+- 实际的页面已隐藏，但用户可以看到页面的预览
+- 页面在屏幕外执行预渲染处理
+
+`visibilitychange`事件，文档从可见变为不可见或从不可见变为可见时，触发该事件
+```js
+document.addEventListener("visibilitychange", function() {})
+```
+
+### 25.3 Geolocation API
+地理定位，访问之前需要得到用户的许可  
+
+在浏览器中的实现是 navigator.geolocation对象，对象包含三个方法，
+
+`getCurrentPosition()`，接收三个参数，成功回调，可选失败回调和可选的选项对象  
+
+成功回调会接收一个Position对象参数，对象有两个属性,coords和timestamp  
+
+coords对象包含下面与位置相关的信息，latitude,纬度, longitude，经度，accuracy,经纬度精度，以米为单位,  
+有些浏览器还包含了 heading(指南针的方向), speed(速度，即每秒移动多少米), altitude(海拔高度)，altitude(海拔高度的经度)
+```js
+navigator.geolocation.getCurrentPosition(function(position) {
+    console.log(position)
+}, function(error) {
+  console.log(error.code) // code包含错误类型，用户拒绝共享1，位置无效2，超时3
+  console.log(error.message)
+}, {
+  enableHighAccuracy: true, // 必须尽可能使用最准确的位置信息，消耗更多电量
+  timeout: 5000, // 等待位置信息的最长时间
+  maxinumAge: 25000 // 上一次取得坐标信息的有效时间，Infinity始终使用上一次坐标信息
+})
+```
+
+跟踪用户位置，使用`watchPosition()`，接收参数与`getCurrentPosition`完全相同，`watchPosition`与定时调用`getCurrentPosition`效果相同
+
+`watchPosition`会返回一个数值标识符，用于跟踪监控的操作，基于这个返回值可以取消返回操作，只要将其传递给clearWatch方法即可(与定时器使用类似)
+```js
+var watchId = navigator.geolocation.watchPosition(function(position) {
+    drawMapCenteredAt(postion.coords.latitude, postion.coords.longitude) // 实际并没有这个方法
+}, function(error) {
+  console.log(error.code) // code包含错误类型，用户拒绝共享1，位置无效2，超时3
+  console.log(error.message)
+})
+```
+
+### 25.4 File API
+不能直接访问用户计算机中的文件，一直是Web应用开发中的一大障碍。 
+2000年以前，处理文件的唯一方式就是在表单中加入`<input type="file">`  
+
+HTML5在DOM中为文件输入元素添加了一个files集合，在通过文件输入字段选择了一个或多个文件时，files集合中将包含一组File对象，每个File对象对应着一个文件，每个file对象都有下列只读属性
+
+| 值 | 说明
+| --- | ----
+| name | 本地文件系统中的文件名
+| size | 文件的字节大小
+| type | 字符串，文件的MIME类型
+| lastModifiedDate | 字符串，文件上一次被修改的时间
+
+通过侦听change事件
+```js
+var fileList = document.getElementById("file-list")
+fileList.addEventListener("change", function(event) {
+  for (var i = 0; i < event.files.length; i ++) {
+    console.log(files[i].name)
+  }
+})
+```
+
+#### 25.4.1 FileReader类型
+FileReader类型实现的是一种异步文件读取机制
+#### 25.4.2 读取部分内容
+#### 25.4.3 对象URL
+#### 25.4.4 读取拖放的文件
+#### 25.4.5 使用XHR上传文件
+通过File Api 能够访问到文件内容，利用这一点就可以通过XHR直接把文件上传到服务器。当然，把文件内容放到send()方法中，再通过post请求，的确很容易就能实现上传，但这样传递的是文件内容，因而服务器必须收集提交的内容，然后再把它们保存到另一个文件中，其实，更好的做法是以表单提交的方式来上传文件。
+
+使用FormData类型很容易就做到了
+```js
+var target = docuemnt.getElementById('form-file')
+function handleEvent(event) {
+  var data = new Data()
+  files = event.dataTransfer.files
+  while (i < files.lenght) {
+    data.append("file" + i, files[i])
+    i++
+  }
+  var xhr = new XMLHttpRequest()
+  xhr.open("post", "example.com", true)
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      alert(xhr.responseText)
+    }
+  }
+  xhr.send(data)
+}
+```
