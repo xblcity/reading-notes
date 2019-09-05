@@ -9,4 +9,4 @@
 
 ### 我看过的一些小册子
 ### 我看过的一些视频课
-- [四大维度解锁 Webpack 前端工程化](https://github.com/xblcity/reading-notes/blob/master/videos/webpack.md)
+- [四大维度解锁 Webpack 前端工程化](https://github.com/xblcity/reading-notes/blob/master/video_courses/webpack.md)
