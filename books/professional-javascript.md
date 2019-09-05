@@ -2701,3 +2701,138 @@ storage限制一般是5M
 - 定义变量时，应该有初始值
 
 #### 24.1.3 松散耦合
+只要应用的某个部分过分依赖另一部分，代码就是耦合过紧，难于维护。典型的问题如：对象直接引用另一个对象，并且当修改其中一个的同时需要修改另外一个。紧密耦合的软件难以维护并且需要经常重写。
+
+##### 1.解耦HTML/Javascript
+内联代码，内联使用程序
+##### 2.解耦CSS/Javascript
+```js
+// css与js的紧密耦合
+element.style.color = "red"
+element.style.backgroundColor = "blue"
+// css对js的松散耦合
+element.className = "edit"
+```
+##### 3.解耦应用逻辑/事件处理程序
+```js
+function handleKeyPress(event) {
+  if (event.keyCode === 13) { // 即enter键
+    // 应用逻辑
+    var value = 5 * parseInt(event.target.value)
+    if (value > 10) {
+      document.getElementById("err-message").style.display = "block"
+    }
+  }
+}
+// 抽离应用逻辑
+function validateValue(value) {
+  value = 5 * parseInt(value)
+  if (value > 10) {
+    document.getElementById("err-message").style.display = "block"
+  }
+}
+
+function handleKeyPress(event) {
+  if (event.keyCode === 13) [
+    validateValue(event.target.value)
+  ]
+}
+```
+validateValue函数没有任何东西依赖事件处理程序逻辑，它只接收一个值，并根据该值进行其他处理
+
+#### 24.1.4 编程实践
+##### 1.尊重对象所有权
+如果你不负责创建或维护对象，就不能对它们进行修改
+- 不要为实例或原型添加属性/方法
+- 不要重定义已存在的方法
+
+##### 2.避免全局变量
+```js
+// 两个全局量——避免！！
+var name = 'nico'
+function sayName() {
+  alert(name)
+}
+// 一个全局变量，推荐
+```
+
+##### 3.避免与null进行比较
+##### 4.使用常量
+```js
+function validate(value) {
+  if (!value) {
+    alert("invalid value!")
+    location.href = "/errors/invalid.php"
+  }
+}
+```
+这个函数中有两端数据：要显示给用户的信息以及URL。这些都有随应用成长而改变的倾向
+```js
+var Constance = {
+  INVALID_MESSAGE_ERROR: "invalid value!",
+  INVALID_MESSAGE_URL: "/errors/invalid.php"
+}
+function validate(value) {
+  if (!value) {
+    alert(Constance.INVALID_MESSAGE_ERROR)
+    location.href = Constance.INVALID_MESSAGE_URL
+  }
+}
+```
+将数据和使用它的逻辑进行分离，要注意的值的类型如下  
+- 重复值
+- 用户界面字符串
+- URLs
+- 任意可能会改变的值
+
+### 24.2 性能
+#### 24.2.1 注意作用域
+#### 24.2.2 选择正确方法
+#### 24.2.3 最小化语句数
+##### 1.多个变量声明
+```js
+// 3个语句，很浪费
+var count = 5
+var color = "blue"
+var values = [1,2,3]
+// 一个语句
+var count = 5,
+    color = "blue",
+    values = [1,2,3]
+```
+##### 2.插入迭代值
+```js
+var name = values[i]
+i ++
+// 一个语句
+var name = values[i++]
+```
+##### 3.使用数组和对象字面量
+```js
+// 使用两个语句初始化数组--浪费
+var values = new Array()
+values[0] = 1
+values[1] = 2
+// 使用两个语句创建和初始化对象
+var person = new Object()
+person.name = 'nico'
+person.age = 22
+// 优化
+var values = [1,2]
+var person = {
+  name: "nico",
+  age: 22
+}
+```
+
+#### 24.2.4 优化DOM交互
+
+### 24.3 部署
+#### 24.3.1 构建过程
+#### 24.3.2 验证
+JSlint
+#### 24.3.3 压缩
+- 1.文件压缩
+- 2.http压缩
+
+### 24.4 小结
