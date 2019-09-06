@@ -2944,10 +2944,11 @@ FileReader类型实现的是一种异步文件读取机制
 
 使用FormData类型很容易就做到了
 ```js
-var target = docuemnt.getElementById('form-file')
+var target = document.getElementById('form-file')
 function handleEvent(event) {
-  var data = new Data()
-  files = event.dataTransfer.files
+  var data = new FormData()
+  files = target.files
+  var i = 0
   while (i < files.lenght) {
     data.append("file" + i, files[i])
     i++
@@ -2962,3 +2963,24 @@ function handleEvent(event) {
   xhr.send(data)
 }
 ```
+当然，也可以使用h5提供的拖拽事件上传文件
+
+### 25.5 Web计时
+Web计时的核心是window.performance对象
+
+performance.navigation/time 等等属性
+
+### 25.6 Web Workers
+解决js加载阻塞问题
+#### 25.6.1 使用Worker
+#### 25.6.2 Worker全局作用域
+#### 25.6.3 包含其他脚本
+#### 25.6.1 Web Workers的未来
+
+### 25.7 小结
+- requestAnimationFrame()
+- Page Visibility API
+- GeoLocation API
+- File API
+- Web Timing
+- Web Workers

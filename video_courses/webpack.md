@@ -167,6 +167,9 @@ less-loader，less-loader在处理less文件时，use选项时要写到最后(�
 
 `optimization.splitChunks ` ~~`CommonsChunkPlugin`~~  production环境默认开启
 
+是webpack的内置插件，只需要配置一下即可开启代码分割
+
+
 ~~减少公共代码重复引用，减小打包体积，会打包出一个公用的chunk包，使用插件CommonsChunkPlugin，是webpack自带的optimize(优化)插件，配置options见官网~~
 
 代码分割：将不同用途的公用代码提取至不同bundle，并用options的chunk选项配置要提取的范围，在webpack4中被移除，取而代之的是SplitChunksPlugin（官网）
@@ -178,7 +181,13 @@ less-loader，less-loader在处理less文件时，use选项时要写到最后(�
 module.exports = {
     optimization: {
         splitChunks: {
-            chunks: 'async'
+            cacheGroups: {
+                vendors: {
+                    test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/, // Controls which modules are selected by this cache group
+                    name: 'vendor',  // 指定打包的名字
+                    chunks: 'all',  // This indicates which chunks will be selected for optimization
+                }
+            }
         }
     }
 }
