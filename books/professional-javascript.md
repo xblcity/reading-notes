@@ -24,6 +24,7 @@
 - [第23章 离线应用与客户端存储](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第23章-离线应用与客户端存储)
 - [第24章 最佳实践](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第24章-最佳实践)
 - [第25章 新兴的API](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#第25章-新兴的API)
+- [附录A ECMAScript Harmony](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md#附录A-ECMAScript-Harmony)
 
 :smile: :smiley: :innocent:
 
@@ -2984,3 +2985,43 @@ performance.navigation/time 等等属性
 - File API
 - Web Timing
 - Web Workers
+
+## 附录A ECMAScript Harmony
+即ES6的前身
+### A.1 一般性变化
+#### A.1.1 常量
+const
+#### A.1.2 块级作用域及其他作用域
+let...
+### A.2 函数
+#### A.2.1 剩余参数与分布参数
+剩余参数(rest arguments)。使用这种语法可以定义可能会传进来的更多参数，然后把它们收集到一个数组中。
+```js
+function sum(num1, num2, ...nums) {
+  var result = num1 + num2
+  for(let i = 0; i < nums.length; i++) {
+    result += nums[i]
+  }
+  return result
+}
+var result = sum(1,2,3,4,5)
+```
+定义了一个sum函数，至少接收两个参数，其余参数都将保存到nums数组中，与原来的arguments对象不同，剩余参数都保存在Array的一个实例中，因此可以使用任何数组方法来操作它们。另外，即使没有多余的参数传入函数，剩余参数对象也是Array的一个实例。
+
+与剩余参数紧密相关的另一种参数语法是分布参数(spread arguments)。通过分布参数，可以向函数中传入一个数组，然后数组中的元素会映射到函数的每个参数上。分布参数的语法形式与剩余参数的语法相同，就是在值的前面加三个点。唯一的区别是分布参数在调用函数的时候使用，而剩余参数在定义函数的时候使用。比如，我们可以不给sum()函数一个一个的传入参数，而是传入分布参数
+```js
+var result = sum(...[1,2,3,4,5])
+// 等同于
+var result = sum(1,2,3,4,5)
+```
+
+#### A.2.2 默认参数
+```js
+function sum(num1, num2 = 0) {
+  return num1 + num2
+}
+var result = sum(5)
+var result = sum(5, 5)
+```
+#### A.2.3 生成器
+所谓生成器，其实就是一个对象，它每次都能
