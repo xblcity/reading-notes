@@ -6,6 +6,7 @@
 ### 我看过的一些书
 - [Javascript高级程序设计(第三版)](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md)
 - [你不知道的javascript(上)]()
+- [深入理解ES6](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md)
 
 ### 我看过的一些小册子
 ### 我看过的一些视频课
