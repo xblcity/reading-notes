@@ -1068,7 +1068,7 @@ intervalId = setInterval(incrementNumber, 500)
 可以使用超时调用，模拟间歇调用，最好不要使用间歇调用
 
 #### 8.1.7 系统对话框
-`alert() confirm() prompt()`可以调用系统对话框向用户展示信息，外观由操作系统或浏览器决定，通过这几个方法打开的对话框都是同步和模态的，显示这些对话框的时候代码hui停止执行，关掉这些对话框代码又恢复执行  
+`alert() confirm() prompt()`可以调用系统对话框向用户展示信息，外观由操作系统或浏览器决定，通过这几个方法打开的对话框都是同步和模态的，显示这些对话框的时候代码会停止执行，关掉这些对话框代码又恢复执行  
 异步执行的对话框
 ```js
 window.print() // 打印
@@ -1142,6 +1142,7 @@ alert(hasPlugin('Chrome PDF Plugin'))
 
 ### 8.4 screen对象
 获取的是设备屏幕相关属性
+
 | 属性 | 说明
 | -------- | ---------
 | width |
@@ -1183,7 +1184,8 @@ Mozilla/版本号 [语言] (平台：加密类型)
 ![文档树解构](../images/pro_js/document_tree.jpg)
 
 #### 10.1.1 Node类型
-*nodeName和nodeValue属性*  
+*nodeName, nodeType, nodeValue属性*   
+nodeName是大写如`LI``DIV`,但是document除外，nodeType为1说明是元素节点
 节点关系使用childNodes属性，其中包含一个NodeList对象，类数组对象，可以使用`Array.prototype.slice(xxx, 0)` 或`Array.from()`将其转换成数组对象  
 每个节点都有parentNode, previousSibling, nextSibling属性  
 父节点的firstChild和 lastChild分别指向父节点的第一个和最后一个节点
@@ -1471,7 +1473,7 @@ attachEvent, detachEvent, 两个参数，第一个参数加on
 | preventDefault  |  Function | 只读   | 取消事件默认行为，cancelable是true，可以使用这个方法
 | stopPropagation |  Function |  只读  |  取消事件的进一步捕获或冒泡，如果bubbles为true，可以使用这个方法
 | stopImmediatePropagation  |  Function  | 只读  |  取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用(DOM3级事件中新增)
-| target        | Element    | 只读    | 事件的目标
+| target        | Element    | 只读    | 事件的目标元素
 | type          |  String    |  只读   |  触发事件的类型
 
 在事件处理程序内部，对象this始终等于currentTarget的值，而target只包含事件的实际目标，如果直接将事件处理程序指定给了目标元素，则this, currentTarget, target包含相同的值
@@ -1852,6 +1854,10 @@ context.strokeRect(10, 10, 50, 50)
 | moveTo(x,y) | 将绘图游标移动到(x,y)，不画线
 | quadraticCurveTo(cx,cy,x,y) | 从上一点绘制一条二次曲线，到(x,y)为止，并且以(cx,cy)为控制点
 | rect(x,y,width,height) | 从点(x,y)开始绘制一个矩形，这个方法绘制的是矩形路径，而不是strokeRect()和fillRect()所绘制的独立的形状
+| fill() |
+| fillStyle |
+| stroke() |
+| strokeStyle |
 
 创建路径之后，接下来有几种可能的选择，如果想绘制一条连接到路径起点的线条，可以调用closePath()，如果路径已经完成，你想用fillStyle()填充它，可以调用fill()方法。另外，还可以调用stroke()方法对路径进行描边，描边使用的是strokeStyle。最后还可以调用clip()，这个方法可以在路径上创建一个剪切区域。  
 
@@ -2279,6 +2285,7 @@ Ajax技术的核心是XMLHttpRequest对象，简称XHR
 发送异步请求时，可以检测XHR的readyState属性，该属性表示请求/响应过程的当前活动阶段  
 
 | 值 | 说明
+| --- | --- 
 | 0 | 未初始化
 | 1 | 启动，已调用open()方法，但尚未调用send()方法
 | 2 | 发送，已调用send()方法，但尚未收到响应
