@@ -838,7 +838,7 @@ var object = {
 }
 alert(object. getNameFunc()()) 
 ```
-在定义匿名函数之前，我们把this对象赋给了一个名叫that的变量，即使在函数返回之后，闭包也可访问这个变量，  
+在定义匿名函数之前，我们把this对象赋给了一个名叫that的变量，即使在函数返回之后，**闭包**也可访问这个变量，  
 通过`that = this`这个赋值语句，匿名函数的活动对象的变量`that`引用着`getNameFunc()`，因此，匿名函数的执行环境就延伸到了`getNameFunc()`，因此可以获得`getNameFunc`的`this`变量  
 
 > 在几种特殊的情况下，this的值可能会意外的改变
@@ -1004,7 +1004,7 @@ screenX screenY ?
 
 #### 8.1.4 窗口大小
 ```js
-innerHeight innerWidth
+innerHeight innerWidth // 页面可视部分
 outerHeight outerWidth
 调整窗口 window.resizeTo(100, 100) ?
 ```
@@ -1035,7 +1035,7 @@ setTimeout(function() {
 ```
 setTimeout第二个参数是一个表示等待多长事件的毫秒数，但经过该时间的指定的代码并不一定会执行，js是单线程解释器，因此一段时间只能执行一段代码，为了控制要执行的代码，就有一个javascript任务队列，这些任务会按照它们被添加的顺序执行，setTimeout第二个参数告诉js再过多长时间把当前任务添加的js任务队列，如果队列是空的，那么添加的代码会立即执行，如果队列不是空的，那么它就要等前面的代码执行完了以后再执行  
 
-调用setTimeout之后，该方法会返回一个数值ID，这个超时ID是计划执行代码的唯一标识符，可以通过它取消超时调用。要取消尚未调用的超时调用计划，可以调用clearTimeout()方法并将相应的超时ID作为参数传递给它
+调用setTimeout之后，该方法会return一个数值ID，这个超时ID是计划执行代码的唯一标识符，可以通过它取消超时调用。要取消尚未调用的超时调用计划，可以调用clearTimeout()方法并将相应的超时ID作为参数传递给它
 ```js
 // 设置超时调用
 var timeId = setTimeout(function() {
@@ -1141,7 +1141,7 @@ alert(hasPlugin('Chrome PDF Plugin'))
 #### 8.3.2 注册处理程序
 
 ### 8.4 screen对象
-获取的是设备屏幕相关属性
+获取的是**设备**屏幕相关属性
 
 | 属性 | 说明
 | -------- | ---------
