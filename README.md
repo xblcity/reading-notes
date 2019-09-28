@@ -1,7 +1,5 @@
 # reading-notes
-为了标记一些看过的书，记录一点笔记~
-
-时常看一看，不至于忘得太快~~
+看过的一些纸质级电子书的读书笔记
 
 ### 我看过的一些书
 - [Javascript高级程序设计(第三版)](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md)
