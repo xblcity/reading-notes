@@ -246,3 +246,49 @@ emmiter.emit('event1, 'i am message')
 ### 4.4 异步并发控制
 ### 4.5 总结
 本章主要介绍了异步编程的几种解决方案，如事件发布/订阅，Promsie等
+
+## 第五章 内存控制
+### 5.1 V8的垃圾回收机制和内存限制
+新生代内存与老生代内存
+
+### 5.2 高效使用内存
+#### 5.2.1 作用域
+```js
+var foo = function() {
+  var local = {}
+}
+```
+函数在被调用时会创建对应的作用域，函数执行完毕后，该作用域会被销毁。同时函数作用域内的局部变量分配在该作用域上，随作用域的销毁而销毁。只被局部变量引用的对象存活周期较短，在这个示例中，由于对象非常小，将会分配在新生代的From空间中，在作用域释放后，局部变量local失效，其引用的对象将会在下次垃圾回收时被释放。  
+以上就是基本的内存回收过程
+
+### 5.2.2 闭包
+作用域链上的对象只能向上，这样外部无法向内部访问。如
+```js
+var foo = function() {
+  var local = '局部变量'
+  (function() {
+    console.log(local)
+  }())
+}
+
+var bar = funciton() {
+  (function() {
+    var local = '局部变量'
+  }())
+  console.log(local)
+}
+```
+在js中，实现外部作用域访问内部作用域中变量的方法叫做闭包(closure)，这得益于高阶函数这个特性：函数可以作为参数或者返回值，示例代码如下：
+```js
+var foo = function() {
+  var bar = function() {
+    var local = '局部变量'
+    return function() {
+      return local
+    }
+  }
+  var baz = bar() // bar函数引用了local变量，使得bar的作用于一直存在
+  console.log(baz()) // local
+}
+```
+一般儿
