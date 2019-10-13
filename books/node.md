@@ -231,7 +231,7 @@ Node是为了解决编程模型中阻塞I/O的性能问题的
 - 多线程编程
 
 ### 4.3 异步编程解决方案
-事件发布/订阅模式
+1.事件发布/订阅模式
 ```js
 // 订阅
 emmiter.on('event1', function() {})
@@ -239,3 +239,10 @@ emmiter.on('event1', function() {})
 emmiter.emit('event1, 'i am message')
 ```
 如果事件是侦听器过多，可能存在过多占用CPU的情况
+
+2.Promise
+3.async
+
+### 4.4 异步并发控制
+### 4.5 总结
+本章主要介绍了异步编程的几种解决方案，如事件发布/订阅，Promsie等
