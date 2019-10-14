@@ -3,9 +3,6 @@
 - [第二章 Node简介](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第二章-模块机制)
 
 ## 第一章 Node简介
-### 1.1 Node的诞生历程
-### 1.2 Node的命名与起源
-### 1.3 Node给Javascript带来的意义
 ### 1.4 Node的特点
 #### 1.4.1 异步I/O
 I/O 即 Input/Output，即输入输出，异步I/O即即时Input不会立即得到Output  
@@ -119,7 +116,6 @@ js不断被类剧和抽象，以更好地组织业务逻辑，从另一个角度
 在其他高级语言中，Java有类文件，Python有import机制，Ruby有require，PHP有include和requrie，而js通过`<script>`标签引入代码的方式显得杂乱无章，语言自身毫无组织和约束能力。人们不得不用命名空间等方式人为地约束代码，以求达到安全和易用的目的
 
 ### 2.1 CommonJS规范
-#### 2.1.1 CommonJS的出发点
 #### 2.1.2 CommonJS的模块规范
 - 模块引用 `var math = require('math')`
 - 模块定义，使用`module.exports`导出当前模块的方法或变量
