@@ -291,4 +291,38 @@ var foo = function() {
   console.log(baz()) // local
 }
 ```
-一般儿
+// Todo
+
+### 5.3 内存指标
+查看进程的内存占用：process.memoryUsage()  
+查看系统的内存占用：os.totalmem()以及freemem()  
+Node的内存使用并非都是通过V8进行分配的，我们将那些不是通过V8分配的内存称为堆外内存。  
+Buffer对象不同于其他对象，它不经过V8的内存分配机制，所以也不会有堆内存的大小限制。
+
+### 5.4 内存泄漏
+造成内存泄漏的原因如下：缓存，队列消费不及时，作用域未释放
+#### 5.4.1 慎将内存当做缓存
+严格意义上缓存有着完善的过期策略，，而普通对象的键值对并没有  
+一个可能造成内存泄漏的场景，memoize，undescore的实现：
+```js
+_.memorize = function(func, hasher) {
+  var memo = {}
+  hasher || (hasher = _.identity)
+  return function() {
+    var key = hasher.apply(this,arguments)
+    return _.has(memo, key) ? memo[key] : (memo[key] = func.apply(this,arguments))
+  }
+}
+```
+这里潜藏的陷阱是每个被执行的结果都会按照参数缓存在memo对象上，不会被清除，这在前端网页这种短时应用场景中不存在大问题，但是执行量大和参数多样性的情况下，会造成内存占用不释放。  
+所以在Node中，任何视图拿内存当缓存的行为都应当被限制。
+
+### 5.5 内存泄漏排查
+使用工具定位Node应用的内存泄漏
+
+### 5.6 大内存应用
+Node提供了stream模块用于处理大文件，stream分为可读，可写两种   
+Node大多数模块都有stream的应用，比如fs的createReadStream()和createWriteStream()可以分别用于创建文件的可读流和可写流
+
+### 5.7 总结
+Node将js的主要应用场景扩散到了服务器端，需要考虑的细节也与浏览器不同，需要更严谨地为每一份资源作出安排
