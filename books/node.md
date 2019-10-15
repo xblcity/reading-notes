@@ -322,3 +322,28 @@ Node大多数模块都有stream的应用，比如fs的createReadStream()和creat
 
 ### 5.7 总结
 Node将js的主要应用场景扩散到了服务器端，需要考虑的细节也与浏览器不同，需要更严谨地为每一份资源作出安排
+
+## 第六章 理解Buffer
+文件和网络I/O对于前端开发者而言都是不曾有的应用场景。  
+由于应用场景不同，在Node中，应用需要处理网络协议，操作数据库，处理图片，接收上传文件等，在网络流和文件的操作中，还要处理大量二进制数据,js自带的字符串远远不能满足这些需求，于是Buffer对象应运而生。
+
+### 6.1 Buffer结构
+Buffer是一个像Array的对象，元素为16进制的两位数，即0-255的数值
+
+由于buffer太过常见，Node在进程开启时就已经加载了它，并将其放在全局对象(global)上，所以在使用buffer时，无需通过require()即可直接使用
+
+#### 6.1.3 beffer内存分配
+buffer对象内存匹配不是在V8的堆内存中，而是在Node的C++层面实现内存的申请的，Node在内存中使用的是C++层面申请内存，在js层面分配内存的策略
+
+Node以8KB为界限来区分Buffer是大对象还是小对象
+
+### 6.2 Buffer的转换
+字符串转buffer， `new Buffer(str, [encoding])` 第二个参数是编码模式，一般是UTF-8  
+buffer转字符串，`buf.toString([encoding], [start], [end])`
+
+### 6.3 Buffer的拼接
+
+### 6.4 Buffer与性能
+
+### 6.5 总结
+Buffer是二进制数据，字符串与Buffer之间存在编码关系
