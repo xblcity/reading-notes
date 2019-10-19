@@ -353,4 +353,74 @@ buffer转字符串，`buf.toString([encoding], [start], [end])`
 ### 6.5 总结
 Buffer是二进制数据，字符串与Buffer之间存在编码关系
 
-### 第七章 网络编程
+## 第七章 网络编程
+### 7.1 构建TCP服务
+目前大多数应用都是基于TCP搭建而成的
+#### 7.1.1 TCP
+TCP,Transmission Control Prototal,传输控制协议，在OSI模型中属于传输层协议。  
+OSI模型由七层组成：物理层，数据链结层，网络层，传输层，会话层，表示层，应用层
+#### 7.1.2 创建TCP服务器端
+服务器端即接收请求的一端
+```js
+var net = require('net')
+var server = net.createServer(function(socket) {
+  socket.on('data', function(data) {
+    socket.write('你好')
+  })
+
+  socket.on('end', function() {
+    console.log('连接断开')
+  })
+
+  socket.write('欢迎光临~')
+})
+server.listen(8000, function() {
+  console.log('server bound')
+})
+```
+出错，Unhandled 'error' event
+#### 7.1.3 TCP服务的事件
+##### 1.服务器事件
+通过net.createServer()创建的服务器而言，它是一个EventEmitter实例，有如下自定义事件  
+
+listening: 该事件在调用server.listen()绑定端口或者Domain Socket后出发，简洁写法为server.listen(port, listeningListener)，通过listen()方法的第二个参数传入。  
+connection:该事件在每个**客户端**连接到服务器端时触发，简洁写法为通过net.createServer()，最后一个参数传递  
+close: 该事件在服务器关闭时触发，在调用server.close()后，服务器将停止接收新的套接字连接，但保护当前存在的连接，等待所有连接都断开后，会触发该事件。  
+error: 该事件在服务器发生异常时，将会触发该事件，比如侦听一个使用中的端口，将会触发一个异常，如果不侦听error事件，服务器将会抛出异常。
+
+##### 2.连接事件
+服务器可以同时与多个客户端保持连接，对于每个连接而言是典型的可读可写Stream对象。Stream对象可以用于服务器端和客户端之间的通信，既可以通过data事件从一段读取另一端发来的数据，也可以通过write()方法从一端向另一端发送数据。它有如下自定义事件。  
+data: 当一端调用write()发送数据时，另一端会触发data事件，事件传递的数据即是write()发送的数据  
+end: 当连接中的任意一端发送了FIN数据时，将会触发该事件。  
+connect: 该事件用于客户端，当套接字与服务器连接成功时会被触发  
+drain: 当任意一端调用write()发送数据时，当前这端会触发该事件  
+error: 当异常发生时，会触发该事件。  
+close: 放套接字完全关闭时，触发该事件。  
+timeout：当一定事件后连接不再活跃时，该事件将会被触发，通知用户当前该连接已经被闲置了。  
+
+另外，由于TCP套接字是可读可写的Stream对象，可以利用pipe()方法巧妙地实现管道操作，如下代码实现了一个echo服务器：  
+```js
+var net = require('net')
+var server = net.createServer(function(socket) {
+  socket.write('Echo server')
+  socket.pipe(socket)
+})
+server.listen(1337, '127.0.0.1')
+```
+
+### 7.2 构建UDP服务
+// Todo
+
+### 7.3 构建HTTP服务
+TCP和UDP都属于网络传输层协议，如果要构建高效地网络应用，就应该从传输层着手。但是对于经典的应用场景，则无需从传输层协议入手构造自己的应用，比如HTTP或SMTP等，这些经典的应用层协议对于普通应用而言绰绰有余。Node提供了基本的http和https模块用于HTTP和HTTPS的封装，对于其他应用层协议的封装，也能从社区中轻松找到其实现。  
+实现一个HTTP服务器极其容易，代码如下：
+```js
+var http = require('http')
+http.createServer(function(req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'})
+  res.end('Hello World')
+}).listen(1337, function() {
+  console.log('server start')
+})
+```
+#### 7.3.1 HTTP
