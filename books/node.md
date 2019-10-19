@@ -1,6 +1,11 @@
 # 深入浅出node.js
 - [第一章 Node简介](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第一章-node简介)
 - [第二章 Node简介](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第二章-模块机制)
+- [第三章 异步I/O](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第三章-异步I/O)
+- [第四章 异步编程](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第四章-异步编程)
+- [第五章 内存控制](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第五章-内存控制)
+- [第六章 理解Buffer](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第六章-理解Buffer)
+- [第七章 网络编程](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第七章-网络编程)
 
 ## 第一章 Node简介
 ### 1.4 Node的特点
