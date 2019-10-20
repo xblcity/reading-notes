@@ -431,4 +431,19 @@ http.createServer(function(req, res) {
 #### 7.3.1 HTTP
 HyperText Transfer Protocol，超文本传输协议,HTTP构建在TCP之上，属于应用层协议，在HTTP的两端是服务器和浏览器，即著名的B/S模式，如今精彩纷呈的Web即是HTTP的应用。(app也是HTTP应用)
 
-现在的应用，如浏览器，其实是一个HTTP的代理，用户的行为将会通过它转换为HTTP请求报文发送给服务器端，服务器端在处理请求后，发送响应报文给代理，代理在解析报文后，将用户需要的内容呈现在界面上
+现在的应用，如浏览器，其实是一个HTTP的代理，用户的行为将会通过它转换为HTTP请求报文发送给服务器端，服务器端在处理请求后，发送响应报文给代理，代理在解析报文后，将用户需要的内容呈现在界面上。
+
+在linux命令行，可以使用 curl发送get请求  
+// HTTP报文，todo
+#### 7.3.2 http模块
+在Node中,HTTP服务继承自TCP服务(net模块),它能够与多个客户端保持连接，由于其采用事件驱动的形式，并不为每一个连接创建额外的线程或进程，保持很低的内存占用，所以能实现高并发。HTTP服务于TCP服务模型由区别的地方在于，在开启keeplive后，一个TCP会话可以用于多次请求和相应，TCP服务以connnection为单位进行u、服务，HTTP服务以request为单位进行服务，http模块即使将connection到request的过程进行了封装。  
+在请求产生的过程中，http模块那大连接中传来的数据，调用二进制模块http_parser进行解析，在解析完请求报文的报头后，触发request事件，调用用户的业务逻辑
+
+**HTTP请求**  
+req.method: 请求方法，值为GET，POST,DELETE,PUT.CONNECT等  
+req.url：/等  
+req.httpVersion: 1.1等  
+其余报头会议上股个别规律的key:value格式，在解析后方盒子在req.headers属性上传递给业务逻辑以供调用
+
+**HTTP响应**  
+响应头部信息的API：req.setHead, req.setHeader
