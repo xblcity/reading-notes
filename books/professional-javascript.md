@@ -1080,16 +1080,16 @@ window.find() // 查找页面中的值
 ### 8.2 location对象
 location对象是一个很特别的对象，因为它既是window对象的属性，也是document对象的属性    
 
-| 属性名 | 例子 | 说明 
-| ----- | ---------- | ------------- 
-| hash  | #mine |
-| host  | m.com:80 |
-| hostname | m.com |
-| href | m.com/user |
-| pathname | /user |
-| port | 80 |
-| protocol | http: |
-| search | ?name=li |
+| 属性名 | 例子 | 说明  |
+| ----- | ---------- | -------------  |
+| hash  | #mine | |
+| host  | m.com:80 | |
+| hostname | m.com | |
+| href | m.com/user | |
+| pathname | /user | |
+| port | 80 | |
+| protocol | http: | |
+| search | ?name=li | |
 
 #### 8.2.1 查询字符串参数
 search属性并不能逐个访问其中的每个查询字符串参数，我们可以创建一个函数，用以解析查询字符串，然后返回包含所有参数的一个对象
@@ -1121,10 +1121,10 @@ location.href, hash, host, hostname, port, search 等等都会在浏览器产生
 `reload` 可以重新加载当前页面
 
 ### 8.3 navigator对象
-|属性或方法  | 说明
-|--------- | ---------
-| userAgent | 浏览器的用户代理字符串
-|... | ...
+|属性或方法  | 说明 |
+|--------- | --------- |
+| userAgent | 浏览器的用户代理字符串 |
+|... | ... |
 
 #### 8.3.1 检测插件
 ```js
@@ -1145,10 +1145,10 @@ alert(hasPlugin('Chrome PDF Plugin'))
 ### 8.4 screen对象
 获取的是**设备**屏幕相关属性
 
-| 属性 | 说明
-| -------- | ---------
-| width |
-| height |
+| 属性 | 说明 |
+| -------- | --------- |
+| width | |
+| height | |
 
 ### 8.5 history对象
 ```js
@@ -1465,18 +1465,18 @@ attachEvent, detachEvent, 两个参数，第一个参数加on
 只有在事件处理程序执行期间，event
 
 #### 13.3.1 DOM中的事件对象
-| 属性/方法      |  类型      | 读/写   | 说明
-| -------       | ---------- | ----------- | ---------
-| bubbles       |  Boolean   |  只读   | 表示事件是否冒泡
-| cancelable    | Boolean    |  只读   |  表示是否可以取消事件的默认行为
-| currentTarget | Element    |  只读   | 其事件处理程序当前正在处理事件的那个元素
-| detail        |  Integer   |  只读   |  与事件相关的细节信息
-| eventPhase    | Integer    |  只读   | 调用事件处理程序的阶段，1表示捕获，2表示处理目标，3表示冒泡阶段
-| preventDefault  |  Function | 只读   | 取消事件默认行为，cancelable是true，可以使用这个方法
-| stopPropagation |  Function |  只读  |  取消事件的进一步捕获或冒泡，如果bubbles为true，可以使用这个方法
-| stopImmediatePropagation  |  Function  | 只读  |  取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用(DOM3级事件中新增)
-| target        | Element    | 只读    | 事件的目标元素
-| type          |  String    |  只读   |  触发事件的类型
+| 属性/方法      |  类型      | 读/写   | 说明 |
+| -------       | ---------- | ----------- | --------- |
+| bubbles       |  Boolean   |  只读   | 表示事件是否冒泡 |
+| cancelable    | Boolean    |  只读   |  表示是否可以取消事件的默认行为 |
+| currentTarget | Element    |  只读   | 其事件处理程序当前正在处理事件的那个元素 |
+| detail        |  Integer   |  只读   |  与事件相关的细节信息 |
+| eventPhase    | Integer    |  只读   | 调用事件处理程序的阶段，1表示捕获，2表示处理目标，3表示冒泡阶段 |
+| preventDefault  |  Function | 只读   | 取消事件默认行为，cancelable是true，可以使用这个方法 |
+| stopPropagation |  Function |  只读  |  取消事件的进一步捕获或冒泡，如果bubbles为true，可以使用这个方法 |
+| stopImmediatePropagation  |  Function  | 只读  |  取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用(DOM3级事件中新增) |
+| target        | Element    | 只读    | 事件的目标元素 |
+| type          |  String    |  只读   |  触发事件的类型 |
 
 在事件处理程序内部，对象this始终等于currentTarget的值，而target只包含事件的实际目标，如果直接将事件处理程序指定给了目标元素，则this, currentTarget, target包含相同的值
 ```js
@@ -1630,13 +1630,13 @@ list.addEventListener("click", function(event) {
 ### 14.1 表单的基本知识
 在HTML中，表单是由`<form>`元素来表示的，而在javascript中，表单对应的是HTMLFormElement类型，HTMLFormElement继承了HTMLElement，因而与其他HTML元素有相同的默认属性，但是,HTMLFormElement也有自己独有的方法和属性  
 
-| 属性/方法 |  说明 
-| ------  | ------
-| action  |  接收请求的URL
-| method  |  要发送的HTTP请求类型，通常是get或者post
-| name    |  表单的名称
-| submit() | 提交表单
-| reset()  | 将所有表单域重置为默认值
+| 属性/方法 |  说明  |
+| ------  | ------ |
+| action  |  接收请求的URL |
+| method  |  要发送的HTTP请求类型，通常是get或者post |
+| name    |  表单的名称 |
+| submit() | 提交表单 |
+| reset()  | 将所有表单域重置为默认值 |
 
 #### 14.1.1 提交表单
 使用input或者button都可以定义提交按钮，只要把type设置为submit即可
@@ -1662,12 +1662,12 @@ form.submit() // 不会触发submit事件，
 
 #### 14.1.3 表单字段
 ###### 1.共有的表单字段属性
-|  属性  |  作用
-|  ----- | ------
-| disabled | 布尔值，当前字段是否被禁用
-| name    | 当前字段的属性
-| type  |  当前字段的类型
-| value  | 当前字段被提交给服务器的值，对文件字段来说，这个属性是只读的，包含着文件在计算机中的路径
+|  属性  |  作用 |
+|  ----- | ------ |
+| disabled | 布尔值，当前字段是否被禁用 |
+| name    | 当前字段的属性 |
+| type  |  当前字段的类型 |
+| value  | 当前字段被提交给服务器的值，对文件字段来说，这个属性是只读的，包含着文件在计算机中的路径 |
 
 也可以通过js动态修改属性值
 ```js
@@ -1722,14 +1722,14 @@ textbox.addEventListener('keypress', function(event) {
 })
 ```
 ###### 1.操作粘贴板
-| 剪贴板事件 | 作用
-| --------   | ------
-| beforecopy | 复制操作前触发
-| copy       | 发生复制时触发
-| beforecut  | 发生剪切操作前触发
-| cut        |
-| beforepaste|
-| paste      |
+| 剪贴板事件 | 作用 |
+| --------   | ------ |
+| beforecopy | 复制操作前触发 |
+| copy       | 发生复制时触发 |
+| beforecut  | 发生剪切操作前触发 |
+| cut        | |
+| beforepaste| |
+| paste      | |
 
 #### 14.2.3 自动切换焦点
 在用户填写完当前字段，自动将焦点切换到下一字段  
@@ -1847,19 +1847,19 @@ context.strokeRect(10, 10, 50, 50)
 #### 15.2.3 绘制路径
 通过路径可以创建复杂的形状和线条，要绘制路径，首先要调用beginPath()方法，然后再调用下列方法实际的绘制路径  
 
-|  方法  |  作用
-|  ----- | -------
-| arc(x,y,radius,startAngle,endAngle,counterclockwise) | 以(x,y)为圆心绘制弧线，半径为radius，设置起始终止角，最后一个是否按逆时针计算，false表示顺时针
-| arcTo(x1,y1,x2,y2,radius) | 从上一点开始绘制一条弧线，到(x2,y2)为止，并且以给定的半径radius穿过(x1,y1)
-| bezierCurveTo(clx,cly,c2x,c2y,x,y) | 从上一点开始绘制一条曲线，到(x,y)为止，并且(c1x,c1y)和(c2x,c2y)为控制点
-| lineTo(x,y) | 从上一点绘制一条直线，到(x,y)为止
-| moveTo(x,y) | 将绘图游标移动到(x,y)，不画线
-| quadraticCurveTo(cx,cy,x,y) | 从上一点绘制一条二次曲线，到(x,y)为止，并且以(cx,cy)为控制点
-| rect(x,y,width,height) | 从点(x,y)开始绘制一个矩形，这个方法绘制的是矩形路径，而不是strokeRect()和fillRect()所绘制的独立的形状
-| fill() |
-| fillStyle |
-| stroke() |
-| strokeStyle |
+|  方法  |  作用 |
+|  ----- | ------- |
+| arc(x,y,radius,startAngle,endAngle,counterclockwise) | 以(x,y)为圆心绘制弧线，半径为radius，设置起始终止角，最后一个是否按逆时针计算，false表示顺时针 |
+| arcTo(x1,y1,x2,y2,radius) | 从上一点开始绘制一条弧线，到(x2,y2)为止，并且以给定的半径radius穿过(x1,y1) |
+| bezierCurveTo(clx,cly,c2x,c2y,x,y) | 从上一点开始绘制一条曲线，到(x,y)为止，并且(c1x,c1y)和(c2x,c2y)为控制点 |
+| lineTo(x,y) | 从上一点绘制一条直线，到(x,y)为止 |
+| moveTo(x,y) | 将绘图游标移动到(x,y)，不画线 |
+| quadraticCurveTo(cx,cy,x,y) | 从上一点绘制一条二次曲线，到(x,y)为止，并且以(cx,cy)为控制点 |
+| rect(x,y,width,height) | 从点(x,y)开始绘制一个矩形，这个方法绘制的是矩形路径，而不是strokeRect()和fillRect()所绘制的独立的形状 |
+| fill() | |
+| fillStyle | |
+| stroke() | |
+| strokeStyle | |
 
 创建路径之后，接下来有几种可能的选择，如果想绘制一条连接到路径起点的线条，可以调用closePath()，如果路径已经完成，你想用fillStyle()填充它，可以调用fill()方法。另外，还可以调用stroke()方法对路径进行描边，描边使用的是strokeStyle。最后还可以调用clip()，这个方法可以在路径上创建一个剪切区域。  
 
@@ -1987,24 +1987,24 @@ HTML5规定dataTransfer对象还包含下面属性和方法...
 `<audio>与<video/>`  
 
 #### 16.3.1 属性
-| 属性值 | 作用
-| ----   | ----
-| src   |
-| width  | 
-| height | 
-| poster | 加载内容时显示一幅图像
-| autoplay |  
-| controls  | 是否显示控件
-| readyState | 表示媒体是否就绪了
-| ... | ...
+| 属性值 | 作用 |
+| ----   | ---- |
+| src   | |
+| width  |  |
+| height |  |
+| poster | 加载内容时显示一幅图像 |
+| autoplay |   |
+| controls  | 是否显示控件 |
+| readyState | 表示媒体是否就绪了 |
+| ... | ... |
 
 #### 16.3.2 事件
-| 事件  |  触发时机
-| ----  | ------
-| canplay | 可以播放时，readyState是2
-| play  |  媒体接收指令开始播放
-| playing | 媒体已实际开始播放
-| ... | ...
+| 事件  |  触发时机 |
+| ----  | ------ |
+| canplay | 可以播放时，readyState是2 |
+| play  |  媒体接收指令开始播放 |
+| playing | 媒体已实际开始播放 |
+| ... | ... |
 
 #### 16.3.3 自定义媒体播放器
 play和pause方法可以手动控制媒体文件的播放
@@ -2064,15 +2064,15 @@ function testFinally() {
 ###### 2. 错误类型
 7种错误类型(构造函数)  
 
-| 错误类型
-| -----
-| Error
-| EvalError
-| RangeError
-| ReferenceError
-| SyntaxError
-| TypeError
-| URIError
+| 错误类型 |
+| ----- |
+| Error |
+| EvalError |
+| RangeError |
+| ReferenceError |
+| SyntaxError |
+| TypeError |
+| URIError |
 
 ```js
 try {
@@ -2279,20 +2279,20 @@ Ajax技术的核心是XMLHttpRequest对象，简称XHR
 
 在收到响应后，响应数据会自动填充XHR对象的属性，相关属性如下  
 
-| 属性  | 说明
-| ----  | ------
-| responseText  | 返回的文本
-| status  |  响应的HTTP状态
+| 属性  | 说明 |
+| ----  | ------ |
+| responseText  | 返回的文本 |
+| status  |  响应的HTTP状态 |
 
 发送异步请求时，可以检测XHR的readyState属性，该属性表示请求/响应过程的当前活动阶段  
 
-| 值 | 说明
-| --- | --- 
-| 0 | 未初始化
-| 1 | 启动，已调用open()方法，但尚未调用send()方法
-| 2 | 发送，已调用send()方法，但尚未收到响应
-| 3 | 接收，已收到部分响应数据
-| 4 | 完成。已经接收到全部响应数据，而且已经可以在客户端使用了
+| 值 | 说明 |
+| --- | ---  |
+| 0 | 未初始化 |
+| 1 | 启动，已调用open()方法，但尚未调用send()方法 |
+| 2 | 发送，已调用send()方法，但尚未收到响应 |
+| 3 | 接收，已收到部分响应数据 |
+| 4 | 完成。已经接收到全部响应数据，而且已经可以在客户端使用了 |
 
 只要readyState属性的值由一个值变成另一个值，就会触发一次readystatechange事件，可以用这个事件来检测每次状态变化之后的readyState的值，通常我们只对readyState为4的值感兴趣
 ```js
@@ -2311,17 +2311,17 @@ xhr.send(null)
 ```
 
 #### 21.1.2 HTTP头部信息
-| 值 | 说明
-| ----- | -----
-| Accept | 浏览器能够处理的内容类型
-| Accept-Charset |
-| Accept-Encoding |
-| Accept-Language | 
-| Connection | 浏览器与服务器之间的连接类型
-| Cookie | 当前页面设置的任何cookie
-| Host | 发出请求的页面所在的域
-| Referer |
-| User-Agent | 浏览器的用户代理字符串
+| 值 | 说明 |
+| ----- | ----- |
+| Accept | 浏览器能够处理的内容类型 |
+| Accept-Charset | |
+| Accept-Encoding | |
+| Accept-Language |  |
+| Connection | 浏览器与服务器之间的连接类型 |
+| Cookie | 当前页面设置的任何cookie |
+| Host | 发出请求的页面所在的域 |
+| Referer | |
+| User-Agent | 浏览器的用户代理字符串 |
 
 在调用`open`之后`send`之前调用`setRequestHeader`
 
@@ -2440,12 +2440,12 @@ var socket = new WebSocket("city.com")
 同源策略对websocket不适用，因此可以通过它打开到任何站点的连接，至于是否会与某个域中的页面通信，则完全取决于服务器  
 
 WebSocket也有一个表示当前状态的readyState属性   
-| 值  |  说明
-| ----- | ------
-| WebSocket.OPENING(0) | 正在建立连接
-| WebSocket.OPEN(1) | 已经建立连接
-| WebSocket.CLOSING(2) | 正在关闭连接
-| WebSocket.CLOSE(3) | 已经关闭连接
+| 值  |  说明 |
+| ----- | ------ |
+| WebSocket.OPENING(0) | 正在建立连接 |
+| WebSocket.OPEN(1) | 已经建立连接 |
+| WebSocket.CLOSING(2) | 正在关闭连接 |
+| WebSocket.CLOSE(3) | 已经关闭连接 |
 
 关闭WebSocket 连接，使用`close()`方法  
 
@@ -2654,16 +2654,16 @@ Set-Cookie: name=value
 
 cookie组成  
 
-| 值 | 说明
-| ---  | ----
-| 名称(name) |
-| 值(value) |
-| 域(domain) | 即域名
-| 路径(path) | 通常是 /
-| 失效时间(Expires/Max-Age) | 
-| 大小(size) |
-| HttpOnly | 是否只能服务器修改
-| 安全(Secure) |
+| 值 | 说明 |
+| ---  | ---- |
+| 名称(name) | |
+| 值(value) | |
+| 域(domain) | 即域名 |
+| 路径(path) | 通常是 / |
+| 失效时间(Expires/Max-Age) |  |
+| 大小(size) | |
+| HttpOnly | 是否只能服务器修改 |
+| 安全(Secure) | |
 
 ```js
 Set-Cookie: name="name"; domain=cc.com; path=/; expires= Mon,22-Jan-07 07:10:10 GMT; secure; http-only
@@ -2678,12 +2678,12 @@ h5新增 sessionStorage localStorage 使用`setItem, removeItem, clearItem, getI
 storage事件，对storage对象进行任何修改都会触发storage事件  
 事件对象有下列属性：  
 
-| 值 | 说明
-| --- | ---
-| domain | 发生变化的存储空间的域名
-| key | 设置或者删除的域名
-| newValue | 如果是设置值，则是新值，如果是删除值，则是Null
-| oldValue | 键被更改之前的值
+| 值 | 说明 |
+| --- | --- |
+| domain | 发生变化的存储空间的域名 |
+| key | 设置或者删除的域名 |
+| newValue | 如果是设置值，则是新值，如果是删除值，则是Null |
+| oldValue | 键被更改之前的值 |
 
 storage限制一般是5M
 
@@ -2927,12 +2927,12 @@ var watchId = navigator.geolocation.watchPosition(function(position) {
 
 HTML5在DOM中为文件输入元素添加了一个files集合，在通过文件输入字段选择了一个或多个文件时，files集合中将包含一组File对象，每个File对象对应着一个文件，每个file对象都有下列只读属性
 
-| 值 | 说明
-| --- | ----
-| name | 本地文件系统中的文件名
-| size | 文件的字节大小
-| type | 字符串，文件的MIME类型
-| lastModifiedDate | 字符串，文件上一次被修改的时间
+| 值 | 说明 |
+| --- | ---- |
+| name | 本地文件系统中的文件名 |
+| size | 文件的字节大小 |
+| type | 字符串，文件的MIME类型 |
+| lastModifiedDate | 字符串，文件上一次被修改的时间 |
 
 通过侦听change事件
 ```js
