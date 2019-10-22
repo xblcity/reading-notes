@@ -452,4 +452,36 @@ req.httpVersion: 1.1等
 其余报头会议上股个别规律的key:value格式，在解析后方盒子在req.headers属性上传递给业务逻辑以供调用
 
 **HTTP响应**  
-响应头部信息的API：req.setHead, req.setHeader
+响应头部信息的API：req.setHead, req.setHeader  
+
+如同TCP服务一样，http服务器也抽象了一些时间，以供应用层使用，服务器也是一个EventEmitter实例。  
+connnection事件：在开始http请求和响应前，客户端与服务器端需要建立底层的TCP连接，这个连接可能因为开启了keep-alive，可以在多次请求响应之间使用，当这个连接建立时，服务器触发一次connection事件。  
+request事件：建立TCP连接后，http模块底层将在数据流中抽象出HTTP请求和HTTP响应，当强求数据发送到服务器端，在解析出HTTP请求头后，将会触发该事件，在res.end()后，TCP连接可能将用于下一次请求响应。  
+close事件：与TCPP服务器的行为一致。  
+checkContinue事件： 。。。  
+connect事件：  
+upgrade事件：  
+clientError事件
+#### 7.3.3 HTTP客户端
+即用于发送请求的一段，node模块提供的api为: http.request(options,connect),用于构造http客户端，与curl命令大致相同
+```js
+var options = {
+  hostname: '127.0.0.1',
+  port: 1334,
+  path: '/',
+  method: 'GET'
+}
+
+var req = http.request(options, function(res) {
+  console.log('STATUS', res.statusCode)
+  console.log('HEADERS', JSON.stringify(res.headers))
+  res.setEncoding('utf8')
+  res.on('data', function(chunk) {
+    console.log(chunk)
+  })
+}
+
+req.end()
+```
+
+### 7.4 构建WebSocket服务
