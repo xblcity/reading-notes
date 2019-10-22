@@ -10,7 +10,7 @@
 react的渲染逻辑和UI逻辑紧密结合在一起：事件如何被处理，状态如何改变，数据如何被展示
 在JS中描述UI较好的选择？
 #### USE JSX
-- 可以在JSX中放任何合法的JS表达式
+- 可以在JSX中放任何合法的JS表达式，需要加大括号
 - 对于HTML属性，使用驼峰语法
 - JSX语法通过babel-preset-env-react以及React.createElement()转换成vdom，即js对象格式
 ```js
@@ -19,7 +19,7 @@ const element = (
   <h1 className="greeting">
     Hello, world!
   </h1>
-);
+);  // jsx元素加不加括号有什么区别？
 // 经过babel
 const element = React.createElement(
   'h1',
@@ -74,7 +74,7 @@ ReactDOM.render(
 - 组件尽可能拆分成更小的可复用的组件
 - props是只读的，不要去改变它，把它当作纯函数对待
 
-## State and Lifecycle
+### State and Lifecycle
 以时钟组件为例，如何改变视图而不是每次调用`ReactDOM.render`,首先需要把函数组件转换成class组件，class组件拥有render方法，也可以拥有自己的state，可以在class constructor中分配一个初始的this.state  
 这段代码做了什么呢？//ES6拓展
 ```js
@@ -156,14 +156,14 @@ function FormattedDate(props) {
 ```
 FormattedDate组件在props中会接收date并且不知道它是来自Clock的state还是Clock的props或是只是手打的，这种模式被称为自顶向下(top-down)或者单向(unidirectional)数据流,任何组件的数据派发只会影响在树形结构中它下面的组件，可以认为所有组件都是隔离的
 
-## Handling Events
+### Handling Events
 react元素中处理事件与DOM相似，但也有不同点
 - react事件使用驼峰命名法，而不是小写
 - 在jsx中需要传递一个函数作为事件处理函数，而不是一个字符串
 - 在html中你可以通过return false来阻止html元素的默认行为，但是在react中，需要通过`e.preventDefault()`, e是个合成事件，在react中遵从了W3C标准
 - 在jsx中不需要使用addEventListener()来为已经创建的dom绑定事件，相反，只需要提供一个事件按监听函数当元素首次被渲染后
 
-#### js回调函数中的this
+##### js回调函数中的this
 由于是window调用的事件处理程序函数，在class中，默认的this是Undefined，为了使得this表现的符合预期，推荐两种方式改变this指向：  
 1. bind，需要在constructor构造函数中绑定，或者在jsx事件按处理程序中进行绑定
 2. 使用箭头函数，这时的this是静态的，即指向class组件,在class内部定义，或者在回调函数中定义都可以
@@ -207,3 +207,28 @@ class LoggingButton extends React.Component {
 <button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
 ```
 以上两种方式是等价的，分别使用了使用箭头函数和Function.prototype.bind，在大多数情况下，e参数代表作为react事件的第二个参数(在ID之后)，在箭头函数中，我们显示的传递了，但是在使用Bind时，其他任何参数都会被自动转发
+
+### Conditional Rendering
+使用if或者条件运算符(三元表达式)或逻辑运算符&&，比如，用户登陆与未登录需要展示不同的UI，这时候就可以使用条件渲染  
+在jsx中使用表达式需要包裹大括号  
+return null 可以阻止组件渲染，但是组件仍然存在生命周期
+
+### Lists and Keys
+Keys帮助react辨别哪个item发生变化，被添加或者被移除。keys应当被赋予给数组里的元素，来给这些元素稳定的标识，一般使用string类型的字符串，不推荐使用数组index作为key，当数组发生变化时，react无法正确判断哪些item发生了变化，会影响正确渲染。  
+key作为react的一个提示，但是它们并不会传递给组件。  
+如果map()里面嵌套过多，也许是把它提取成组件的好时机
+
+### Forms
+HTML中的form元素与其他在react中的dom元素有些不同，因为这些form元素一般有着自己的内部状态
+
+#### Controlled Components
+在html中，form元素如`<input/>,<textarea/>,<select/>`等通常拥有自己的内部状态，并且会随着用户输入而更新，但在react中，更新视图的方法只有setState()   
+
+改成受控组件，对于<input/>, input的value来源应当是this.state.value，而通过input的onChange事件来setState()更改this.state并且更新UI
+
+对于<select/>, 在html中，用select属性表示当前被选中的项，在react中，使用value表示当前被选中的时哪一项，如`<select value={this.state.value} onChange={this.handleChange}/>`，当options为多选时，value可以是一个数组，如`<select multiple={true} value={['B', 'C']}`
+
+对于file input tag，由于它时只读的，所以它不是react的受控组件
+
+### Lifting State Up
+几个组件经常会被一个改变的数据源所影响，需要尽量把状态提升至它们最接近的共同祖先
