@@ -1,4 +1,6 @@
 # 深入浅出node.js
+> 该书不仅讲解了node.js方面的知识，对于增加网络层面的知识也有很大帮助，对前端开发来说，太棒了~
+
 - [第一章 Node简介](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第一章-node简介)
 - [第二章 Node简介](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第二章-模块机制)
 - [第三章 异步I/O](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第三章-异步I/O)
