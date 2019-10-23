@@ -8,7 +8,7 @@
 - [你不知道的javascript(上)]()
 
 ### 阅读文档
-- [react英文文档16.10.2](https://github.com/xblcity/reading-notes/blob/master/docs/react.md)git
+- [react英文文档16.10.2](https://github.com/xblcity/reading-notes/blob/master/docs/react.md)
 
 ### 我看过的一些小册子
 - [前端面试之道](https://github.com/xblcity/reading-notes/blob/master/booklet/fe-interview.md)

@@ -1,6 +1,6 @@
 # React Docs
 
-## MAIN CONCEPTS
+## 第一部分 MAIN CONCEPTS
 ### 1.Hello World
 
 ### 2.Introducing JSX
@@ -233,4 +233,257 @@ HTML中的form元素与其他在react中的dom元素有些不同，因为这些f
 对于file input tag，由于它时只读的，所以它不是react的受控组件
 
 ### 10.Lifting State Up
-几个组件经常会被一个改变的数据源所影响，需要尽量把状态提升至它们最接近的共同祖先
+几个组件经常会被一个改变的数据源所影响，需要尽量把状态提升至它们最接近的共同祖先  
+参考官方例子，比如`Calculator`组件包含多个`TemperatureInput`组件，多个`TemperatureInput`组件的input输入框的值同步改变，所以要把本来在`TemperatureInput`组件的state提升到`Calculator`组件中，由于传递给`TemperatureInput`的props是不能改变的，`TemperatureInput`组件中input值(即temperature)只能通过`this.setState()`改变，但是，temperature的值是通过父组件的props传递进来的，`TemperatureInput`组件无法控制它的值
+
+在react中，这通常可以通过让组件被控制解决，就像是DOM`<input/>`接受一个`value`和`onChange`prop，可以让TemperatureInput接受来自父组件`Calculate`的`temperature`和`onTemperatureChange` prop  
+现在，当`TemperatureInput`想要更改它的温度的时候，调用`this.props.onTemperatureChange`即可，如
+```js
+handleChange(e) {
+  this.props.onTemperatureChange(e.target.value)
+}
+```
+
+官方例子，what happens when you edit an input: // Todo
+
+### 11.Composition vs Inheritance
+##### Containment
+有些组件不会提前知道它的子组件，这些在那些如侧边栏(Sidebar)或者对话框(Dialog)等代表这通用的盒子比较常见。我们推荐使用特殊的prop`children`来把子元素当作输入直接传递给该组件，即`props.children`，当然，有时候你也可以把组件当作prop传递给容器组件，有点类似插槽(slots),如：
+```js
+function SplitPane(props) {
+  return (
+    <div className="SplitPane">
+      <div className="SplitPane-left">
+        {props.left}
+      </div>
+      <div className="SplitPane-right">
+        {props.right}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <SplitPane
+      left={
+        <Contacts />
+      }
+      right={
+        <Chat />
+      } />
+  );
+}
+```
+
+我们不推荐通过继承层次结构创建组件，如果想复用无UI的功能性代码，推荐把它提取成一个单独的js模块
+
+### 12.Thinking In React
+对于一个组件复杂组件  
+1. Break The UI Into A Component Hierarchy(将UI拆分成组件层次结构)   
+从UI的方面拆分组件
+
+2. Build A Static Version in React(在React中创建一个静态的版本)
+创建静态版本组件时，不要使用state，state只用于那些有互动性的组件，你可以自上而下或者自下向上创建组件，通常，自顶向下更容易，但在大的项目中，自下而上更容易书写和测试，对于那些可以复用的组件，一般只需要渲染逻辑就可以了(render方法)  
+
+3. Identify The Minimal (but complete) Representation Of UI State(识别UI state的最小(但完整)的表示) 
+
+如何正确构建应用，你需要考虑应用程序需要的最小可变状态，关键时DRY(Don't Repeat Yourself)，在上述例子中，我们有：  
+- 商品列表数据
+- 用户输入的搜索文字
+- checkbox的值
+- 被过滤后的商品列表
+
+每种数据需要做以下思考：  
+- 是否由父组件传入，如果是，那就不用state
+- 是否随着发生变化？如果不变化，那就不用state
+- 是否可以由其他的state或者prop计算得出，如果是，就不用state
+
+最后我们得出可以作为state的是，input输入值以及checkbox的值
+
+4. Identify Where Your State Should Live(判断你的state应该存放在哪里)
+记住，react只有一种自顶向下的数据流。  
+对于，每一个在应用中存在的state，你需要考虑以下几点：   
+- 组件的渲染是否依赖state
+- 找到一个可以分发这些state的组件
+- 在结构上处于较高部分的组件因该拥有state
+- 如果你不知道哪个组件要拥有状态，创建一个只拥有state的组件并把它放在结构组件的某一位置
+
+5. Add Inverse Data Flow(添加逆向数据流)
+现在需要以另一种方式支持数据流：表单组件的数据更新需要更新`FilterableProductTable`的state，react使数据明确化，与传统的双向数据绑定，确实需要更多的输入
+
+
+完整示例
+```js
+class ProductCategoryRow extends React.Component {
+  render() {
+    const category = this.props.category;
+    return (
+      <tr>
+        <th colSpan="2">
+          {category}
+        </th>
+      </tr>
+    );
+  }
+}
+
+class ProductRow extends React.Component {
+  render() {
+    const product = this.props.product;
+    const name = product.stocked ?
+      product.name :
+      <span style={{ color: 'red' }}>
+        {product.name}
+      </span>;
+
+    return (
+      <tr>
+        <td>{name}</td>
+        <td>{product.price}</td>
+      </tr>
+    );
+  }
+}
+
+class ProductTable extends React.Component {
+  render() {
+    const filterText = this.props.filterText;
+    const inStockOnly = this.props.inStockOnly;
+
+    const rows = [];
+    let lastCategory = null;
+
+    this.props.products.forEach((product) => {
+      if (product.name.indexOf(filterText) === -1) {
+        return;
+      }
+      if (inStockOnly && !product.stocked) {
+        return;
+      }
+      if (product.category !== lastCategory) {
+        rows.push(
+          <ProductCategoryRow
+            category={product.category}
+            key={product.category} />
+        );
+      }
+      rows.push(
+        <ProductRow
+          product={product}
+          key={product.name}
+        />
+      );
+      lastCategory = product.category;
+    });
+
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>{rows}</tbody>
+      </table>
+    );
+  }
+}
+
+class SearchBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleFilterTextChange = this.handleFilterTextChange.bind(this);
+    this.handleInStockChange = this.handleInStockChange.bind(this);
+  }
+
+  handleFilterTextChange(e) {
+    this.props.onFilterTextChange(e.target.value);
+  }
+
+  handleInStockChange(e) {
+    this.props.onInStockChange(e.target.checked);
+  }
+
+  render() {
+    return (
+      <form>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={this.props.filterText}
+          onChange={this.handleFilterTextChange}
+        />
+        <p>
+          <input
+            type="checkbox"
+            checked={this.props.inStockOnly}
+            onChange={this.handleInStockChange}
+          />
+          {' '}
+          Only show products in stock
+        </p>
+      </form>
+    );
+  }
+}
+
+class FilterableProductTable extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filterText: '',
+      inStockOnly: false
+    };
+
+    this.handleFilterTextChange = this.handleFilterTextChange.bind(this);
+    this.handleInStockChange = this.handleInStockChange.bind(this);
+  }
+
+  handleFilterTextChange(filterText) {
+    this.setState({
+      filterText: filterText
+    });
+  }
+
+  handleInStockChange(inStockOnly) {
+    this.setState({
+      inStockOnly: inStockOnly
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <SearchBar
+          filterText={this.state.filterText}
+          inStockOnly={this.state.inStockOnly}
+          onFilterTextChange={this.handleFilterTextChange}
+          onInStockChange={this.handleInStockChange}
+        />
+        <ProductTable
+          products={this.props.products}
+          filterText={this.state.filterText}
+          inStockOnly={this.state.inStockOnly}
+        />
+      </div>
+    );
+  }
+}
+
+
+const PRODUCTS = [
+  { category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football' },
+  { category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball' },
+  { category: 'Sporting Goods', price: '$29.99', stocked: false, name: 'Basketball' },
+  { category: 'Electronics', price: '$99.99', stocked: true, name: 'iPod Touch' },
+  { category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5' },
+  { category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7' }
+];
+
+ReactDOM.render(
+  <FilterableProductTable products={PRODUCTS} />,
+  document.getElementById('container')
+);
+```
