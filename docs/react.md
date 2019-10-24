@@ -1,6 +1,7 @@
 # React Docs
+> 官方文档是渐进式的，对于一步一步理解与使用React很有帮助
 
-## 第一部分 MAIN CONCEPTS
+## 第一部分 MAIN CONCEPTS (主要概念)
 ### 1.Hello World
 
 ### 2.Introducing JSX
@@ -537,3 +538,140 @@ ReactDOM.render(
   document.getElementById('container')
 );
 ```
+
+## 第二部分 ADVANCED GUIDES (高级指南)
+### Accessibility (易接近性？)
+- 在react中可以使用aria-xxx，帮助残障人士理解应用
+- 语义化的HTML
+- 无障碍表单
+- 焦点控制，以编程的方式控制焦点，需使用refs
+```js
+class CustomTextInput extends React.Component {
+
+  constructor(props) {
+    super(props);
+    // Create a ref to store the textInput DOM element
+    this.textInput = React.createRef();
+  }
+
+  focus() {
+    // Explicitly focus the text input using the raw DOM API
+    // Note: we're accessing "current" to get the DOM node
+    this.textInput.current.focus();
+  }
+
+  render() {
+  // Use the `ref` callback to store a reference to the text input DOM
+  // element in an instance field (for example, this.textInput).
+    return (
+      <input
+        type="text"
+        ref={this.textInput}
+      />
+    );
+  }
+}
+```
+再父组件中获取自组件的DOM
+```js
+function CustomTextInput(props) {
+  return (
+    <div>
+      <input ref={props.inputRef} />
+    </div>
+  );
+}
+
+class Parent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.inputElement = React.createRef();
+  }
+  render() {
+    return (
+      <CustomTextInput inputRef={this.inputElement} />
+    );
+  }
+}
+
+// Now you can set focus when required.
+this.inputElement.current.focus();
+```
+
+- 鼠标和指针事件，为window注册事件，当点击document时，移除某些状态
+- 更复杂的小组件：尽量使用html中的aria-xx属性
+- 其他考虑事项：设置语言，设置html文档标题，颜色对比
+- 开发和测试工具：如何更易近性
+
+### Code-Splitting
+代码分割，只有在需要的时候才会加载对应的bundle  
+
+- 使用import().then()异步加载，webpack使用了这种语法，但目前js并不支持(在提案中)
+- 使用React.lazy()和Suspense()(但是服务端渲染暂不支持，可以使用loadable)，Suspense可以放在任何你希望懒加载的地方
+
+##### 使用Suspense与懒加载
+- 为懒加载增加错误处理
+- 以路由为单位进行代码分割
+- React.lazy()只支持默认的导出
+
+### Context
+Context提供一种可以不通过props进行数据传递的方式  
+在React应用中，数据是通过props自上而下传递的，但是这在传递一些固定类型的props(如locale preference, UI theme)会比较麻烦，因为很多组件都会用到它，Context提供了一种方式可以共享值，但是不用通过树的每一层明确地传递props。
+嵌套传递prop theme
+```js
+class App extends React.Component {
+  render() {
+    return <Toolbar theme="dark" />;
+  }
+}
+
+function Toolbar(props) {
+  // The Toolbar component 必须要传递一个多余的prop "theme"
+  return (
+    <div>
+      <ThemedButton theme={props.theme} />
+    </div>
+  );
+}
+
+class ThemedButton extends React.Component {
+  render() {
+    return <Button theme={this.props.theme} />;
+  }
+}
+```
+使用Context
+```js
+const ThemeContext = React.createContext('light')
+
+class App extends React.component {
+  render() {
+    // 使用Provider为下面的组件提供 theme，所有在底下的组件都可以获取该值
+    <ThemeContext.Provider value="dark">
+      <Toolbar />
+    </ThemeContext.Provider>
+  }
+}
+
+// 不用传递多余的prop
+function Toolbar(props) {
+  return (
+    <div>
+      <ThemedButton />
+    </div>
+  );
+}
+
+class ThemedButton extends React.Component {
+  // 使用一个变量去读取当前的theme context
+  // React会去寻找最近的theme Provider
+  // React will find the closest theme Provider above and use its value.
+  // In this example, the current theme is "dark".
+  static contextType = ThemeContext;
+  render() {
+    return <Button theme={this.context} />;
+  }
+}
+```
+
+
