@@ -1,6 +1,7 @@
 # React Docs
+> 官方文档是渐进式的，对于一步一步理解与使用React很有帮助
 
-## 第一部分 MAIN CONCEPTS
+## 第一部分 MAIN CONCEPTS (主要概念)
 ### 1.Hello World
 
 ### 2.Introducing JSX
@@ -20,7 +21,7 @@ const element = (
     Hello, world!
   </h1>
 );  // jsx元素加不加括号有什么区别？ 好像是没有区别，都可以编译执行，()表现的更有可读性吧？
-// 经过babel
+// 经过babel转换
 const element = React.createElement(
   'h1',
   {className: 'greeting'},
@@ -37,8 +38,8 @@ const element = {
 ```
 
 ### 3.Rendering Elements
-element&components: components是由elements构成的
-把React element 转换成DOM node，需要使用`ReactDOM.render()`
+element与components的关系: components是由elements构成的   
+把React element 转换成真实的DOM node，需要使用`ReactDOM.render()`
 ```js
 const element = <h1>Hello, world</h1>;
 ReactDOM.render(element, document.getElementById('root'));
@@ -52,7 +53,7 @@ ReactDOM.render(element, document.getElementById('root'));
 ### 4.Components and Props
 Components使得你可以把组件划分成独立可复用的部分，并且可以单独考虑每个部分。  
 从概念上讲，组件就像是JS的函数，接收任意输入(称之为props)并且返回可以描述UI的React元素  
-react组件分为函数组件和class组件，组件首字母要大写，用于JSX的识别，是react component还是html element  
+react组件分为函数组件和class组件，组件首字母要大写，**用于babel的识别与转换**，babel对于HTML原生元素与React组件的转换结果是不同的。
 
 ```js
 function Welcome(props) {
@@ -165,13 +166,15 @@ react元素中处理事件与DOM相似，但也有不同点
 - 在jsx中不需要使用addEventListener()来为已经创建的dom绑定事件，相反，只需要提供一个事件监听函数当元素首次被渲染后
 
 ##### js回调函数中的this
-由于是window调用的事件处理程序函数，在class中，默认的this是Undefined，为了使得this表现的符合预期，推荐两种方式改变this指向：  
+在React中，在class中，事件处理函数中的this是Undefined(因为事件处理函数的方法提取出来调用了)，为了使得this表现的符合预期，推荐两种方式改变this指向：  
 1. bind，需要在constructor构造函数中绑定，或者在jsx事件按处理程序中进行绑定
-2. 使用箭头函数，这时的this是静态的，即指向class组件,在class内部定义，或者在回调函数中定义都可以
+2. 使用箭头函数，这时的this是静态的，即指向class类，在class内部定义，或者在事件处理函数中
+
+以下是使用箭头函数的两种不同方式
 ```js
 class LoggingButton extends React.Component {
-  // This syntax ensures `this` is bound within handleClick.
-  // Warning: this is *experimental* syntax.
+  // 此语法是ES6 class属性初始化语法，可参照 https://babeljs.io/docs/en/babel-plugin-proposal-class-properties
+  // 箭头函数中的this，是它在被定义时的所在函数的this，在这里是LoggingButton
   handleClick = () => {
     console.log('this is:', this);
   }
@@ -185,14 +188,15 @@ class LoggingButton extends React.Component {
   }
 }
 
-// 使用Bind指定this
+// 把事件处理函数改成箭头函数
 class LoggingButton extends React.Component {
   handleClick() {
     console.log('this is:', this);
   }
 
   render() {
-    // This syntax ensures `this` is bound within handleClick
+    // 这里存疑？
+    // onClick事件传入回调函数，回调函数是个箭头函数，window
     return (
       <button onClick={(e) => this.handleClick(e)}>
         Click me
@@ -209,6 +213,47 @@ class LoggingButton extends React.Component {
 <button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
 ```
 以上两种方式是等价的，分别使用了使用箭头函数和Function.prototype.bind，在大多数情况下，e参数代表作为react事件的第二个参数(在ID之后)，在箭头函数中，我们显示的传递了，但是在使用Bind时，其他任何参数都会被自动转发
+
+#### 补充一下在HTML中事件的this
+PS.在HTML中事件处理程序的this是window，对于DOM0级和DOM2级事件绑定来说，回调函数中的this是绑定事件的DOM元素，比如
+```js
+<button onclick="check()">按钮1</button>  // 事件处理程序内容可以是一个js函数，也可以是js代码
+<button id="click-button2">按钮2</button>
+<button id="click-button3">按钮3</button>
+<script>
+  var check = function () {
+    console.log('按钮1的this', this) // window
+  }
+
+  document.querySelector('#click-button2').onclick = function () {
+    console.log('按钮2的this', this) // <button id="click-button2">按钮2</button>
+  }
+
+  document.querySelector('#click-button3').addEventListener('click', function () {
+    console.log('按钮3的this', this)  // <button id="click-button3">按钮3</button>
+  })
+</script>
+```
+
+#### ES6 class中的this
+对于es6的class来说，如果把方法提取出来单独使用，this是undefined，如
+```js
+class A {
+  foo() {
+    console.log('foo this', this)
+  }
+  bar() {
+    console.log('bar this', this)
+  }
+}
+
+A.prototype.foo() // class A
+const { bar } = new A()
+bar()  // undefined
+```
+一个比较简单的解决办法就是在constructor中使用bind进行this绑定
+
+在react中，JSX中写的事件并没有绑定到对应的真实DOM上，而是通过事件代理的方式，将所有的事件都统一绑定在了document上。这样的方式不仅减少了内存消耗，还能在组件挂载销毁时统一订阅和移除事件。//这里并不是很懂。
 
 ### 7.Conditional Rendering
 使用if或者条件运算符(三元表达式 a?b:c)或逻辑运算符&&，比如，用户登陆与未登录需要展示不同的UI，这时候就可以使用条件渲染  
@@ -315,6 +360,7 @@ function App() {
 
 完整示例
 ```js
+// 类别的小标题，传入props类别名称
 class ProductCategoryRow extends React.Component {
   render() {
     const category = this.props.category;
@@ -328,6 +374,7 @@ class ProductCategoryRow extends React.Component {
   }
 }
 
+// 最小组件，一行产品，传入props商品名字和价格
 class ProductRow extends React.Component {
   render() {
     const product = this.props.product;
@@ -346,6 +393,7 @@ class ProductRow extends React.Component {
   }
 }
 
+// 用于展示的表格，传入props产品列表数组，关键字，是否只显示打折商品
 class ProductTable extends React.Component {
   render() {
     const filterText = this.props.filterText;
@@ -391,6 +439,7 @@ class ProductTable extends React.Component {
   }
 }
 
+// 搜索框，props传入input值和change回调，checkbox值和对应change回调
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
@@ -429,6 +478,8 @@ class SearchBar extends React.Component {
   }
 }
 
+// 容器组件，有自己的state，保存text值和checkbox的值，包含两个自组件，并传入相应props
+// 容器组件接收外部定义的商品列表prop
 class FilterableProductTable extends React.Component {
   constructor(props) {
     super(props);
@@ -487,3 +538,140 @@ ReactDOM.render(
   document.getElementById('container')
 );
 ```
+
+## 第二部分 ADVANCED GUIDES (高级指南)
+### Accessibility (易接近性？)
+- 在react中可以使用aria-xxx，帮助残障人士理解应用
+- 语义化的HTML
+- 无障碍表单
+- 焦点控制，以编程的方式控制焦点，需使用refs
+```js
+class CustomTextInput extends React.Component {
+
+  constructor(props) {
+    super(props);
+    // Create a ref to store the textInput DOM element
+    this.textInput = React.createRef();
+  }
+
+  focus() {
+    // Explicitly focus the text input using the raw DOM API
+    // Note: we're accessing "current" to get the DOM node
+    this.textInput.current.focus();
+  }
+
+  render() {
+  // Use the `ref` callback to store a reference to the text input DOM
+  // element in an instance field (for example, this.textInput).
+    return (
+      <input
+        type="text"
+        ref={this.textInput}
+      />
+    );
+  }
+}
+```
+再父组件中获取自组件的DOM
+```js
+function CustomTextInput(props) {
+  return (
+    <div>
+      <input ref={props.inputRef} />
+    </div>
+  );
+}
+
+class Parent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.inputElement = React.createRef();
+  }
+  render() {
+    return (
+      <CustomTextInput inputRef={this.inputElement} />
+    );
+  }
+}
+
+// Now you can set focus when required.
+this.inputElement.current.focus();
+```
+
+- 鼠标和指针事件，为window注册事件，当点击document时，移除某些状态
+- 更复杂的小组件：尽量使用html中的aria-xx属性
+- 其他考虑事项：设置语言，设置html文档标题，颜色对比
+- 开发和测试工具：如何更易近性
+
+### Code-Splitting
+代码分割，只有在需要的时候才会加载对应的bundle  
+
+- 使用import().then()异步加载，webpack使用了这种语法，但目前js并不支持(在提案中)
+- 使用React.lazy()和Suspense()(但是服务端渲染暂不支持，可以使用loadable)，Suspense可以放在任何你希望懒加载的地方
+
+##### 使用Suspense与懒加载
+- 为懒加载增加错误处理
+- 以路由为单位进行代码分割
+- React.lazy()只支持默认的导出
+
+### Context
+Context提供一种可以不通过props进行数据传递的方式  
+在React应用中，数据是通过props自上而下传递的，但是这在传递一些固定类型的props(如locale preference, UI theme)会比较麻烦，因为很多组件都会用到它，Context提供了一种方式可以共享值，但是不用通过树的每一层明确地传递props。
+嵌套传递prop theme
+```js
+class App extends React.Component {
+  render() {
+    return <Toolbar theme="dark" />;
+  }
+}
+
+function Toolbar(props) {
+  // The Toolbar component 必须要传递一个多余的prop "theme"
+  return (
+    <div>
+      <ThemedButton theme={props.theme} />
+    </div>
+  );
+}
+
+class ThemedButton extends React.Component {
+  render() {
+    return <Button theme={this.props.theme} />;
+  }
+}
+```
+使用Context
+```js
+const ThemeContext = React.createContext('light')
+
+class App extends React.component {
+  render() {
+    // 使用Provider为下面的组件提供 theme，所有在底下的组件都可以获取该值
+    <ThemeContext.Provider value="dark">
+      <Toolbar />
+    </ThemeContext.Provider>
+  }
+}
+
+// 不用传递多余的prop
+function Toolbar(props) {
+  return (
+    <div>
+      <ThemedButton />
+    </div>
+  );
+}
+
+class ThemedButton extends React.Component {
+  // 使用一个变量去读取当前的theme context
+  // React会去寻找最近的theme Provider
+  // React will find the closest theme Provider above and use its value.
+  // In this example, the current theme is "dark".
+  static contextType = ThemeContext;
+  render() {
+    return <Button theme={this.context} />;
+  }
+}
+```
+
+
