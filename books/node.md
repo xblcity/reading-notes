@@ -8,6 +8,9 @@
 - [第五章 内存控制](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第五章-内存控制)
 - [第六章 理解Buffer](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第六章-理解Buffer)
 - [第七章 网络编程](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第七章-网络编程)
+- [第八章 构建Web应用](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第八章-构建Web应用)
+
+:smile: :smiley: :innocent:
 
 ## 第一章 Node简介
 ### 1.4 Node的特点
@@ -487,3 +490,68 @@ req.end()
 ```
 
 ### 7.4 构建WebSocket服务
+相比HTTP，WebSocket更接近于传输层协议，它并没有在HTTP的基础上模拟服务器端的发送，而是在TCP上定义独立的协议，让人迷路的部分在于WebSocket的握手部分是由HTTP完成的，使人可能觉得它可能是基于HTTP实现的。
+#### 7.4.1 WebSocket握手
+请求报文
+```js
+GET /chat HTTP/1.1
+Host: xxx.com
+// 请求服务升级协议为WebSocket
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Key: dGhlIHn...  // 安全校验
+Sec-WebSocket-Prototal: chat, superchat  // 子协议
+Sec-Websocket-Version: 13  // 版本号
+```
+响应报文
+```js
+HTTP/1.1 101 Switching Protocols
+// 更新应用层协议为WebSocket协议
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: s3pPl...
+Sec-WebSocket-Prototal: chat
+```
+node代码部分 // Todo
+#### 7.4.2 WebSocket数据传输
+在握手顺利完成后，当前连接不再进行HTTP的交互，而是开始WebSocket的数据帧协议，实现客户端与服务器端的数据交换，握手完成后，客户端的onopen()将会被触发执行，代码如下：
+```js
+socket.onopen = function() {
+  // 要做的事情
+}
+```
+服务器端。 // Todo
+
+### 7.5 网络服务与安全
+为防止数据被监听，我们需要将数据加密后再进行网络传输，但是对于应用层而言，如HTTP，FTP等，我们仍希望能够透明的处理数据，而无需操心网络传输过程中的安全问题。  
+SSL Secure Sockets Layer，安全嵌套层，SSL作为一种安全协议，它在传输层提供对网络连接加密的功能。对于应用层而言，它是透明的，数据在传递到应用层之前就已经完成了加密和解密的过程。最初的SSL应用在Web上，被放服务器端和浏览器端同时支持，对吼IEIF将其标准化，成为TLS(Transport Layer Security, 安全传输层协议)   
+Node在网络安全上提供了3个模块，分别为crypto, tls, https.其中crypto主要用于加密解密，SHAI,MD5等加密算法都在其中有体现，真正用于网络的是另外两个模块，tls模块提供了与net模块类似的功能，区别在于它建立在TLS/SSL加密的TCP连接上，对于https而言，它完全与http模块接口一致，区别也仅在于它建立安全的连接之上。
+#### 7.5.1 TLS/SSL
+1. 秘钥
+TLS/SSL是一种公钥/私钥的结构，它是一个非对称结构，每个服务器端和客户端都有自己的公私钥，公钥用来加密要传输的数据，私钥用来解密接收收到的数据
+// Todo
+2. 数字证书
+// Todo Todo
+#### 7.5.2 TLS服务
+利用tls模块，在创建server的时候需要传入一个options的对象参数，其中包含CA证书
+#### 7.5.3 HTTPS服务
+HTTPS服务就是工作在TLS/SSL上的HTTP  
+创建HTTPS服务
+```js
+var https = require('htpps')
+var fs = require('fs')
+var options = {
+  key: fs.readFileSync('./keys/server.key'),
+  cert: fs.readFileSync('./keys/server.crt')
+}
+
+http.createServer(options, function(req, res) {
+  res.writeHead(200)
+  res.end('hello world')
+}).listen(8000)
+```
+HTTPS客户端，也需要指定证书的相关参数 // Todo
+### 7.6 总结
+Node基于事件驱动和非阻塞设计，在分布式环境中尤其能发挥出它的特长，基于事件驱动可以实现与大量的客户端进行对接，非阻塞设计则可以让它更好的提升网络的响应吞吐，Node提供了相对底层的网络调用，以及基于事件的编程接口，使得开发者在这些模块上十分轻松的构建网络应用
+
+## 第八章 构建Web应用
