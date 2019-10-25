@@ -1,5 +1,5 @@
 # 深入浅出node.js
-> 该书不仅讲解了node.js方面的知识，对于增加网络层面的知识也有很大帮助，对前端开发来说，太棒了~
+> 该书不仅讲解了node.js方面的知识，对于了解与巩固网络传输方面的知识也有很大帮助，对前端开发来说，太棒了~
 
 - [第一章 Node简介](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第一章-node简介)
 - [第二章 Node简介](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第二章-模块机制)
@@ -555,3 +555,93 @@ HTTPS客户端，也需要指定证书的相关参数 // Todo
 Node基于事件驱动和非阻塞设计，在分布式环境中尤其能发挥出它的特长，基于事件驱动可以实现与大量的客户端进行对接，非阻塞设计则可以让它更好的提升网络的响应吞吐，Node提供了相对底层的网络调用，以及基于事件的编程接口，使得开发者在这些模块上十分轻松的构建网络应用
 
 ## 第八章 构建Web应用
+
+### 8.1 基础功能
+
+本章Web应用方面的内容，将从http模块中的服务器端的request事件开始分析。request事件发生于网络连接建立，客户端向服务端发送报文，服务端解析报文，发现HTTP请求的报头时，在已触发request事件前，它已准备好ServerRequest和ServerResponse对象以供对请求和响应报文的操作，比如，官方的一个简单示例，就是调用ServerResponse实现响应的。
+
+```js
+var http = require('http')
+http.createServer(function() {
+  res.writeHead(200, {'Content-Type': 'text/plain'})
+  res.end('Hello World')
+}).listen(1337, '127.0.0.1', function() {
+  console.log('服务启动啦~')
+})
+```
+对于一个Web应用而言，仅仅只是上面这样的响应圆管达不到业务的需求，在具体的业务中，我们可能会有如下这些需求。
+
+- 请求方法的判断
+- URL的路径解析
+- URL中查询字符串解析
+- Cookie的解析
+- 认证
+- 表单数据的解析
+- 任意格式文件的上传处理
+
+#### 8.1.1 请求方法
+除了最常见的GET, POST之外，还有HEAD, DELETE, PUT, CONNECT等方法。通常，我们只需要处理GET, POST两类请求方法，但是在Restful类web服务中心请求方法十分重要，因为它会决定资源的操作行为。PUT代表新建一个资源，POST表示要更新一个资源，GET表示查看一个资源，而DELETE表示删除一个资源。我们可以通过请求方法来决定响应行为，如
+
+```js
+function (req, res) {
+  switch(req.method) {
+    case 'POST':
+      update(req, res)
+      break
+    case 'DELETE':
+      remove(req, res)
+      break
+    case 'PUT':
+      create(req, res)
+      break
+    case 'GET':
+    default:
+      get(req, res)
+  }
+}
+```
+
+#### 8.1.2 路径解析
+HTTP_Parser将其解析为req.url, hash部分会被丢掉  
+一种比较常见的是根据路径进行业务员处理的应用是静态文件服务器，还有一种是根据路径来选择控制器
+
+#### 8.1.3 查询字符串
+在地址栏路径后的`?foo=bar&baz=val`可以使用node核心模块querystring，当然更简洁的方法是使用引入核心模块url,`url.parse(req.url,true).query`
+
+#### 8.1.4 Cookie
+HTTP是无状态的，现实中的圆舞曲却需要一定的状态，如何标识和认证一个用户，最早的方案就是Cookie了
+
+Cookie的处理分为如下几步：  
+- 服务端向客户端发送Cookie
+- 浏览器将Cookie保存
+- 之后每次浏览器都会将Cookie发送服务器端
+
+命令行模拟发送cookie `curl -v -H "Cookie: foo=bar; baz=val" "http://127.0.0.1:1337/path?foo=bar&baz=val"`
+
+获取cookie`req.headers.cookie`，cookie是字符串如`Cookie: foo=bar; baz=val`的方式，可以写一个函数进行解析，如下
+
+```js
+var parseCookie = function(cookie) {
+  var cookies = {}
+  if(!cookie) {
+    return cookies
+  }
+  var list = cookie.split(';')
+  for (var i=0; i <list.length; i++) {
+    var pair = list[i].split('=')
+    cookies[pair[0].trim()] = pair[1]
+  }
+  return cookies
+}
+```
+响应字段在Set-Cookie里面，例如`Set-Cookie: name=value; Path=/; Expires=Sun, 23-Apr-23 09:01:35 GMT; Domain=domian.com`,主要选项
+
+- path，表示cookie影响到的路径
+- Expires和Max-Age告知浏览器合适过期
+- HttpOnly，告知浏览器不可以通过脚本`document.cookie`去更改cookie值
+- Secure: 当设置为true只有在HTTPS中才有效
+
+Cookie的性能问题：cookie在发送每次请求都会被带到服务端，优化：   
+- 减小cookie大小
+- 为静态资源使用不同的域名
+- 减少DNS查询？
