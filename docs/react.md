@@ -1,19 +1,28 @@
 # React Docs
-> 官方文档是渐进式的，对于一步一步理解与使用React很有帮助
+
+> 官方文档是渐进式的，对于理解与使用React很有帮助，记一些我认为比较重要的点
 
 ## 第一部分 MAIN CONCEPTS (主要概念)
+
 ### 1.Hello World
 
 ### 2.Introducing JSX
+
 `const element = <h1>hello world</h1>`   
 这种标记语法既不是字符串也不是HTML，它叫做JSX，它是JS的一种语法拓展，我们推荐用它在React描述UI，JSX可能会让你想到模板语法，但其实它拥有JS的全部功能
+
 #### Why JSX
-react的渲染逻辑和UI逻辑紧密结合在一起：事件如何被处理，状态如何改变，数据如何被展示  
+
+react的渲染逻辑和UI逻辑紧密结合在一起：事件如何被处理，状态如何改变，数据如何被展示
+
 JSX是在JS中描述UI较好的选择？
+
 #### USE JSX
+
 - 可以在JSX中放任何合法的JS表达式，需要加大括号
 - 对于HTML属性，使用驼峰语法
-- JSX语法通过babel-preset-env-react以及React.createElement()转换成vdom，即js对象格式
+- JSX语法通过`@babel/preset-react`以及`React.createElement()`转换成虚拟DOM(virtual DOM)，即js对象格式
+
 ```js
 // JSX对象
 const element = (
@@ -38,19 +47,23 @@ const element = {
 ```
 
 ### 3.Rendering Elements
+
 element与components的关系: components是由elements构成的   
 把React element 转换成真实的DOM node，需要使用`ReactDOM.render()`
+
 ```js
 const element = <h1>Hello, world</h1>;
 ReactDOM.render(element, document.getElementById('root'));
 ```
 
 #### 如何更新DOM
+
 多次调用`ReactDOM.render()`并不是可取之策，事实上我们只改变了应用的一部分，但是却让整个应用更新，造成了性能上的下降。事实上，大部分应用只需要调用一次`ReactDOM.render()`  
 
 **React Only Updates What’s Necessary**(diff算法)
 
 ### 4.Components and Props
+
 Components使得你可以把组件划分成独立可复用的部分，并且可以单独考虑每个部分。  
 从概念上讲，组件就像是JS的函数，接收任意输入(称之为props)并且返回可以描述UI的React元素  
 react组件分为函数组件和class组件，组件首字母要大写，**用于babel的识别与转换**，babel对于HTML原生元素与React组件的转换结果是不同的。
@@ -65,6 +78,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
+
 在上述例子中发生了哪些事情呢？  
 - 调用ReactDOM.render()并传入react element `<Welcome name="Sara" />`
 - React调用Welcome组件并传入`{name："Sara"}`这个props
@@ -72,11 +86,13 @@ ReactDOM.render(
 - ReactDOM更新视图
 
 ##### Tips
+
 - React app通常有一个顶层的App组件，你可以通过很小的组件来构建这个顶层组件
 - 组件尽可能拆分成更小的可复用的组件
 - props是只读的，不要去改变它，把它当作纯函数的参数对待
 
 ### 5.State and Lifecycle
+
 以时钟组件为例，如何改变视图而不是每次调用`ReactDOM.render`,首先需要把函数组件转换成class组件，class组件拥有render方法，也可以拥有自己的state，可以在class constructor中分配一个初始的this.state  
 这段代码做了什么呢？//ES6拓展：constructor为类的默认方法，通过new的调用可以执行这个方法，每个类都必须要有这个方法，如果没有显示定义，则一个空的constructor被添加到类里面。constructor方法默认返回实例对象，即this，，在constructor定义的都是实例属性~
 ```js
@@ -131,14 +147,17 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
+
 让我们来回顾一下发生了什么以及一些方法的调用顺序  
+
 1. 当`<Clock/>`传递给`ReactDOM.render()`的时候，react调用Clock组件的构造函数，当Clock需要展示当前时间的时候，它用一个包含当前时间的对象初始化了`this.state`，我们稍后会更新这个state  
 2. React接着调用Clock组件的render方法，react通过这个知道哪些应该被展现在屏幕上，React接着用符合render的输出来更新DOM
 3. 当Clock的输出插入到DOM之后，React调用`ComponentDidMount()`这个生命周期方法，在这个方法里面，Clock组件通知浏览器设置一个定时器每隔一秒来调用组件的`tick()`方法
 4. 浏览器每隔一秒调用`tick()`方法，在这个方法里面，Clock组件通过调用调用`setState()`并传入一个包含当前时间的对象来更新UI，多亏了`setState()`的调用，React知道state已经发生改变，并且再次调用`render()`方法来知道哪些应该被展现在屏幕上，这一次，在`render()`方法里面的`this.state.date`会不一样，因此渲染输出将会包含这个更新过后的时间，React也相应的更新了DOM
 5. 如果Clock组件从DOM中移除，react会调用`componentWillUnmount()`生命周期方法，所以定时器停止了  
 
-使用state tips
+使用state的一些建议
+
 - 不要直接改变state,这样不会触发重新渲染，唯一可以分配state的地方是在构造函数constructor中(Q:也可以直接在class内部定义实例属性，在new操作符生成的实例初始化也会携带这个属性，缺点是无法通过传参的方式决定实例属性的值)
 - state更新也许是异步的，this.props,this.state可能会异步更新，不要依赖它们来改变下一次的state, 可以给setState传一个函数参数，该函数方法会接收前一次的state和当前的props作为该方法的两个参数
 ```js
@@ -159,6 +178,7 @@ function FormattedDate(props) {
 FormattedDate组件在props中会接收date并且不知道它是来自Clock的state还是Clock的props或是只是手打的，这种模式被称为自顶向下(top-down)或者单向(unidirectional)数据流,任何组件的数据派发只会影响在树形结构中它下面的组件，可以认为所有组件都是隔离的
 
 ### 6.Handling Events
+
 react元素中处理事件与DOM相似，但也有不同点
 - react事件使用驼峰命名法，而不是小写
 - 在jsx中需要传递一个函数作为事件处理函数，而不是一个字符串
@@ -166,6 +186,7 @@ react元素中处理事件与DOM相似，但也有不同点
 - 在jsx中不需要使用addEventListener()来为已经创建的dom绑定事件，相反，只需要提供一个事件监听函数当元素首次被渲染后
 
 ##### js回调函数中的this
+
 在React中，在class中，事件处理函数中的this是Undefined(因为事件处理函数的方法提取出来调用了)，为了使得this表现的符合预期，推荐两种方式改变this指向：  
 1. bind，需要在constructor构造函数中绑定，或者在jsx事件按处理程序中进行绑定
 2. 使用箭头函数，这时的this是静态的，即指向class类，在class内部定义，或者在事件处理函数中
@@ -236,6 +257,7 @@ PS.在HTML中事件处理程序的this是window，对于DOM0级和DOM2级事件�
 ```
 
 #### ES6 class中的this
+
 对于es6的class来说，如果把方法提取出来单独使用，this是undefined，如
 ```js
 class A {
@@ -256,19 +278,23 @@ bar()  // undefined
 在react中，JSX中写的事件并没有绑定到对应的真实DOM上，而是通过事件代理的方式，将所有的事件都统一绑定在了document上。这样的方式不仅减少了内存消耗，还能在组件挂载销毁时统一订阅和移除事件。//这里并不是很懂。
 
 ### 7.Conditional Rendering
+
 使用if或者条件运算符(三元表达式 a?b:c)或逻辑运算符&&，比如，用户登陆与未登录需要展示不同的UI，这时候就可以使用条件渲染  
 在jsx中使用表达式需要包裹大括号  
 return null 可以阻止组件渲染，但是组件仍然存在生命周期
 
 ### 8.Lists and Keys
+
 Keys帮助react辨别哪个item发生变化，被添加或者被移除。keys应当被赋予给数组里的元素，来给这些元素稳定的标识，一般使用string类型的字符串，不推荐使用数组index作为key，当数组发生变化时，react无法正确判断哪些item发生了变化，会影响正确渲染。  
 key作为react的一个提示，但是它们并不会传递给组件。  
 如果map()里面嵌套过多，也许是把它提取成组件的好时机
 
 ### 9.Forms
+
 HTML中的form元素与其他在react中的dom元素有些不同，因为这些form元素一般有着自己的内部状态
 
 #### Controlled Components
+
 在html中，form元素如`<input/>,<textarea/>,<select/>`等通常拥有自己的内部状态，并且会随着用户输入而更新，但在react中，更新视图的方法只有setState()   
 
 改成受控组件，对于`<input/>`, input的value来源应当是`this.state.value`，而通过input的onChange事件来`setState()`更改`this.state`并且更新UI
@@ -278,6 +304,7 @@ HTML中的form元素与其他在react中的dom元素有些不同，因为这些f
 对于file input tag，由于它时只读的，所以它不是react的受控组件
 
 ### 10.Lifting State Up
+
 几个组件经常会被一个改变的数据源所影响，需要尽量把状态提升至它们最接近的共同祖先  
 参考官方例子，比如`Calculator`组件包含多个`TemperatureInput`组件，多个`TemperatureInput`组件的input输入框的值同步改变，所以要把本来在`TemperatureInput`组件的state提升到`Calculator`组件中，由于传递给`TemperatureInput`的props是不能改变的，`TemperatureInput`组件中input值(即temperature)只能通过`this.setState()`改变，但是，temperature的值是通过父组件的props传递进来的，`TemperatureInput`组件无法控制它的值
 
@@ -292,7 +319,9 @@ handleChange(e) {
 官方例子，what happens when you edit an input: // Todo
 
 ### 11.Composition vs Inheritance
+
 ##### Containment
+
 有些组件不会提前知道它的子组件，这些在那些如侧边栏(Sidebar)或者对话框(Dialog)等代表这通用的盒子比较常见。我们推荐使用特殊的prop`children`来把子元素当作输入直接传递给该组件，即`props.children`，当然，有时候你也可以把组件当作prop传递给容器组件，有点类似插槽(slots),如：
 ```js
 function SplitPane(props) {
@@ -324,6 +353,7 @@ function App() {
 我们不推荐通过继承层次结构创建组件，如果想复用无UI的功能性代码，推荐把它提取成一个单独的js模块
 
 ### 12.Thinking In React
+
 对于一个组件复杂组件  
 1. Break The UI Into A Component Hierarchy(将UI拆分成组件层次结构)   
 从UI的方面拆分组件
@@ -540,7 +570,9 @@ ReactDOM.render(
 ```
 
 ## 第二部分 ADVANCED GUIDES (高级指南)
+
 ### Accessibility (易接近性？)
+
 - 在react中可以使用aria-xxx，帮助残障人士理解应用
 - 语义化的HTML
 - 无障碍表单
@@ -604,17 +636,20 @@ this.inputElement.current.focus();
 - 开发和测试工具：如何更易近性
 
 ### Code-Splitting
+
 代码分割，只有在需要的时候才会加载对应的bundle  
 
 - 使用import().then()异步加载，webpack使用了这种语法，但目前js并不支持(在提案中)
 - 使用React.lazy()和Suspense()(但是服务端渲染暂不支持，可以使用loadable)，Suspense可以放在任何你希望懒加载的地方
 
 ##### 使用Suspense与懒加载
+
 - 为懒加载增加错误处理
 - 以路由为单位进行代码分割
 - React.lazy()只支持默认的导出
 
 ### Context
+
 Context提供一种可以不通过props进行数据传递的方式  
 在React应用中，数据是通过props自上而下传递的，但是这在传递一些固定类型的props(如locale preference, UI theme)会比较麻烦，因为很多组件都会用到它，Context提供了一种方式可以共享值，但是不用通过树的每一层明确地传递props。
 嵌套传递prop theme
