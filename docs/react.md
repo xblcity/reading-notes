@@ -652,6 +652,33 @@ this.inputElement.current.focus();
 
 Context提供一种可以不通过props进行数据传递的方式  
 在React应用中，数据是通过props自上而下传递的，但是这在传递一些固定类型的props(如locale preference, UI theme)会比较麻烦，因为很多组件都会用到它，Context提供了一种方式可以共享值，但是不用通过树的每一层明确地传递props。
+
+Context由两部分构成，分别是Provider Component与Consumer Component，首先，创建一个Context，即`const MyContext = React.createContext(defaultValue)`，使用了`React.createContext()`api，并传入了一个初始值，紧接着，使它成为提供者角色`<MyContext.Provider value={} />`，
+
+Consumers可以有多个，Consumers可以获取到上层的Provider，consumer如何获取context的值？在组件上定义一个静态属性`contextType`，值是Provider的context的名称标识，在本例中，是`MyContext`，紧接着，该组件会被绑定一个context属性，然后我们使用`this.context`即可获取Provider的context的值，并且当Provider的context的值发生变化时，Consumer组件的context也会随之发生变化
+
+```js
+MyClass.contextType = MyContext // 或者在class内部定义静态属性，如static contextType = MyContext
+class MyClass extends React.component {
+  render() {
+    let value = this.context
+    return (
+      <div>{value}</div>
+    )
+  }
+}
+```
+
+也有一种更简单的办法使用Consumer context，如下，这样让你可以在函数组件中使用context
+
+```js
+// 接收回调函数作为child
+<MyContext.Consumer>
+  {value => /* render something based on the context value */}
+</MyContext.Consumer>
+```
+
+
 嵌套传递prop theme
 ```js
 class App extends React.Component {
@@ -698,10 +725,7 @@ function Toolbar(props) {
 }
 
 class ThemedButton extends React.Component {
-  // 使用一个变量去读取当前的theme context
-  // React会去寻找最近的theme Provider
-  // React will find the closest theme Provider above and use its value.
-  // In this example, the current theme is "dark".
+  // 使用一个contextType可以读取context，值即要读取的Provider的context
   static contextType = ThemeContext;
   render() {
     return <Button theme={this.context} />;
@@ -709,4 +733,267 @@ class ThemedButton extends React.Component {
 }
 ```
 
+context常被用于多个在不同嵌套层次的组件需要共享同一些数据时，但是如果你只是想通过多层结构传递数据时，component composition是更好的选择，如下
+
+```js
+// 改造之前
+<Page user={user} avatarSize={avatarSize} />
+// ... which renders ...
+<PageLayout user={user} avatarSize={avatarSize} />
+// ... which renders ...
+<NavigationBar user={user} avatarSize={avatarSize} />
+// ... which renders ...
+<Link href={user.permalink}>
+  <Avatar user={user} size={avatarSize} />
+</Link>
+
+// 之后
+function Page(props) {
+  const user = props.user;
+  const userLink = (
+    <Link href={user.permalink}>
+      <Avatar user={user} size={props.avatarSize} />
+    </Link>
+  );
+  return <PageLayout userLink={userLink} />;
+}
+
+// Now, we have:
+<Page user={user} avatarSize={avatarSize} />
+// ... which renders ...
+<PageLayout userLink={...} />
+// ... which renders ...
+<NavigationBar userLink={...} />
+// ... which renders ...
+{props.userLink}
+```
+可以理解为插槽，减少了prop的传递，并且使得根组件有更好的控制，但是会让根组件变得复杂
+
+列一些官网的例子
+在context定义回调，使得嵌套组件可以改变context，下例的Consumer两种使用都有列出
+
+```js
+// theme-context.js
+// 定义Provider Context初始值
+export const ThemeContext = React.createContext({
+  theme: themes.dark,
+  toggleTheme: () => {},
+});
+
+// App
+import {ThemeContext, themes} from './theme-context';
+import ThemeTogglerButton from './theme-toggler-button';
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.toggleTheme = () => {
+      this.setState(state => ({
+        theme:
+          state.theme === themes.dark
+            ? themes.light
+            : themes.dark,
+      }));
+    };
+
+    // state包含主题色，以及更新主题色的回调函数
+    this.state = {
+      theme: themes.light,
+      toggleTheme: this.toggleTheme,
+    };
+  }
+
+  render() {
+    // 将state都传给Provider
+    return (
+      <ThemeContext.Provider value={this.state}>
+        <Content />
+      </ThemeContext.Provider>
+    );
+  }
+}
+
+function Content() {
+  return (
+    <div>
+      <ThemeTogglerButton />
+    </div>
+  );
+}
+
+ReactDOM.render(<App />, document.root);
+
+// ThemeTogglerButton
+// 引入Provider Context
+import {ThemeContext} from './theme-context';
+
+function ThemeTogglerButton() {
+  // The Theme Toggler Button receives not only the theme
+  // but also a toggleTheme function from the context
+  return (
+    <ThemeContext.Consumer>
+      {({theme, toggleTheme}) => (
+        <button
+          onClick={toggleTheme}
+          style={{backgroundColor: theme.background}}>
+          Toggle Theme
+        </button>
+      )}
+    </ThemeContext.Consumer>
+  );
+}
+
+export default ThemeTogglerButton;
+
+// 这里再写一下，不使用ThemeContext.Consumer的class组件用法
+import {ThemeContext} from './theme-context';
+
+class ThemeTogglerButton extends React.component {
+  static contextType = ThemeContext
+  render() {
+    return (
+      <button
+        onClick={this.context.toggleTheme}
+        style={{backgroundColor: this.context.theme.background}}>
+        Toggle Theme
+      </button>
+    );
+  }
+ }
+
+export default ThemeTogglerButton;
+```
+
+Consumer也订阅多个Provider的context，见官网。
+
+使用Context的注意事项，如果把context的值作为一个外部传入值，那么当根组件重新渲染的时候，所有的Consumer组件都会重新渲染，如下例
+```js
+class App extends React.Component {
+  render() {
+    return (
+      <Provider value={{something: 'something'}}>
+        <Toolbar />
+      </Provider>
+    );
+  }
+}
+
+// 把value作为父组件的state，只更新要更新的部分
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: {something: 'something'},
+    };
+  }
+
+  render() {
+    return (
+      <Provider value={this.state.value}>
+        <Toolbar />
+      </Provider>
+    );
+  }
+}
+```
+
+### Error Boundaries
+React组件内部的错误会使得状态更新的时候组件报错，但在react中没有优雅处理这种错误的方法
+
+错误边界可以使得React组件在render的时候捕获错误，并展示回退的UI，但错误边界无法捕获下面错误：  
+- 事件处理程序
+- 异步代码(如定时器回调)
+- 服务端渲染
+- 错误边界自己抛出的错误
+
+主要利用了`getDerivedStateFromErrors()`以及`componentDidCatch()`
+
+### Forwarding Refs
+```js
+const FancyButton = React.forwardRef((props, ref) => (
+  <button ref={ref} className="FancyButton">
+    {props.children}
+  </button>
+));
+
+// You can now get a ref directly to the DOM button:
+const ref = React.createRef();
+<FancyButton ref={ref}>Click me!</FancyButton>;
+```
+在上面的例子里发生了什么？   
+- 调用`React.createRef()`创建了一个React ref，并给他赋值给一个变量，这里我们叫ref
+- 我们把ref作为一个JSX属性传递给`FancyButton`组件
+- React通过`React.forwardRef()`即`(props, ref) => ...`把ref传递进来
+- 我们给`<button>`元素添加ref属性来传递`ref`
+- 当给定了ref后，ref.current就指向了`<button>`这个元素
+
+要注意的是，ref参数只有在你使用`React.createRef()`的时候才会作为第二个参数传递
+
+### Fragments
+在react中一个组件返回多个元素是很常见的，Fragment可以使你将多个元素包裹但是不产生多余的DOM节点，因为react一个组件必须要有一个唯一的DOM节点，不想产生多余的DOM节点就可以用Fragment，简洁语法：`<></>`，但是不支持keys或者属性，另外需要注意的是，key是唯一可以传递给`Fragment`的属性
+
+### Higher-Order Components
+HOC是一种复用组件逻辑的一种高级技术，具体来说，HOC是一个可以接收组件并return一个新class组件的函数，HOC在react的第三方库很常见，比如redux的`connect`，比如，
+
+```js
+import React from 'react';
+
+function withSimple(WrappedComponent, title) { // 注意，这里的W要大写，因为是自定义组件要用于渲染
+  // 这里经过babel转换后的vnode, type是React.createElement()，支持的格式，转换成了字符串
+  return class extends React.Component {
+    render() {
+      return <WrappedComponent title={title}/>
+    }
+  }
+  // 如果是直接return了组件呢？经过babel转换后的vnode，type是class Text，不是React.createElement()支持的格式，应该是string
+  return <wrappedComponent />
+}
+
+
+class Test extends React.Component {
+  render() {
+    return <div>{this.props.title}</div>
+  }
+}
+
+const App = withSimple(Test, '这是标题')
+console.log('打印App', App)
+
+export default App
+
+// 一般第三方HOC是个柯里化函数，处理第一个参数，再处理第二个组件参数，比如
+const withSimple = (title) => (WrappedComponent) => {
+  return class extends React.Component {
+    render() {
+      return <WrappedComponent title={title}/>
+    }
+  }
+}
+
+class Test extends React.Component {
+  render() {
+    return <div>{this.props.title}</div>
+  }
+}
+
+const App = withSimple('这是一个标题')(Test)
+
+export default App
+
+// 如果使用ES5的方式，实现HOC柯里化
+function withSimple(title) {
+  return function(WrappedComponent) {
+    return class extends React.Component {
+      render() {
+        return <WrappedComponent title={title}/>
+      }
+    }
+  }
+}
+```
+经过高阶组件处理后的新的组件在React Dev Tools中查看，不会多出组件，处理后的新组件依然是原来组件的名字
+
+
+可以看官网的例子，高阶组件`withSubscription`接收组件作为第一个参数，每个组件要用的获取数据的方法作为第二个参数。HOC作为一个纯函数，不会改变它输入的组件，无副作用
 
