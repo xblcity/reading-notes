@@ -934,7 +934,7 @@ const ref = React.createRef();
 在react中一个组件返回多个元素是很常见的，Fragment可以使你将多个元素包裹但是不产生多余的DOM节点，因为react一个组件必须要有一个唯一的DOM节点，不想产生多余的DOM节点就可以用Fragment，简洁语法：`<></>`，但是不支持keys或者属性，另外需要注意的是，key是唯一可以传递给`Fragment`的属性
 
 ### Higher-Order Components
-HOC是一种复用组件逻辑的一种高级技术，具体来说，HOC是一个可以接收组件并return一个新class组件的函数，HOC在react的第三方库很常见，比如redux的`connect`，比如，
+HOC是一种复用组件逻辑的一种高级技术，具体来说，HOC是一个可以接收组件并return一个新class组件的函数，HOC在react的第三方库很常见，比如redux的`connect`，再`connect`中是通过一个高阶函数返回一个高阶组件的形式来实现HOC的
 
 ```js
 import React from 'react';
@@ -992,8 +992,15 @@ function withSimple(title) {
   }
 }
 ```
-经过高阶组件处理后的新的组件在React Dev Tools中查看，不会多出组件，处理后的新组件依然是原来组件的名字
+经过高阶组件处理后的新的组件在React Dev Tools中查看，不会多出组件，处理后的新组件依然是原来组件的名字   
+可以在JSX元素标签内通过`{...this.props}`把所有的props都传递给子组件
 
+如果我们使用了多个高阶函数，比如使用了withRouter以及connect这两个第三方高阶函数，下面是它的实现。
+```js
+const EnhancedComponent = withRouter(connect(commentSelector)(WrappedComponent))
+// 可以使用一个工具方法，compose(f, g, h)的作用就是，将其转换成 (...args) => f(g(h(..args)))
+const enhance = compose(withRouter, connect(commentSelector))
+const EnhanceComponent = enhance(WrappedComponent)
+```
 
-可以看官网的例子，高阶组件`withSubscription`接收组件作为第一个参数，每个组件要用的获取数据的方法作为第二个参数。HOC作为一个纯函数，不会改变它输入的组件，无副作用
-
+### Integrating with Other Libraries
