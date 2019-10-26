@@ -9,7 +9,7 @@
 
 - [深入理解ES6](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md)
 
-- [你不知道的javascript(上)]()
+- [你不知道的javascript(上)](https://github.com/xblcity/reading-notes/blob/master/books/you-don't-know-js1.md)
 
 ### 阅读文档
 
