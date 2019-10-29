@@ -2,6 +2,28 @@
 
 > 官方文档是渐进式的，对于理解与使用React很有帮助，记一些我认为比较重要的点
 
+## 目录
+
+- MAIN CONCEPTS
+
+  - [1.Hello World](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#1.Hello-World)
+  - [2.Introducing JSX](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#2.Introducing-JSX)
+  - [3.Rendering Elements](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#3.Rendering-Elements)
+  - [4.Components and Props](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#4.Components-and-Props)
+  - [5.State and Lifecycle](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#5.State-and-Lifecycle)
+  - [6.Handling Events](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#6.Handling-Events)
+  - [7.Conditional Rendering](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#7.Conditional-Rendering)
+  - [8.Lists and Keys](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#8.Lists-and-Keys)
+  - [9.Forms](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#9.Forms)
+  - [10.Lifting State Up](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#10.Lifting-State-Up)
+  - [11.Composition vs Inheritance](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#11.Composition-vs-Inheritance)
+  - [12.Thinking In React](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#12.Thinking-In-React)
+
+- ADVANCED GUIDES
+
+
+  
+
 ## 第一部分 MAIN CONCEPTS (主要概念)
 
 ### 1.Hello World
@@ -571,7 +593,7 @@ ReactDOM.render(
 
 ## 第二部分 ADVANCED GUIDES (高级指南)
 
-### Accessibility (易接近性？)
+### 1.Accessibility (易接近性？)
 
 - 在react中可以使用aria-xxx，帮助残障人士理解应用
 - 语义化的HTML
@@ -635,7 +657,7 @@ this.inputElement.current.focus();
 - 其他考虑事项：设置语言，设置html文档标题，颜色对比
 - 开发和测试工具：如何更易近性
 
-### Code-Splitting
+### 2.Code-Splitting
 
 代码分割，只有在需要的时候才会加载对应的bundle  
 
@@ -648,7 +670,7 @@ this.inputElement.current.focus();
 - 以路由为单位进行代码分割
 - React.lazy()只支持默认的导出
 
-### Context
+### 3.Context
 
 Context提供一种可以不通过props进行数据传递的方式  
 在React应用中，数据是通过props自上而下传递的，但是这在传递一些固定类型的props(如locale preference, UI theme)会比较麻烦，因为很多组件都会用到它，Context提供了一种方式可以共享值，但是不用通过树的每一层明确地传递props。
@@ -898,7 +920,7 @@ class App extends React.Component {
 }
 ```
 
-### Error Boundaries
+### 4.Error Boundaries
 React组件内部的错误会使得状态更新的时候组件报错，但在react中没有优雅处理这种错误的方法
 
 错误边界可以使得React组件在render的时候捕获错误，并展示回退的UI，但错误边界无法捕获下面错误：  
@@ -909,7 +931,7 @@ React组件内部的错误会使得状态更新的时候组件报错，但在rea
 
 主要利用了`getDerivedStateFromErrors()`以及`componentDidCatch()`
 
-### Forwarding Refs
+### 5.Forwarding Refs
 ```js
 const FancyButton = React.forwardRef((props, ref) => (
   <button ref={ref} className="FancyButton">
@@ -930,10 +952,10 @@ const ref = React.createRef();
 
 要注意的是，ref参数只有在你使用`React.createRef()`的时候才会作为第二个参数传递
 
-### Fragments
+### 6.Fragments
 在react中一个组件返回多个元素是很常见的，Fragment可以使你将多个元素包裹但是不产生多余的DOM节点，因为react一个组件必须要有一个唯一的DOM节点，不想产生多余的DOM节点就可以用Fragment，简洁语法：`<></>`，但是不支持keys或者属性，另外需要注意的是，key是唯一可以传递给`Fragment`的属性
 
-### Higher-Order Components
+### 7.Higher-Order Components
 HOC是一种复用组件逻辑的一种高级技术，具体来说，HOC是一个可以接收组件并return一个新class组件的函数，HOC在react的第三方库很常见，比如redux的`connect`，再`connect`中是通过一个高阶函数返回一个高阶组件的形式来实现HOC的
 
 ```js
