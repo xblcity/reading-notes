@@ -1,13 +1,18 @@
 # 你不知道的Javascript(上卷)
 
 - [第一部分 作用域和闭包](https://github.com/xblcity/reading-notes/blob/master/books/you-don't-know-js1.md#第一部分-作用域和闭包)
+
   - [第一章 作用域是什么](https://github.com/xblcity/reading-notes/blob/master/books/you-don't-know-js1.md#第一章-作用域是什么)
+
   - [第二章 词法作用域](https://github.com/xblcity/reading-notes/blob/master/books/you-don't-know-js1.md#第二章-词法作用域)
+
   - [第三章 函数作用域和块作用域](https://github.com/xblcity/reading-notes/blob/master/books/you-don't-know-js1.md#第三章-函数作用域和块作用域)
 
 ## 第一部分 作用域和闭包
 
 ### 第一章 作用域是什么
+
+> 作用域，变量作用的范围？分为局部作用域，函数作用域，全局作用域。局部作用域内的变量只能被局部范围引用，局部引用全局变量通过向上查找，可以查找到全局作用域的变量并使用
 
 #### 1.1 编译原理
 
@@ -100,6 +105,19 @@ ReferenceError同作用域判别失败有关，而TypeError则代表作用域判
 LHS查询与RHS查询，会从当前作用域向上查找，不成功则会有ReferenceError或TypeError
 
 ### 第二章 词法作用域
+
+> 词法作用域，即变量的引用查找会从它在被定义的地方开始查找(通常是一个函数内部需要查找一个外部变量，会从定义的地方开始查找)，如下例所示，foo函数输出为1。如果按照语法作用域，输出为2
+
+```js
+let value = 1
+function foo() {
+  console.log(value)
+}
+function bar() {
+  let value = 2
+  foo()
+}
+```
 
 作用域共有两种主要的工作模型。第一种是最为普遍的，被大多数编程语言所采用的词法作用域(静态作用域)，我们会对这种作用域进行深入讨论。另外一种叫作语法作用域(动态作用域)，仍有一些编程语言在使用（比如 Bash 脚本、Perl 中的一些模式等）。
 
@@ -243,3 +261,67 @@ setTimeout( function timeoutHandler() { // <-- 快看，我有名字了！
 
 ##### 3.3.2 立即执行函数表达式 
 
+IIFE，代表立即执行函数表达式（Immediately Invoked Function Expression），比如：
+
+```js
+(function foo() {
+ var a = 3;
+ console.log( a ); // 3
+})()
+(function() {
+  var a = 3;
+  console.log(a); // 3
+})();
+
+// 第二种IIFE
+(function foo() {
+  var a = 3;
+  console.log(a); // 3
+}());
+
+(function() {
+  var a = 3;
+  console.log(a); // 3
+}())
+
+// 传参,也可以把函数传进去
+(function(b) {
+  var a = 3;
+  console.log(a); // 3
+  console.log(b)  // 4
+}(4))
+```
+
+#### 3.4 块作用域
+```js
+for (var i=0; i<10; i++) {
+ console.log( i );
+}
+```
+我们在for循环的头部直接使用了变量i，但是i会直接被绑定在外部作用域(全局作用域)中，事实上，我们只想在for循环内使用i变量
+
+##### 3.4.1 with
+
+##### 3.4.2 try/catch
+```js
+try {
+ undefined(); // 执行一个非法操作来强制制造一个异常
+}
+catch (err) {
+ console.log( err ); // 能够正常执行！
+}
+console.log( err ); // ReferenceError: err not found
+```
+err变量仅存在于catch分句内部，当试图从别处引用它时会抛出错误
+
+##### 3.4.3 let
+```js
+var foo = true;
+if (foo) {
+ let bar = foo * 2;
+ bar = something( bar );
+ console.log( bar );
+}
+console.log( bar ); // ReferenceError
+```
+let 关键字可以将变量绑定到所在的任意作用域中（通常是 { .. } 内部）。换句话说，let为其声明的变量隐式地了所在的块作用域。let 进行的声明不会在块作用域中进行提升。
