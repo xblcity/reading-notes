@@ -853,3 +853,135 @@ function(req, res) {
 ```
 在接收到的Buffer列表转化为一个Buffer对象后，再转换为没有乱码的字符串，暂时挂置在req.rawBody处。
 
+#### 8.2.1 表单数据  
+
+默认的表单提交，请求头中的Content-Type字段值为application/x-www-form-urlencoded
+
+#### 8.2.2 其他格式
+
+除了表单数据外，常见的提交还有JSON和XML等，判断和解析他们的原理都比较相似，依据Content-Type，JSON类型的值为application/json，XML的值为application/xml。需要注意的是，在Content-Type中可能还附带如下的编码信息`Content-Type: application/json; charset=utf-8`，所以在做判断时，需要注意区分，如下：
+```js
+var mine = function(req) {
+  var str = req.headers['Content-Type'] || ''
+  return str.split(';')[0]
+}
+```
+
+#### 8.2.3 附近上传
+在HTML代码中，特殊表单与普通表单的差异在于该表单中可以含有file类型的控件，以及需要指定表单属性enctype为multipart/form-data，请求报文头与普通表单也有不同：
+```js
+Content-Type: multipart/form-data; boundary=AaB03x   
+Content-Length: 18231
+```
+`boundary=AaB03x`指定的是每部分内容的分解符，`AaB03x`是随机生成的字符串，报文体的内容将通过在它前面添加--进行分割，报文结束后在它前后都加上--表示结束。另外，`Content-Type`的值必须确保是报文体的长度。
+
+由于是文件上传，那么像普通表单，JSON或XML那样先接受内容在解析的方式将变得不可接受，接收大小未知的数据量时，我们需要十分谨慎。如下：
+```js
+function(req, res) {
+  if(hasBody(req)) {
+    var done = function() {
+      handle(req, res)
+    }
+    if(mine(req) === 'application/json' {
+      parseJSON(req, done)
+    }) else if (mine(req) === 'application/xml') {
+      parseXML(req, done)
+    } else if (mine(req) === 'multipart/form-data') {
+      parseMultipart(req, done)
+    }
+  } else {
+    hanle(req, res)
+  }
+}
+```
+这里要用到模块formiable。它基于流式处理解析报文，将接收到的文件写入到系统的临时文件夹中，并返回对应的路径，如下所示：
+```js
+var fromiable = require('formiable')
+function(req, res) {
+  if(hasBody) {
+    if(mine(req) === 'multipart/from-data') {
+      var form = new formiable.IncomingForm()
+      form.parse(req, function(err, fields, files) {
+        req.body = fields
+        req.files = files
+        handle(req, res)
+      })
+    }
+  } else {
+    handle(req, res)
+  }
+}
+```
+#### 8.2.4 数据上传与安全
+##### 内存限制
+攻击者通过客户端能够十分容易的模拟伪造大量数据，如果攻击者每次都提交1MB的内容，那么只要并发请求数量一大，内存很快就会被吃光，解决方案有两种：
+
+- 限制上传内容的大小，一旦超过限制，停止接收数据，并相应400状态码
+- 通过流式解析，将数据导向磁盘中，Node值保留文件路径等小数据
+
+##### CSRF
+CSRF全称是Cross-Site Request Forgery, 跨站请求伪造
+domian-a：正常提交会携带cookie及from参数值，  
+domian-b：网页中包含向a服务端发送请求(相关不利代码)的操作
+
+XSS主要利用用户输入的不严谨，然后执行js语句，CSRF通过伪造受信任用户发送请求，SCRF可通过XSS实现
+
+解决方案，在Session中赋予一个随机值，再做页面渲染过程中，将这个_scrf值告知前端，由于该值是一个随机值，攻击者构造出相同的随机值难度相当大，所以我们只需要在接收端做一次校验就能轻易识别出该请求是否是伪造的
+
+### 8.3 路由解析
+本节会介绍文件路径，MVC，RESTful等路由方式
+
+#### 8.3.1 文件路径型
+1. 静态文件
+这种方式的路由在路径解析的部分有过简单描述，其让人舒服的地方在于URL的路径与网站目录的路径一致，无需转换，非常直观，这种路由的处理方式也十分简单，将请求路径对应的文件发送给客户端即可
+2. 动态文件
+在MVC模式流行之前，根据文件路径执行动态脚本也是基本的路由方式，它的处理原理是Web服务齐全根据URL路径找到对应的文件，如/index.asp或/index.php。Web服务器根绝文件名后缀去寻找脚本的解析器。并传入HTTP请求的上下文。以下是Apache种配置PHP支持的方式：
+```js
+AddType application/x-httpd-php .php
+```
+解析器执行脚本，并输出响应报文，达到完成服务的目的。现今大多数的服务器都很只能的根据后缀同事服务动态和静态文件，这种方式在Node中不太常见，主要原因是文件的后缀都是.js，分不清是后端脚本，还是前端脚本，这可不是什么好的设计，而且Node中的Web服务器与应用业务脚本是一体的，无需按这种方式实现
+
+#### 8.3.2 MVC
+在MVC流行之前，主流的处理方式都是通过文件路径进行处理的，甚至以为是常态，直到有一天开发者发现用户请求的URL路径原来根具体脚本所在的路径没有任何关系。
+
+MVC模型主要思想是将业务逻辑按职责分离，主要分为以下几种：  
+- 控制器Controller，一组行为的集合
+- 模型Model，数据相关的操作和封装。
+- 视图View，视图的渲染
+
+工作模式如下说明   
+- 路由解析，根据URL寻找对应的控制器和行为
+- 行为调用相关的模型，进行数据操作
+- 数据操作结束后，调用视图和相关数据进行页面渲染，输出到客户端
+
+#### 8.3.3 RESTful
+MVC模式大行其道了很多年，知道RESTful的流行，大家才意识到URL也可以设计的很规范，请求方法也能作为逻辑分发的单元。  
+RESTful的全称是Representational State Transfer，表现层状态转化。符合REST规范的设计，我们成为RESTful设计，他的设计哲学主要将服务器端提供的内容实体看做一个资源，并表现在URL上。比如一个用户的地址如下所示： `/user/jacksontian`
+
+这个地址代表了一个资源，对这个资源的操作，主要体现在HTTP请求方法上，不是体现在URL上，过去我们对用户的增删改查或许是这样设计URL的：
+```js
+POST /user/add?username=jacksontian
+GET /user/remove?username=jacksontian
+POST /user/update?username=jacksontian
+GET /user/get?username=jacksontian
+```
+操作行为主要体现在行为上，主要使用的请求方法是POST和GET，在RESTful设计中，它是如下这样的
+```js
+POST /user/jacksontian
+DELETE /user/jacksontian
+PUT /user/jacksontian
+GET /user/jacksontian
+```
+它将DELETE和PUT请求方法引入设计中，参与资源的操作和更改资源的状态。  
+对于这个资源的具体表现形态，也不再如过去一样表现在URL的文件后缀上，过去设计资源的格式与后缀有很大的关联，例如：
+```js
+GET /user/jacksontian.json
+GET /user/jacksontian.xml
+```
+在RESTful设计中，资源的具体格式由请求报头中的Accept字段和服务端的支持情况来决定，如果客户端同时接受JSON和XML格式的响应，那么它的Accept字段值是如下这样的：`Accept: application/json,application/xml`。  
+靠谱的服务器端应该要顾及这个字段，然后根据自己能响应的格式做出相应，在响应报文中，通过Content-Type字段告知客户端是什么格式，如`Content-Type: application/json`  
+具体格式，我们称之为具体的表现，所以REST的设计就是，通过URL设计资源，请求方法定义资源的操作，通过Accept决定资源的表现形式。  
+RESTful与MVC并不冲突，而且是更好的改进，相比MVC，RESTful知识将HTTP请求方法也加入了路由的过程，以及在URL路径上体现的更资源化
+
+### 8.4 中间件
+
