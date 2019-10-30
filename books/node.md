@@ -984,4 +984,8 @@ GET /user/jacksontian.xml
 RESTful与MVC并不冲突，而且是更好的改进，相比MVC，RESTful知识将HTTP请求方法也加入了路由的过程，以及在URL路径上体现的更资源化
 
 ### 8.4 中间件
+// Todo  
+// 看了一遍不是很懂~~
+
+### 8.5 页面渲染
 
