@@ -989,3 +989,71 @@ RESTful与MVC并不冲突，而且是更好的改进，相比MVC，RESTful知识
 
 ### 8.5 页面渲染
 
+#### 8.5.1 
+
+服务器端的响应报文，最终都要被终端处理，这个终端可能是命令行终端，也可能是代码终端，也可能是浏览器。服务器端的响应从一定程度上决定或指示了客户端该如何处理响应的内容。内容响应的过程中，响应报头中的Content-*字段十分重要，如下：
+```js
+Content-Encoding: gzip
+Content-Length: 21170
+Content-Type: text/javascript; charset=utf-8
+```
+上面报文服务器端告诉客户端内容是以gzip编码的，其内容长度为21170个字节，内容类型为javascript，字符集为UTF-8。  
+客户端在收到这个报文后，正确的处理过程是通过gzip来解码报文体中的内容，用长度校验报问题内容是否正确，然后再以字符集UTF-8将解码后的脚本插入到文档节点中
+
+```js
+res.writeHead(200, {Content-Type: ''text/plain})
+res.end('<html><body>hello world</body></html>')
+res.writeHead(200, {Content-Type: ''text/html})
+res.end('<html><body>hello world</body></html>')
+// 前者显示整段文本，后者只显示hello world
+```
+浏览器通过不同的Content-Type的值来决定采用不同的渲染方式，这个值我们简称为MIME，全称为Multipurpose Internet Mail Extensions，从名字可以看出，它最早应用于电子邮件，后来也应用到浏览器中。
+
+在一些场景下，无论响应的是什么样的MIME值，需求中并不要要求客户端去打开它，只需弹出并下载它即可。为了满足这种需求，Content-Disposition字段登场，浏览器会根据该字段的值判断时应该讲报文数据当做即时浏览器的内容，还是可下载的附件。当内容只需即时查看时，它的值是inline，当数据可以存为附件时，它的值为attachment。另外Content-Disposition字段还能通过参数指定保存时应该使用的文件名。如下：
+```js
+Content-Disposition: attachment; filename='filename.txt'
+```
+如果我们要设计一个响应附件下载的API(res.sendfile),我们的方法大致如下
+```js
+res.sendfile = function(filepath) {
+  fs.stat(filepath, function() { //stat检查文件是否存在
+    var stream = fs.createReadStream(filepath)
+    // 设置内容
+    res.setHeader('Content-Type', mime.lookup(filepath))
+    // 设置长度
+    res.setHeader('Content-Length', stat.size)
+    // 设置为附件
+    res.setHeader('Content-Disposition', 'attachment; filename="'+path.basename(filepath)+'"')
+    res.writeHead(200)
+    stream.pipe(res)
+  })
+}
+```
+如下为响应json
+```js
+res.json = function(json) {
+  res.setHeader('Content-Type', 'application/json')
+  res.writeHead(200)
+  res.end(JSON.stringify(json))
+}
+```
+
+#### 8.5.2 视图渲染
+普通的HTML内容响应，统称为视图渲染，通常我们将渲染方法设计为render()，如
+```js
+res.render = function(view, data) {
+  res.setHeader('Content-Type', 'text/plain')
+  res.setHead(200)
+  // 实际渲染
+  var html = render(view, data)
+  res.render(html)
+}
+```
+
+#### 8.5.3 模板
+服务端动态渲染技术，如ASP,PHP,JSP，他们将动态语言通过特殊的标签(ASP和JSP以<%%>作为标志，PHP则以<??>作为标志)，通过HTML和模板标签混排，将开发者从输出HTML的工作中解脱出来，这样的方法虽然一定程度上减轻了开发维护的难度，但是页面里还是充斥着大量的逻辑代码。这催生了MVC在动态网页技术中的发展，MVC将逻辑，显示，数据分离开的方式，大大提高了项目的可维护性
+
+#### 8.6 小结
+在web应用构建过程中，从处理请求到响应过程的整个过程都需要考虑
+
+
