@@ -23,3 +23,18 @@ person = { // 抛出语法错误 syntax Error
 改变person.name并不会抛出任何错误，因为修改的是person包含的值。
 
 #### 临时死区(Temporal Dead Zone)
+即无法提升变量，提前引用会抛错
+
+在for循环中使用let，进行块级作用域绑定，避免变量污染，当然，使用立即执行函数(IIFE)也会形成块级作用域，比如
+```js
+var funcs = []
+for (var i = 0; i < 10; i++) {
+  funcs.push(function(values) {
+    return function() {
+      console.log(values)
+    }
+  }(i))
+}
+
+funcs.forEach(func => {func()}) // 0~9
+```
