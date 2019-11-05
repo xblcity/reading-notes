@@ -1,5 +1,11 @@
 # 深入理解ES6
 
+- [第一章 块级作用域](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第一章-块级作用域)
+
+- [第二章 字符串和正则表达式](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第二章-字符串和正则表达式)
+
+- [第三章 函数](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第三章-函数)
+
 ## 第一章 块级作用域
 var声明及变量提升
 
@@ -42,7 +48,7 @@ funcs.forEach(func => {func()}) // 0~9
 
 var声明的全局变量可能会覆盖全局属性，但是let和const声明的变量不会添加为全局对象的属性
 
-## 字符串和正则表达式
+## 第二章 字符串和正则表达式
 字符串新增了 includes(), startWith(), endWith()方法，都可以传递两个参数，第一个参数是要检索的文本，第二个是起始位置
 
 repeat方法，接收number类型参数
@@ -50,3 +56,56 @@ repeat方法，接收number类型参数
 模板字符串，``可以换行，可以在里面使用${}占位符，中间可以包含任意的js表达式
 
 标签模板：使用函数对模板字符串进行重组
+
+## 第三章 函数
+
+函数**形参**默认值
+
+处理无命名参数，ES5:
+```js
+function pick(object) {
+  let result = Object.create(null)
+  // 从第二个参数开始
+  for(let i = 1; i < arguments.length; i ++) {
+    result[arguments[i]] = object[arguments[i]]
+  }
+  return result
+}
+let book = {
+  title: 'ud',
+  au66ythor: 'nicholas',
+  year: 2016
+}
+let bookData = pick(book, "author", "year")
+console.log(bookData)
+```
+该函数反悔了一个给定对象的副本，包含原始对象属性的特定子集。  
+关于pick函数：这个函数接收任意数量的参数,要拷贝属性名称时，要从索引1开始
+
+在ES6中，使用不定参数/剩余参数(rest parameters)，在函数的命名参数前添加三个点(...)就表明这是一个不定参数/剩余参数
+```js
+// 重写pick函数
+function pick(object, ...keys) {
+  let result = Object.create(null)
+  for (let i = 0; i < keys.length; i ++) {
+    result[keys[i]] = object[keys[i]]
+  }
+  return result
+}
+```
+
+剩余参数的使用限制：每个函数最多只能声明一个不定参数，而且一定要放在所有参数的末尾
+
+与剩余参数比较相似的是展开运算符。剩余参数可以让你指定多个各自独立的参数，并通过整合后的数组来访问，而展开运算符可以让你指定一个数组，将它们打散作为各自独立的参数传入函数。
+
+```js
+// 从数组取最大值
+let values = [25, 50, 75, 100]
+// apply函数第二个参数是数组，在执行max方法时，参数会被打碎
+console.log(Math.max.apply(Math, values))
+// ES6
+console.log(Math.max(...values))
+// 展开运算符可以与其他正常传入的参数混合使用
+console.log(Math.max(...values, 0))
+```
+大多数使用apply()方法的情况下展开运算符可能是一个更合适的方案。
