@@ -96,7 +96,7 @@ function pick(object, ...keys) {
 
 剩余参数的使用限制：每个函数最多只能声明一个不定参数，而且一定要放在所有参数的末尾
 
-与剩余参数比较相似的是展开运算符。剩余参数可以让你指定多个各自独立的参数，并通过整合后的数组来访问，而展开运算符可以让你指定一个数组，将它们打散作为各自独立的参数传入函数。
+与剩余参数比较相似的是展开运算符(spread operator)。剩余参数可以让你指定多个各自独立的参数，并通过整合后的数组来访问，而展开运算符可以让你指定一个数组，将它们打散作为各自独立的参数传入函数。
 
 ```js
 // 从数组取最大值
@@ -108,4 +108,65 @@ console.log(Math.max(...values))
 // 展开运算符可以与其他正常传入的参数混合使用
 console.log(Math.max(...values, 0))
 ```
-大多数使用apply()方法的情况下展开运算符可能是一个更合适的方案。
+大多数使用apply()方法的情况下展开运算符可能是一个更合适的方案。因为展开运算符可以使得参数为数组
+
+箭头函数与普通JS函数区别：  
+- 没有this, super, arguments和new.target绑定，箭头函数中的this，super,arguments及new.target这些值由外围最近一层非箭头函数决定
+- 不能通过new关键字调用，箭头函数没有[[construct]]方法，所以不能被用作构造函数，通过new关键字调用箭头函数，程序会抛错
+- 没有原型，由于不可以通过new关键字调用箭头函数，因而没有构建原型的需求，所以箭头函数不存在prototype这个属性
+- 不可以改变this的绑定，函数内部的this值不可被改变，在函数生命周期内始终保持一致，不能使用call(), apply(), bind()等方法改变this的值。
+- 不支持arguments对象，箭头函数没有arguments绑定，所以你不许通过命名参数和不定参数这两种形式访问函数的参数
+- 不支持重复的命名参数，无论在严格或者非严格模式下，箭头函数都不支持重复的命名参数，而在传统函数的规定中，只有在严格模式下才不能有重复的命名参数
+
+箭头函数可以减少this报错，因为this的指向更清楚了，下面是一些例子：
+```js
+let pageHandler = {
+  id: '123',
+  init: function() {
+    console.log(this) // pageHandler对象
+    document.addEventListener('click', function(event) {
+      console.log(this)
+      this.doSomething(event.type)
+    }, false)
+  },
+  doSomething: function(type) {
+    console.log("Handing" + type + "for" + this.id)
+  }
+}
+pageHandler.init()
+// 鼠标点击document，this是docuemnts
+
+let pageHandler = {
+  id: '123',
+  init: function() {
+    console.log(this)
+    document.addEventListener('click', (function(event) {
+      this.doSomething(event.type)
+    }).bind(this), false)
+  },
+  doSomething: function(type) {
+    console.log("Handing" + type + "for" + this.id)
+  }
+}
+pageHandler.init()
+// 鼠标点击document，this是pageHandler对象
+
+let pageHandler = {
+  id: '123',
+  init: function() {
+    console.log(this)
+    document.addEventListener('click', 
+    event => this.doSomething(event.type), false)
+  },
+  doSomething: function(type) {
+    console.log("Handing" + type + "for" + this.id)
+  }
+}
+pageHandler.init()
+// 鼠标点击document，this是pageHandler对象
+```
+第三个例子，箭头函数中的this是最近一层非箭头函数的this,即init
+
+箭头函数用于数组的一些高阶函数方法，如sort，reduce等，简洁减少代码量
+
+箭头函数没有arguments对象，但是可以访问外围函数的arguments对象，这是arguments标识符的作用域链解决方案所规定的。
