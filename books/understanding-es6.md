@@ -170,3 +170,79 @@ pageHandler.init()
 箭头函数用于数组的一些高阶函数方法，如sort，reduce等，简洁减少代码量
 
 箭头函数没有arguments对象，但是可以访问外围函数的arguments对象，这是arguments标识符的作用域链解决方案所规定的。
+
+## 第四章 扩展对象的功能性
+
+对象字面量语法扩展：
+
+1. 属性初始值的简写：属性与本地变量同名，只写属性名即可
+2. 对象方法的简写语法
+```js
+var person = {
+  name: 'ya',
+  sayName: function() {
+    console.log(this.name)
+  }
+}
+// ES6
+var person = {
+  name: 'ya',
+  sayName() {
+    console.log(this.name)
+  }
+}
+```
+3. 可计算属性名，当一个对象的属性名包含空格的时候，无法通过object.属性名访问，需要使用object['属性名']访问，当无法提前知道属性名字时？可以用ES6可计算属性实现，可计算属性需要用[]包起来
+```js
+let lastName = "last name"
+let person = {
+  "first name": "ya",
+  [lastname]: "co"
+}
+console.log(person["first name"])
+console.log(person[lastname]) // 不用加双引号了哦~
+
+let suffix = " name"
+let person = {
+  ["first" + suffix]: "ya",
+  ["last" + lastname]: "co"
+}
+console.log(person["first name"])
+console.log(person["last name"]) // 不用加双引号了哦~
+```
+
+### 新增方法
+Object.is(),传入两个值，比全等运算符更为精确，因为全等比较+0与-0会得出相同结果
+
+Object.assign()  
+混合(Mixin)是js中试下对象组合最流行的一种模式，在一个mixin方法中，一个对象接收来自另一个对象的属性和方法
+```js
+function minin(receiver, supplier) {
+  Object.keys(supplier).forEach(function(key) { // Object.keys(obj)返回一个obj对象属性的数组
+    receiver[key] = supplier[key]
+  })
+  return receiver
+}
+```
+上述方法是对对象的浅复制，当属性值为对象时，只复制对象的引用，mixin方法可以被Object.assign()取代，可接收多个参数，第一个参数是接收对象，后面的是源对象。
+
+注意,Object.assign()不能讲提供者的访问器属性复制到接收对象中
+
+自有属性枚举排序
+```js
+var obj = {
+  a: 1,
+  0: 1,
+  c: 1,
+  2: 1,
+  b: 1,
+  1: 1,
+}
+Object.getOwnPropertyNames(obj).join('') // '012acbd'
+```
+自有属性枚举排序规则：   
+1. 所有数字键按升序排序
+2. 字符串键按他们被加入对象的顺序排序
+3. 所有symbol键按照它们被加入对象的顺序排序
+
+对于for-in， Object.keys(), JSON.stringify()枚举顺序并不明确。
