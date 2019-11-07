@@ -13,6 +13,8 @@
 
 - [你不知道的javascript(上) 2015](https://github.com/xblcity/reading-notes/blob/master/books/you-don't-know-js1.md)
 
+- [深入浅出Webpack 2018](https://github.com/xblcity/reading-notes/blob/master/books/webpack.md)
+
 ### 阅读文档
 
 - [react英文文档16.10.2](https://github.com/xblcity/reading-notes/blob/master/docs/react.md)
