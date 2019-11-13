@@ -6,6 +6,8 @@
 
 - [第三章 函数](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第三章-函数)
 
+- [第四章 扩展对象的功能性](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第四章-扩展对象的功能性)
+
 ## 第一章 块级作用域
 var声明及变量提升
 
@@ -57,7 +59,7 @@ repeat方法，接收number类型参数
 
 标签模板：使用函数对模板字符串进行重组
 
-## 第三章 函数
+## 第四章 扩展对象的功能性
 
 函数**形参**默认值
 
@@ -79,7 +81,7 @@ let book = {
 let bookData = pick(book, "author", "year")
 console.log(bookData)
 ```
-该函数反悔了一个给定对象的副本，包含原始对象属性的特定子集。  
+该函数返回了一个给定对象的副本，包含原始对象属性的特定子集。  
 关于pick函数：这个函数接收任意数量的参数,要拷贝属性名称时，要从索引1开始
 
 在ES6中，使用不定参数/剩余参数(rest parameters)，在函数的命名参数前添加三个点(...)就表明这是一个不定参数/剩余参数
@@ -94,7 +96,7 @@ function pick(object, ...keys) {
 }
 ```
 
-剩余参数的使用限制：每个函数最多只能声明一个不定参数，而且一定要放在所有参数的末尾
+剩余参数的使用限制：每个函数最多只能声明一个剩余；；参数，而且一定要放在所有参数的末尾
 
 与剩余参数比较相似的是展开运算符(spread operator)。剩余参数可以让你指定多个各自独立的参数，并通过整合后的数组来访问，而展开运算符可以让你指定一个数组，将它们打散作为各自独立的参数传入函数。
 
@@ -246,3 +248,9 @@ Object.getOwnPropertyNames(obj).join('') // '012acbd'
 3. 所有symbol键按照它们被加入对象的顺序排序
 
 对于for-in， Object.keys(), JSON.stringify()枚举顺序并不明确。
+
+***关于对象的原型***
+Object.create()用于创建一个指定原型的对象   
+Object.getPrototypeof(对象)以及Object.setPrototypeof(对象，原型)分别用于获取和改变原型   
+
+ES6 的 super可以简化原型访问，比如我们想访问原型上同名的方法，要用`Object.getPrototypeof(this).方法.call(this)`，ES6我们可以直接使用`super.方法()`,要必须在简写方法的对象中才能使用
