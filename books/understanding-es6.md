@@ -10,6 +10,8 @@
 
 - [第五章 解构：使数据访问更便捷](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第五章-解构：使数据访问更便捷)
 
+- [第六章 Symbol和Symbol属性](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第六章-、Symbol和Symbol属性)
+
 ## 第一章 块级作用域
 var声明及变量提升
 
@@ -61,7 +63,7 @@ repeat方法，接收number类型参数
 
 标签模板：使用函数对模板字符串进行重组
 
-## 第四章 扩展对象的功能性
+## 第三章 函数
 
 函数**形参**默认值
 
@@ -360,3 +362,17 @@ function setCookie(name. value, {
   expires = setCookieDefault.expires
 } = setCookieDefault) { ... }
 ```
+
+## 第六章 Symbol和Symbol属性
+
+使用Symbol定义对象的可计算属性
+
+Object.keys()以及Object.getOwnPropertyNames()这样的方法不返回任何Symbol，可以使用Object.getOwnPropertySymbols()检索Symbol属性
+
+对于已经定义的Symbol属性，仍可以通过Object.defineProperty()和Object.defineProperties()来改变他们
+
+well-know Symbol 为标准对象定义了一些只在语言内部可见的功能，它使用的是像Symbol.hasInstance属性这样的全局Symbol常量，这些Symbol统一使用Symbol作为前缀，标准中规定，开发者可以通过多种方法修改对象的特性。
+
+这些 well know Symbol 可以通过 如`object.[Symbol.toPrimitive]` `object.prototype.[Symbol.toPrimitive]`等调用，因为这些是直接定义在对象的属性上的，就是说对象的这个可计算属性值(Symbol)类型，是一个函数，可以直接调用，也可以对其进行重新声明
+
+Symbol.toPrimitive方法
