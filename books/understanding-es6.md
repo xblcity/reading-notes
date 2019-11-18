@@ -365,11 +365,94 @@ function setCookie(name. value, {
 
 ## 第六章 Symbol和Symbol属性
 
+ES5对象属性名都是字符串，这很容易造成属性名的冲突，ES6中引入新的原始数据类型Symbol，表示独一无二的值
+
 使用Symbol定义对象的可计算属性
+
+Symbol函数前不能使用new命令，否则会报错。这是因为生成的 Symbol 是一个原始类型的值，不是对象。也就是说，由于 Symbol 值不是对象，所以不能添加属性。基本上，它是一种类似于字符串的数据类型。
+```js
+let s = Symbol();
+
+typeof s
+// "symbol"
+```
+
+Symbol函数可以接受一个字符串作为参数，表示对 Symbol 实例的描述，主要是为了在控制台显示，或者转为字符串时，比较容易区分。
+
+```js
+let s1 = Symbol('foo');
+let s2 = Symbol('bar');
+
+s1 // Symbol(foo)
+s2 // Symbol(bar)
+
+s1.toString() // "Symbol(foo)"
+s2.toString() // "Symbol(bar)"
+```
+上面代码中，s1和s2是两个 Symbol 值。如果不加参数，它们在控制台的输出都是Symbol()，不利于区分。有了参数以后，就等于为它们加上了描述，输出的时候就能够分清，到底是哪一个值。
+
+注意，Symbol函数的参数只是表示对当前 Symbol 值的描述，因此相同参数的Symbol函数的返回值是不相等的。
+
+```js
+// 没有参数的情况
+let s1 = Symbol();
+let s2 = Symbol();
+
+s1 === s2 // false
+
+// 有参数的情况
+let s1 = Symbol('foo');
+let s2 = Symbol('foo');
+
+s1 === s2 // false
+```
+
+Symbol 值不能与其他类型的值进行运算，会报错。
+
+由于每一个 Symbol 值都是不相等的，这意味着 Symbol 值可以作为标识符，用于对象的属性名，就能保证不会出现同名的属性。
+```js
+let mySymbol = Symbol();
+
+// 第一种写法
+let a = {};
+a[mySymbol] = 'Hello!';
+
+// 第二种写法
+let a = {
+  [mySymbol]: 'Hello!'
+};
+
+// 第三种写法
+let a = {};
+Object.defineProperty(a, mySymbol, { value: 'Hello!' });
+
+// 以上写法都得到同样结果
+a[mySymbol] // "Hello!"
+```
+
+Symbol 值作为对象属性名时，不能用点运算符。
+
+在对象的内部，使用 Symbol 值定义属性时，Symbol 值必须放在方括号之中。 否则就是普通的字符串
 
 Object.keys()以及Object.getOwnPropertyNames()这样的方法不返回任何Symbol，可以使用Object.getOwnPropertySymbols()检索Symbol属性
 
 对于已经定义的Symbol属性，仍可以通过Object.defineProperty()和Object.defineProperties()来改变他们
+
+重新使用同一个 Symbol 值，Symbol.for()方法可以做到这一点。Symbol.for()与Symbol()这两种写法，都会生成新的 Symbol。它们的区别是，前者会被登记在全局环境中供搜索，后者不会。Symbol.for()不会每次调用就返回一个新的 Symbol 类型的值，而是会先检查给定的key是否已经存在，如果不存在才会新建一个值。
+
+除了定义自己使用的 Symbol 值以外，ES6 还提供了 11 个内置的 Symbol 值，指向语言内部使用的方法。
+
+对象的`Symbol.hasInstance`属性，指向一个内部方法。当其他对象使用instanceof运算符，判断是否为该对象的实例时，会调用这个方法。比如，`foo instanceof Foo`在语言内部，实际调用的是`Foo[Symbol.hasInstance](foo)`。
+
+```js
+class MyClass {
+  [Symbol.hasInstance](foo) {
+    return foo instanceof Array;
+  }
+}
+
+[1, 2, 3] instanceof new MyClass() // true
+```
 
 well-know Symbol 为标准对象定义了一些只在语言内部可见的功能，它使用的是像Symbol.hasInstance属性这样的全局Symbol常量，这些Symbol统一使用Symbol作为前缀，标准中规定，开发者可以通过多种方法修改对象的特性。
 
