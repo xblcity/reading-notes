@@ -8,6 +8,8 @@
 
 - [第四章 扩展对象的功能性](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第四章-扩展对象的功能性)
 
+- [第五章 解构：使数据访问更便捷](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第五章-解构：使数据访问更便捷)
+
 ## 第一章 块级作用域
 var声明及变量提升
 
@@ -254,3 +256,107 @@ Object.create()用于创建一个指定原型的对象
 Object.getPrototypeof(对象)以及Object.setPrototypeof(对象，原型)分别用于获取和改变原型   
 
 ES6 的 super可以简化原型访问，比如我们想访问原型上同名的方法，要用`Object.getPrototypeof(this).方法.call(this)`，ES6我们可以直接使用`super.方法()`,要必须在简写方法的对象中才能使用
+
+## 第五章 解构：使数据访问更便捷
+
+```js
+// 对象解构
+let {type} = node
+
+// 默认值
+let {type="bool"} = node
+
+// 非同名局部变量赋值
+// 这种语法和传统字面量的语法相悖，原来的语法名称在冒号左边，值在右边，现在变量名称在冒号右边，而需要读取的位置在左边(对象的属性名)
+let {name: localName} = node
+
+// 重命名并添加默认值
+let {name: localName = "bar"} = node
+
+// 嵌套对象解构
+let {local: {start: {name}}} = node
+
+// 数组解构
+let [color1, color2] = colors
+
+// 省略元素
+let [ , , thirdColor] = colors
+
+// 交换变量
+// es5
+let a = 1, b = 2, temp
+temp = a
+a = b
+b = temp
+// ES6
+let a = 2, b = 2
+[a, b] = [b, a]
+
+// 默认值
+let [color1, color2 = "green"] = colors
+
+// 嵌套数组解构
+let [color1, [color11]] = colors
+
+// 剩余元素/不顶元素  rest 
+let [color1, ...resColors] = colors
+
+// 克隆数组
+// es5
+var colors = ["red", "green"]
+var cloneColors = colors.concat()
+// es6
+let colors = ["red", "green"]
+let [...cloneColors] = colors
+
+// 混合结构
+let {loc: {start}, range: [startIndex]} = node
+
+// ======
+// 解构用于传递JS函数参数时
+function setCookie(name, value, {secure, path, domain, expires}) {
+  // 设置cookie的代码
+}
+setCookie("type", "js", {
+  secure: true,
+  expires: 60000
+})
+// 注意
+// 上述函数在调用的时候如果缺失第三个参数，会报错
+// 调用时，JS引擎实际做了这些事情
+let {secure, path, domain, expires} = options
+// options为null, undefined, 或者不传递都会报错
+
+// 如果解构参数是必须的，可以忽略这些问题，如果解构参数是可选的，可以为其提供默认值来解决这个问题
+function setCookie(name. value, {secure, path, domain, expires} = {}) {
+  ...
+}
+
+// =======
+// 为解构参数指定默认值
+function setCookie(name, value, {
+  secure = false,
+  expires = new Date(Date.now() + 36000000)
+}) { ... }
+// 缺点：函数声明比以前复杂，如果解构参数是可选的，仍然要添加一个空对象作为参数，否则像setCookie("type", "js")这样的调用仍然会让程序报出错误。这里建议对于对象类型的解构参数，为其赋予相同解构的默认参数
+function setCookie(name, value, {
+  secure = false,
+  expires = new Date(Date.now() + 36000000)
+} = {
+  secure: false,
+  expires = new Date(Date.now() + 36000000)
+}) { ... }
+// 第一个对象为解构参数，第二个为默认值，这样会有代码冗余，可以讲默认值提取到一个独立对象中，并且使用该对象作为解构和默认参数的一部分，从而消除这些冗余
+const setCookieDefaults = {
+  secure: false,
+  path: "/",
+  domain: "example.com",
+  expires: new Date(Date.now() + 36000000)
+}
+function setCookie(name. value, {
+  secure = setCookieDefaults.secure,
+  path = setCookieDefault.path,
+  domain = setCookieDefault.domain,
+  expires = setCookieDefault.expires
+} = setCookieDefault) { ... }
+```
