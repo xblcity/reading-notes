@@ -12,6 +12,8 @@
 
 - [第六章 Symbol和Symbol属性](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第六章-、Symbol和Symbol属性)
 
+- [第七章 Set集合和Map集合](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第七章-Set集合和Map集合)
+
 ## 第一章 块级作用域
 var声明及变量提升
 
@@ -459,3 +461,89 @@ well-know Symbol 为标准对象定义了一些只在语言内部可见的功能
 这些 well know Symbol 可以通过 如`object.[Symbol.toPrimitive]` `object.prototype.[Symbol.toPrimitive]`等调用，因为这些是直接定义在对象的属性上的，就是说对象的这个可计算属性值(Symbol)类型，是一个函数，可以直接调用，也可以对其进行重新声明
 
 Symbol.toPrimitive方法
+
+## 第七章 Set集合和Map集合
+
+js中对象的属性名会自动被转换成字符串，数字5会被转换成"5"，对象{}会被转换成`[object Object]`
+
+Set集合是一种包含多个非重复值的有序列表，如果相同，会自动过滤重复的值，所以可以使用Set集合过滤数组的重复元素
+
+Set主要有`add, has, delete, clear` 方法
+
+```js
+let set = new Set()
+set.add(5)
+set.add("5")
+set.size // 2
+
+set.add({})
+set.add({})
+set.size // 4
+
+set.has(5) // true
+
+set.delete(5)
+set.size  // 3
+
+set.clear()
+set.size // 0
+```
+
+数组去重
+```js
+const array = [1,3,5,5,5,5]
+let set = new Set(array)
+const newArray = [...set]
+```
+
+遍历
+```js
+let set = new Set([1,2])
+set.forEach(function(value, key, ownerSet) {
+  console.log(key + "" + value)
+})
+// 1 1
+// 2 2
+```
+
+Weak Set
+
+原始引用可以被清除
+
+Map，一种可以存储许多键值对的有序列表，键名相同会被覆盖
+
+主要有set, get, has, delete, clear 方法
+```js
+let map = new Map()
+map.set("year", 2016)
+map.get("year") // 2016
+
+map.size // 1
+map.has("year") // true
+
+map.delete("year")
+map.size // 0
+
+map.clear()
+```
+
+传入数组初始化Map
+```js
+let map = new Map([["name", "xbl"], ["age", 25], ["age", 15]])
+map.get("name") // xbl
+map.get("age") // 15
+map.size // 2
+```
+
+遍历
+```js
+let map = new Map([["name", "xbl"], ["age", 25]])
+map.forEach(function(value, key, ownerMap) {
+  console.log(key + " " + value) 
+})
+// name xbl
+// age 25
+```
+
+Weak Map
+键名必须是非null类型的对象，可以用来存储DOM元素
