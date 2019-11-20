@@ -576,3 +576,108 @@ distinct(list, 'name')
 
 Weak Map
 键名必须是非null类型的对象，可以用来存储DOM元素
+
+## 第八章 迭代器(Iterator)和生成器(Generator)
+
+新的for-of循环，展开运算符(...)，甚至连异步编程都可以使用迭代器
+
+迭代器是一种特殊对象，有个 next() 方法，调用它会返回一个结果对象，这个对象包含两个属性，value和done，结果对象可以继续使用 next()调用
+
+```js
+{
+  value, // 表示下一个将要返回的值， 没有则返回值，value为undefined(与函数类似)，即表示迭代执行完成
+  done  // 布尔值，没有更多可返回数据时返回true, 否则为false
+}
+```
+
+使用ES5创建迭代器
+
+```js
+function createIerator(items) {
+  var i = 0
+  return {
+    next: function() {
+      var done = (i >= items.length)
+      var value = !done ? items[i++] : undefined
+      return {
+        done: done,
+        value: value
+      }
+    }
+  }
+}
+
+var iterator = createIterator([1,2,3])
+
+console.log(iterator.next()) // {value: 1, done: false}
+console.log(iterator.next()) // {value: 2, done: false}
+console.log(iterator.next()) // {value: 3, done: false}
+console.log(iterator.next()) // {value: undefined, done: false}
+
+// 之后所有调用都会返回相同内容
+console.log(iterator.next()) // {value: undefined, done: false}
+```
+
+ES6生成器，可以使创建迭代器对象变得更简单
+
+生成器是一种返回迭代器的函数，通过function关键字后的星号(*)来表示，函数中会用到新的关键字yield。星号可以紧挨着function关键字，也可以在中间添加一个空格。比如
+
+```js
+// 生成器
+function *createItertor() {
+  yield 1
+  yield 2
+  yield 3
+}
+
+// 生成器的调用方式与普通函数相同，只不过返回的是一个迭代器
+let iterator = createIterator()
+
+console.log(iterator.next().value) // 1
+console.log(iterator.next().value) // 2
+console.log(iterator.next().value) // 3
+```
+yield是ES6的新特性，通过它来指定调用迭代器的next()方法时的返回值及返回顺序，生成迭代器后，连续三次调用它的next()方法返回三个不同的值，生成器的调用过程与其他函数一样，最终返回的是创建好的迭代器。
+
+每执行完yield语句后函数就会自动停止执行，直到再次调用迭代器的next()方法才会继续执行下一个yield语句
+
+yield关键字后面可以返回任何值或者表达式，可以通过生成器函数给迭代器添加元素，比如，在循环中使用yield关键字
+
+```js
+function *createIterator(items) {
+  for(let i = 0; i < items.length ; i ++) {
+    yield items[i]
+  }
+}
+
+let iterator = createIterator([1,2,3])
+
+console.log(iterator.next()) // {value: 1, done: false}
+console.log(iterator.next()) // {value: 2, done: false}
+console.log(iterator.next()) // {value: 3, done: false}
+console.log(iterator.next()) // {value: undefined, done: false}
+...
+```
+yield只能在生成器内部使用
+
+```js
+// 生成器函数表达式
+let createIterator = function *(items) {...}
+// 生成器作为 对象的方法
+let o = {
+  createIterator: function *(items) {
+    for (let i = 0; i < items.length; i ++) {
+      yield items[i]
+    }
+  }
+}
+let o = {
+  *createIterator(items) {
+    for (let i = 0; i < items.length; i ++) {
+      yield items[i]
+    }
+  }
+}
+
+let iterator = o.createIterator([1,2,3])
+```
