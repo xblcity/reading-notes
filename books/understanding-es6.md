@@ -545,5 +545,34 @@ map.forEach(function(value, key, ownerMap) {
 // age 25
 ```
 
+数组每一项为对象，对对象某一属性相同的进行去重
+```js
+function distinct(arr, key) {
+  const map = new Map()
+  // map对象没有item[key]，则创建，否则不操作  filter返回一个新的数组，返回那些返回值为true的项
+  const newArr = arr.filter(item => !map.has(item[key]) && map.set(item[key])) 
+  return newArr
+}
+const list = [
+  {
+    name: 'xbl',
+    age: 15
+  },
+  {
+    name: 'xbl',
+    age: 25
+  },
+  {
+    name: 'nico',
+    age: 13
+  }
+]
+distinct(list, 'name')
+// [
+//   {name: "xbl", age: 15},
+//   {name: "nico", age: 13}
+// ]
+```
+
 Weak Map
 键名必须是非null类型的对象，可以用来存储DOM元素
