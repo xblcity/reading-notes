@@ -15,6 +15,10 @@
 
 - [深入浅出Webpack 2018](https://github.com/xblcity/reading-notes/blob/master/books/webpack.md)
 
+- [Node.js实战 第二版 2018](https://github.com/xblcity/reading-notes/blob/master/books/node-learn.md)
+
+- [Koa与Node.js开发实战 2019](https://github.com/xblcity/reading-notes/blob/master/books/koa-learn.md)
+
 ### 阅读文档
 
 - [react英文文档16.10.2](https://github.com/xblcity/reading-notes/blob/master/docs/react.md)
@@ -36,12 +40,6 @@
 ## 2020年
 
 ### 未来可能会读的书
-
-- Node
-
-  - Node.js实战第二版 2018
-
-  - Koa与Node.js开发实战 2019
 
 - 网络
 
