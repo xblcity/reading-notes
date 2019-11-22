@@ -1003,6 +1003,9 @@ const App = withSimple('这是一个标题')(Test)
 
 export default App
 
+// 实际中的一个例子，执行并接收一个参数
+connect(mapStateToProps)(Form.create()(AskForm))
+
 // 如果使用ES5的方式，实现HOC柯里化
 function withSimple(title) {
   return function(WrappedComponent) {
