@@ -1,0 +1,45 @@
+title: 小白龙的读书笔记
+description: 小白龙的读书笔记
+head: 
+  -
+    - link
+    -
+      rel: icon
+      href: /avatar.png
+themeConfig :
+  logo: /avatar.png
+  nav:
+    - text: Github
+      link: https://github.com/xblcity/reading-notes
+  sidebar: 
+    - title: 总览
+      path: /home
+    - title: 前端书籍
+      collapsable: false
+      children:
+        - /books/professional-javascript
+        - /books/understanding-es6
+        - /books/you-don't-know-js1
+        - /books/understanding-node
+        - /books/understanding-webpack
+        - /books/node-in-action
+        - /books/koa-in-action
+    - title: 文档
+      collapsable: false
+      children:
+        - /docs/react
+    - title: 小册子
+      collapsable: false
+      children:
+        - /booklet/fe-interview
+        - /booklet/optimize-performance
+    - title: 视频课
+      collapsable: false
+      children:
+        - /video-courses/webapp
+        - /video-courses/node-learn
+        - /video-courses/webpack
+
+    
+
+    
