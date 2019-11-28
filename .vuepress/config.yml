@@ -1,5 +1,10 @@
 title: 小白龙的读书笔记
 description: 小白龙的读书笔记
+locales:
+  /:
+    lang: zh-CN
+    title: 小白龙的读书笔记
+    description: 小白龙的读书笔记
 head: 
   -
     - link
@@ -9,6 +14,8 @@ head:
 themeConfig :
   logo: /avatar.png
   nav:
+    - text: 博客
+      link: blog.xblcity.com
     - text: Github
       link: https://github.com/xblcity/reading-notes
   sidebar: 
