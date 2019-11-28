@@ -1,6 +1,8 @@
 # reading-notes
 
-看过的一些关于前端的纸质以及电子书的读书笔记
+> 看过的一些关于前端的纸质以及电子书的读书笔记
+
+> 记录一些重要的点，便于查阅，温故而知新
 
 ## 2019年
 
@@ -8,17 +10,17 @@
 
 - [Javascript高级程序设计(第三版) Nicholas C. Zakas 2012](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md)
 
-- [深入浅出node.js 朴灵 2013](https://github.com/xblcity/reading-notes/blob/master/books/node.md)
-
 - [深入理解ES6 Nicholas C. Zakas 2017](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md)
 
 - [你不知道的javascript(上) 2015](https://github.com/xblcity/reading-notes/blob/master/books/you-don't-know-js1.md)
 
-- [深入浅出Webpack 2018](https://github.com/xblcity/reading-notes/blob/master/books/webpack.md)
+- [深入浅出node.js 朴灵 2013](https://github.com/xblcity/reading-notes/blob/master/books/understanding-node.md)
 
-- [Node.js实战 第二版 2018](https://github.com/xblcity/reading-notes/blob/master/books/node-learn.md)
+- [深入浅出Webpack 2018](https://github.com/xblcity/reading-notes/blob/master/books/understanding-webpack.md)
 
-- [Koa与Node.js开发实战 2019](https://github.com/xblcity/reading-notes/blob/master/books/koa-learn.md)
+- [Node.js实战 第二版 2018](https://github.com/xblcity/reading-notes/blob/master/books/node-in-action.md)
+
+- [Koa与Node.js开发实战 2019](https://github.com/xblcity/reading-notes/blob/master/books/koa-in-action.md)
 
 ### 阅读文档
 
