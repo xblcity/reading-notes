@@ -4,7 +4,7 @@
 
 > 记录一些重要的点，便于查阅，温故而知新
 
-[线上版本](reading.xblcity.com)
+[线上版本](https://reading.xblcity.com)
 
 ## 2019年
 
