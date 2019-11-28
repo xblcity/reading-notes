@@ -801,7 +801,7 @@ var result = compareNames({name: 'nico'}, {name: 'luffy'})
 compareNames = null
 ```
 
-![执行环境与作用域链](../images/pro_js/execution_context.jpg)
+![执行环境与作用域链](./images/pro_js/execution_context.jpg)
 
 上图展示了调用compareNames()的过程中产生的作用域链之间的关系，compareNames的执行环境中有三个变量，object1,object2,arguments，但同时又引用了createComparisonFunction作用域的值，因此，createComparisonFunction的活动对象也被推进了执行环境，，而所有函数的作用域链末端都有个全局执行的环境
 
@@ -1183,7 +1183,7 @@ Mozilla/版本号 [语言] (平台：加密类型)
 
 ### 10.1 节点层次
 `<html>`元素称之为文档元素
-![文档树解构](../images/pro_js/document_tree.jpg)
+![文档树解构](./images/pro_js/document_tree.jpg)
 
 #### 10.1.1 Node类型
 *nodeName, nodeType, nodeValue属性*   
@@ -1334,14 +1334,14 @@ offsetWidth // 水平方向，包括元素宽度，滚动条，左右边框宽�
 offsetLeft // 左外边框至元素左内边框距离
 offsetTop // 元素上外边框至元素上内边框距离
 ```
-![图示](../images/pro_js/offset.jpg)  
+![图示](./images/pro_js/offset.jpg)  
 
 客户区大小(client dimension)
 ```js
 clientHeight // 不包含边框的元素高度
 clientWidth
 ```
-![client dimension](../images/pro_js/client_dimension.jpg)
+![client dimension](./images/pro_js/client_dimension.jpg)
 
 滚动大小(scroll dimension)
 ```js
@@ -1354,7 +1354,7 @@ document.documentElement.scrollTop  // 视口
 document.body.scrollHeight // 带有滚动条的页面总高度 <body> , 可以替代上面的方式
 document.body.scrollTop // 视口
 ```
-![client dimension](../images/pro_js/scroll_dimension.jpg)
+![client dimension](./images/pro_js/scroll_dimension.jpg)
 
 元素大小  
 getBoundingClientRect(), 这个方法会返回一个矩形对象，包含四个属性: left,top,right,bottom, 获取元素在页面中相对于视口(视觉区域)的位置
