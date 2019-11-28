@@ -13,7 +13,7 @@ themeConfig :
       link: https://github.com/xblcity/reading-notes
   sidebar: 
     - title: 总览
-      path: /home
+      path: /
     - title: 前端书籍
       collapsable: false
       children:
