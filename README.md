@@ -34,11 +34,11 @@
 
 ### 我看过的一些视频课
 
-- [移动Web App开发之实战美团外卖](https://github.com/xblcity/reading-notes/blob/master/video_courses/webapp.md)
+- [移动Web App开发之实战美团外卖](https://github.com/xblcity/reading-notes/blob/master/video-courses/webapp.md)
 
-- [Node.js入门到企业Web开发中的应用]()
+- [Node.js入门到企业Web开发中的应用](https://github.com/xblcity/reading-notes/blob/master/video-courses/node-learn.md)
 
-- [四大维度解锁 Webpack 前端工程化](https://github.com/xblcity/reading-notes/blob/master/video_courses/webpack.md)
+- [四大维度解锁 Webpack 前端工程化](https://github.com/xblcity/reading-notes/blob/master/video-courses/webpack.md)
 
 ## 2020年
 
