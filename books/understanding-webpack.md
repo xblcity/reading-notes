@@ -61,7 +61,7 @@ output.filename 配置输出文件的名称，为string 类型。 如果只有�
 
 #### path
 
-output.path 配置输出文件存放在本地的目录，必须是 string 类型的绝对路径。通常通过 Node.js 的 path 模块去获取绝对路径：
+output.path 配置输出文件存放在本地的目录，**必须是 string 类型的绝对路径。** 通常通过 Node.js 的 path 模块去获取绝对路径：
 
 ```js
 path: path.resolve(__dirname, 'dist_[hash]')
@@ -305,3 +305,96 @@ module.exports = function (env = {}, argv) {
 1. env：当前运行时的 Webpack 专属环境变量，env 是一个 `Object`。读取时直接访问 `Object` 的属性，设置它需要在启动 Webpack 时带上参数。例如启动命令是 `webpack --env.production --env.bao=foo`时，则 env 的值是 `{"production":"true","bao":"foo"}`。
 
 2. argv：代表在启动 Webpack 时所有通过命令行传入的参数，例如 `--config、--env、--devtool`，可以通过 `webpack -h` 列出所有 `Webpack` 支持的命令行参数。
+
+## 第三章 实战
+
+### 使用ES6语言
+
+虽然目前部分浏览器和 Node.js 已经支持 ES6，但由于它们对 ES6 所有的标准支持不全，这导致在开发中不敢全面地使用 ES6。
+
+通常我们需要把采用 ES6 编写的代码转换成目前已经支持良好的 ES5 代码，这包含2件事：
+
+1. 把新的 ES6 语法用 ES5 实现，例如 ES6 的 class 语法用 ES5 的 prototype 实现。
+2. 给新的 API 注入 polyfill ，例如项目使用 fetch API 时，只有注入对应的 polyfill 后，才能在低版本浏览器中正常运行。
+
+Babel 可以方便的完成以上2件事。 Babel 是一个 JavaScript 编译器，能将 ES6 代码转为 ES5 代码，让你使用最新的语言特性而不用担心兼容性问题，并且可以通过插件机制根据需求灵活的扩展。 在 Babel 执行编译的过程中，会从项目根目录下的 .babelrc 文件读取配置。.babelrc 是一个 JSON 格式的文件，内容大致如下：
+
+```js
+// json文件不允许有注释
+{
+  "plugins": [  // 插件，数组
+    [
+      "transform-runtime",  // 减少冗余代码
+      {
+        "polyfill": false  // 支持浏览器的范围
+      }
+    ]
+   ],
+  "presets": [  // 告诉 Babel 要转换的源码使用了哪些新的语法特性
+    [
+      "es2015",
+      {
+        "modules": false
+      }
+    ],
+    "stage-2",
+    "react"
+  ]
+}
+```
+
+注：原文的配置是基于babel@6, babel@7配置的插件以及preset名字以及配置项有所变化
+
+并且`presets`的 `@babel/preset-env` 包含了 `babel-preset-es2015` `babel-preset-es2016` `babel-preset-es2017` `babel-preset-latest` 全部
+
+```js
+{
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        // "polyfill": false // polyfill babel7成为默认项
+      }
+    ]
+   ],
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "modules": auto
+      }
+    ],
+    // "stage-2",
+    // react"
+  ]
+}
+```
+
+#### Plugins
+
+#### Presets
+
+presets 属性告诉 Babel 要转换的源码使用了哪些新的语法特性，一个 Presets 对一组新语法特性提供支持，多个 Presets 可以叠加。 Presets 其实是一组 Plugins 的集合，每一个 Plugin 完成一个新语法的转换工作。Presets 是按照 ECMAScript 草案来组织的，通常可以分为以下三大类：
+
+1. 已经被写入 ECMAScript 标准里的特性，由于之前每年都有新特性被加入到标准里，所以又可细分为：
+
+- es2015 包含在2015里加入的新特性；
+- es2016 包含在2016里加入的新特性；
+- es2017 包含在2017里加入的新特性；
+- env 包含当前所有 ECMAScript 标准里的最新特性。
+
+2. 被社区提出来的但还未被写入 ECMAScript 标准里特性，这其中又分为以下四种：
+
+- stage0 只是一个美好激进的想法，有 Babel 插件实现了对这些特性的支持，但是不确定是否会被定为标准；
+- stage1 值得被纳入标准的特性；
+- stage2 该特性规范已经被起草，将会被纳入标准里；
+- stage3 该特性规范已经定稿，各大浏览器厂商和 Node.js 社区开始着手实现；
+- stage4 在接下来的一年将会加入到标准里去。
+
+3. 为了支持一些特定应用场景下的语法，和 ECMAScript 标准没有关系，例如 babel-preset-react 是为了支持 React 开发中的 JSX 语法。
+
+注： 
+
+在babel7版本，所有stage全部废除(As of Babel v7, all the stage presets have been deprecated.)
+
+preset-env插件包含了`babel-preset-es2015` `babel-preset-es2016` `babel-preset-es2017` `babel-preset-latest` 插件全部
