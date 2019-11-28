@@ -2,21 +2,21 @@
 
 > 该书不仅讲解了node.js方面的知识，对于了解与巩固网络传输方面的知识也有很大帮助，对前端开发来说，太棒了~
 
-- [第一章 Node简介](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第一章-node简介)
+- [第一章 Node简介](#第一章-node简介)
 
-- [第二章 Node简介](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第二章-模块机制)
+- [第二章 Node简介](#第二章-模块机制)
 
-- [第三章 异步I/O](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第三章-异步I/O)
+- [第三章 异步I/O](#第三章-异步I/O)
 
-- [第四章 异步编程](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第四章-异步编程)
+- [第四章 异步编程](#第四章-异步编程)
 
-- [第五章 内存控制](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第五章-内存控制)
+- [第五章 内存控制](#第五章-内存控制)
 
-- [第六章 理解Buffer](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第六章-理解Buffer)
+- [第六章 理解Buffer](#第六章-理解Buffer)
 
-- [第七章 网络编程](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第七章-网络编程)
+- [第七章 网络编程](#第七章-网络编程)
 
-- [第八章 构建Web应用](https://github.com/xblcity/reading-notes/blob/master/books/node.md#第八章-构建Web应用)
+- [第八章 构建Web应用](#第八章-构建Web应用)
 
 :smile: :smiley: :innocent:
 

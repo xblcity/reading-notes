@@ -1,18 +1,18 @@
 # 深入理解ES6
 
-- [第一章 块级作用域](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第一章-块级作用域)
+- [第一章 块级作用域](#第一章-块级作用域)
 
-- [第二章 字符串和正则表达式](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第二章-字符串和正则表达式)
+- [第二章 字符串和正则表达式](#第二章-字符串和正则表达式)
 
-- [第三章 函数](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第三章-函数)
+- [第三章 函数](#第三章-函数)
 
-- [第四章 扩展对象的功能性](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第四章-扩展对象的功能性)
+- [第四章 扩展对象的功能性](#第四章-扩展对象的功能性)
 
-- [第五章 解构：使数据访问更便捷](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第五章-解构：使数据访问更便捷)
+- [第五章 解构：使数据访问更便捷](#第五章-解构：使数据访问更便捷)
 
-- [第六章 Symbol和Symbol属性](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第六章-、Symbol和Symbol属性)
+- [第六章 Symbol和Symbol属性](#第六章-、Symbol和Symbol属性)
 
-- [第七章 Set集合和Map集合](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md#第七章-Set集合和Map集合)
+- [第七章 Set集合和Map集合](#第七章-Set集合和Map集合)
 
 ## 第一章 块级作用域
 var声明及变量提升
