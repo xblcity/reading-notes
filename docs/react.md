@@ -6,18 +6,18 @@
 
 - MAIN CONCEPTS
 
-  - [1.Hello World](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#1.Hello-World)
-  - [2.Introducing JSX](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#2.Introducing-JSX)
-  - [3.Rendering Elements](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#3.Rendering-Elements)
-  - [4.Components and Props](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#4.Components-and-Props)
-  - [5.State and Lifecycle](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#5.State-and-Lifecycle)
-  - [6.Handling Events](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#6.Handling-Events)
-  - [7.Conditional Rendering](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#7.Conditional-Rendering)
-  - [8.Lists and Keys](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#8.Lists-and-Keys)
-  - [9.Forms](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#9.Forms)
-  - [10.Lifting State Up](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#10.Lifting-State-Up)
-  - [11.Composition vs Inheritance](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#11.Composition-vs-Inheritance)
-  - [12.Thinking In React](https://github.com/xblcity/reading-notes/blob/master/docs/react.md#12.Thinking-In-React)
+  - [1.Hello World](#1.Hello-World)
+  - [2.Introducing JSX](#2.Introducing-JSX)
+  - [3.Rendering Elements](#3.Rendering-Elements)
+  - [4.Components and Props](#4.Components-and-Props)
+  - [5.State and Lifecycle](#5.State-and-Lifecycle)
+  - [6.Handling Events](#6.Handling-Events)
+  - [7.Conditional Rendering](#7.Conditional-Rendering)
+  - [8.Lists and Keys](#8.Lists-and-Keys)
+  - [9.Forms](#9.Forms)
+  - [10.Lifting State Up](#10.Lifting-State-Up)
+  - [11.Composition vs Inheritance](#11.Composition-vs-Inheritance)
+  - [12.Thinking In React](#12.Thinking-In-React)
 
 - ADVANCED GUIDES
 
