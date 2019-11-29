@@ -1,10 +1,10 @@
 title: 小白龙的读书笔记
-description: 小白龙的读书笔记
+description: 小白龙的前端读书笔记
 locales:
   /:
     lang: zh-CN
     title: 小白龙的读书笔记
-    description: 小白龙的读书笔记
+    description: 小白龙的前端读书笔记
 head: 
   -
     - link
