@@ -6,18 +6,18 @@
 
 - MAIN CONCEPTS
 
-  - [1.Hello World](#1.Hello-World)
-  - [2.Introducing JSX](#2.Introducing-JSX)
-  - [3.Rendering Elements](#3.Rendering-Elements)
-  - [4.Components and Props](#4.Components-and-Props)
-  - [5.State and Lifecycle](#5.State-and-Lifecycle)
-  - [6.Handling Events](#6.Handling-Events)
-  - [7.Conditional Rendering](#7.Conditional-Rendering)
-  - [8.Lists and Keys](#8.Lists-and-Keys)
-  - [9.Forms](#9.Forms)
-  - [10.Lifting State Up](#10.Lifting-State-Up)
-  - [11.Composition vs Inheritance](#11.Composition-vs-Inheritance)
-  - [12.Thinking In React](#12.Thinking-In-React)
+  - [1.Hello World](#1.hello-world)
+  - [2.Introducing JSX](#2.introducing-jsx)
+  - [3.Rendering Elements](#3.rendering-elements)
+  - [4.Components and Props](#4.components-and-props)
+  - [5.State and Lifecycle](#5.state-and-lifecycle)
+  - [6.Handling Events](#6.handling-events)
+  - [7.Conditional Rendering](#7.conditional-rendering)
+  - [8.Lists and Keys](#8.lists-and-keys)
+  - [9.Forms](#9.forms)
+  - [10.Lifting State Up](#10.lifting-state-up)
+  - [11.Composition vs Inheritance](#11.composition-vs-inheritance)
+  - [12.Thinking In React](#12.thinking-in-react)
 
 - ADVANCED GUIDES
 
@@ -107,7 +107,7 @@ ReactDOM.render(
 - Welcome组件返回`<h1>Hello, Sara</h1>`这个element作为结果
 - ReactDOM更新视图
 
-##### Tips
+###### Tips
 
 - React app通常有一个顶层的App组件，你可以通过很小的组件来构建这个顶层组件
 - 组件尽可能拆分成更小的可复用的组件
@@ -207,7 +207,7 @@ react元素中处理事件与DOM相似，但也有不同点
 - 在html中你可以通过return false来阻止html元素的默认行为，但是在react中，需要通过`e.preventDefault()`, e是个合成事件，在react中遵从了W3C标准
 - 在jsx中不需要使用addEventListener()来为已经创建的dom绑定事件，相反，只需要提供一个事件监听函数当元素首次被渲染后
 
-##### js回调函数中的this
+###### js回调函数中的this
 
 在React中，在class中，事件处理函数中的this是Undefined(因为事件处理函数的方法提取出来调用了)，为了使得this表现的符合预期，推荐两种方式改变this指向：  
 1. bind，需要在constructor构造函数中绑定，或者在jsx事件按处理程序中进行绑定
@@ -342,7 +342,7 @@ handleChange(e) {
 
 ### 11.Composition vs Inheritance
 
-##### Containment
+###### Containment
 
 有些组件不会提前知道它的子组件，这些在那些如侧边栏(Sidebar)或者对话框(Dialog)等代表这通用的盒子比较常见。我们推荐使用特殊的prop`children`来把子元素当作输入直接传递给该组件，即`props.children`，当然，有时候你也可以把组件当作prop传递给容器组件，有点类似插槽(slots),如：
 ```js
@@ -664,7 +664,7 @@ this.inputElement.current.focus();
 - 使用import().then()异步加载，webpack使用了这种语法，但目前js并不支持(在提案中)
 - 使用React.lazy()和Suspense()(但是服务端渲染暂不支持，可以使用loadable)，Suspense可以放在任何你希望懒加载的地方
 
-##### 使用Suspense与懒加载
+###### 使用Suspense与懒加载
 
 - 为懒加载增加错误处理
 - 以路由为单位进行代码分割
