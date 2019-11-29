@@ -10,9 +10,9 @@
 
 - [第五章 解构：使数据访问更便捷](#第五章-解构：使数据访问更便捷)
 
-- [第六章 Symbol和Symbol属性](#第六章-、Symbol和Symbol属性)
+- [第六章 Symbol和Symbol属性](#第六章-symbol和symbol属性)
 
-- [第七章 Set集合和Map集合](#第七章-Set集合和Map集合)
+- [第七章 Set集合和Map集合](#第七章-set集合和map集合)
 
 ## 第一章 块级作用域
 var声明及变量提升

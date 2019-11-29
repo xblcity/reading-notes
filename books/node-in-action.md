@@ -8,7 +8,7 @@
 
   - [第二章 Node编程基础](#第二章-node编程基础)
 
-  - [第三章 Node Web程序是什么](#第三章-Node-web程序是什么)
+  - [第三章 Node Web程序是什么](#第三章-node-web程序是什么)
 
 ## 第一章 欢迎进入Node.js的世界
 
@@ -85,3 +85,5 @@ server.listen(8888)
 流程控制：串行执行/并行执行
 
 ## 第三章 Node Web程序是什么
+
+https://github.com/xblcity/reading-notes/blob/master/books/node-in-action.md#%E7%AC%AC%E4%B8%80%E7%AB%A0-%E6%AC%A2%E8%BF%8E%E8%BF%9B%E5%85%A5nodejs%E7%9A%84%E4%B8%96%E7%95%8C
