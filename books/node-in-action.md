@@ -4,9 +4,9 @@
 
 - 第一部分 Node基础知识介绍
 
-  - [第一章 欢迎进入Node.js的世界](./node-in-action#第一章-欢迎进入Node.js的世界)
+  - [第一章 欢迎进入Node.js的世界](../books/node-in-action.md#第一章-欢迎进入Node.js的世界)
 
-  - [第二章 Node编程基础](./#第二章-Node编程基础)
+  - [第二章 Node编程基础](#第二章-Node编程基础)
 
   - [第三章 Node Web程序是什么](#第三章-Node-Web程序是什么)
 
