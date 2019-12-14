@@ -639,7 +639,7 @@ console.log(iterator.next().value) // 3
 ```
 yield是ES6的新特性，通过它来指定调用迭代器的next()方法时的返回值及返回顺序，生成迭代器后，连续三次调用它的next()方法返回三个不同的值，生成器的调用过程与其他函数一样，最终返回的是创建好的迭代器。
 
-每执行完yield语句后函数就会自动停止执行，直到再次调用迭代器的next()方法才会继续执行下一个yield语句
+**每执行完yield语句后函数就会自动停止执行，直到再次调用迭代器的next()方法才会继续执行下一个yield语句**
 
 yield关键字后面可以返回任何值或者表达式，可以通过生成器函数给迭代器添加元素，比如，在循环中使用yield关键字
 
@@ -663,7 +663,7 @@ yield只能在生成器内部使用
 ```js
 // 生成器函数表达式
 let createIterator = function *(items) {...}
-// 生成器作为 对象的方法
+// 生成器作为 对象的方法，两种写法 
 let o = {
   createIterator: function *(items) {
     for (let i = 0; i < items.length; i ++) {
@@ -680,4 +680,40 @@ let o = {
 }
 
 let iterator = o.createIterator([1,2,3])
+```
+
+### 可迭代对象与for-of循环
+
+可迭代对象具有Symbol.iterator属性(该属性是一个generator)，对可迭代对象迭代时会使用该属性。
+
+所有集合对象(数组，Set集合, Map集合，字符串, 普通对象不是哦)都是可迭代对象，这些对象有默认的迭代器。ES6新加入的for-of循环就是用到了可迭代对象的Symbol.Iterator属性
+
+for-of循环每执行一次都会调用可迭代对象的next()方法。并将迭代器返回的结果对象的value属性存储在一个变量中，循环将持续执行这一过程直到返回对象的done属性的值为true
+
+```js
+let values = [1,2,3]
+
+for (let num of values) {
+  console.log(num)
+}
+```
+for-of循环通过嗲用values数组的Symbol.iterator方法来获取迭代器，随着迭代器的next()被多次调用，从其返回对象的value属性读取值并存储在变量num中，分别是1,,3，当结果对象的*done*属性值为true时循环退出，所以num不会被复制为undefined
+
+### 为默认对象创建可迭代对象
+
+默认情况下，开发者定义的对象都是不可迭代对象，但如果给Symbol.iterator属性添加一个生成器，则可以将其变为可迭代对象。
+
+```js
+let collection = {
+  items: [1,2,3],
+  *[Symbol.iterator]() {
+    for (let item of this.items) {
+      yield item
+    }
+  }
+}
+
+for (let item of collection) {
+  console.log(item) // 1 2 3
+} 
 ```
