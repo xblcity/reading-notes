@@ -717,3 +717,125 @@ for (let item of collection) {
   console.log(item) // 1 2 3
 } 
 ```
+
+### 内置迭代器
+
+集合类型比如，数组,Set,Map数据通常有三种迭代器方法，比如entries(), values(), keys()，可以从语义理解,entries()返回键值对，values()返回键值，keys()返回键。
+
+每个集合类型都有默认的迭代器，for-of使用默认的迭代器，数组与Set默认迭代器是values()方法，Map是entries()方法
+
+```js
+const a = [1,2,3]
+for (let key of a) {
+  console.log(key) // 1,2,3
+}
+for (let key of a.entries()) {
+  console.log(key) // [0,1], [1,2], [2,3]
+}
+
+const b = new Set(['a', 'b', 'c'])
+for (let key of b) {
+  console.log(key) // 'a', 'b', 'c'
+}
+for (let key of b.entries()) {
+  console.log(key) // ["a", "a"], ["b", "b"], ["c", "c"]
+}
+
+const c = new Map()
+c.set("name", "xbl")
+c.set("age", 17)
+for (let key of c) {
+  console.log(key) // ["name", "xbl"], ["age", 17]
+}
+for (let key of c.entries()) {
+  console.log(key) // ["name", "xbl"], ["age", 17]
+}
+```
+
+使用for-of对字符串与NodeList(Node节点)进行迭代，可以避免for-in循环产生的一些问题
+
+展开运算符可以应用于所有可迭代对象，比如Set, Map集合
+
+### 高级迭代器功能
+
+为next()传递参数，作为上一次yield的返回值，当然，第一次执行next()方法，参数会被忽略，因为上一次并无yield返回值
+
+在迭代器中抛出错误，通过throw方法，如果不使用try-catch语句，那么是生成器抛出的默认错误，使用try-catch可以抛出符合预期的错误，对错误进行处理，使得迭代器可以顺利向后执行。
+
+```js
+// 待补充，
+```
+
+委托生成器：将多个迭代器合为一个，只需要在调用时加入*即可
+
+```js
+function *createNumberIterator() {
+  yield 1
+  yield 2
+}
+function *createColorIterator() {
+  yield 'blue'
+  yield 'green'
+}
+function *createCombinedIterator() {
+  yield *createNumberIterator()
+  yield *createColorIterator()
+  yield true
+}
+
+var iterator = createCombinedIterator()
+
+console.log(iterator.next()) {value: 1, done: false}
+console.log(iterator.next()) {value: 2, done: false}
+console.log(iterator.next()) {value: 'blue', done: false}
+console.log(iterator.next()) {value: 'green', done: false}
+console.log(iterator.next()) {value: true, done: false}
+console.log(iterator.next()) {value: undefined, done: true}
+```
+
+利用生成器的返回值处理复杂任务
+
+```js
+function *createNumberIterator() {
+  yield 1
+  yield 2
+  return 3
+}
+
+function *createRepeatingIterator(count) {
+  for (let i = 0; i < count; i ++) {
+    yield "repeat"
+  }
+}
+
+function *createCombinedIterator() {
+  let result = yield *createNumberIterator()
+  yield *createRepeatingIterator(count)
+}
+
+var iterator = createCombinedIterator()
+
+console.log(iterator.next()) // {value: 1, done: false}
+console.log(iterator.next()) // {value: 2, done: false}
+console.log(iterator.next()) // {value: "repeat", done: false}
+console.log(iterator.next()) // {value: "repeat", done: false}
+console.log(iterator.next()) // {value: "repeat", done: false}
+console.log(iterator.next()) // {value: undefined, done: true}
+```
+
+注意，数值3永远不会被返回，只存在于生成器createNumberIterator内部，如果想要输出这个值，需要额外添加一个yield语句
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
