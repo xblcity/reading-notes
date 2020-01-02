@@ -825,6 +825,134 @@ console.log(iterator.next()) // {value: undefined, done: true}
 
 注意，数值3永远不会被返回，只存在于生成器createNumberIterator内部，如果想要输出这个值，需要额外添加一个yield语句
 
+## 第九章 JavaScript中的类
+
+ES5及之前没有类的概念，最相近的思路是创建一个自定义类型：首先创建一个构造函数，然后定义另一个方法并赋值给构造函数的原型，比如：
+
+```js
+function PersonType(name) {
+  this.name = name
+}
+
+PersonType.prototype.sayName = function() {
+  cosnole.log(this.name)
+}
+
+var person = new PersonType('xbl')
+person.sayName() // 'xbl'
+
+console.log(person instanceof PersonType) // true
+console.log(person instanceof Object) // true
+```
+
+ES6声明类，需要`class`关键字，`constructor()`来定义构造函数，是实例中的自有属性，不会出现在原型上，其他方法都会挂载到原型上面，中间不需要`逗号`分隔符
+
+类声明
+```js
+// 类声明不存在变量提升，默认自动运行在严格模式下，类所有方法都不可枚举
+class Person {
+
+}
+// 类表达式语法
+let PersonClass = class {
+  constructor(name) {
+    this.name = name
+  }
+  sayName() {
+    console.log(this.name)
+  }
+}
+
+let PersonClass = class PersonClass2 {
+
+}
+console.log(typeof PersonClass) // function
+console.log(typeof PersonClass2) // undefined
+```
+
+访问器属性
+
+```js
+class CustomHTMLElement {
+  cosntructor(element) {
+    this.element = element
+  }
+  get html() {
+    return this.element.innerHTML
+  }
+  set html() {
+    this.element.innerHTML = value
+  }
+}
+
+var descriptor = Object.getOwnPropertyDescriptor(CustomHTMLElement.prototype, "html")
+console.log("get" in descriptor) // true
+console.log("set" in descriptor) // true
+console.log(descriptor.enumerable) // false
+
+// 等同于ES5
+let CustomHTMLElement = (function() {
+  "use strict";
+  const CustomHTMLElement = function(element) {
+    // 确保通过关键字new调用该函数
+    if(typeof new.target === "undefined") {
+      throw new Error("必须通过关键字new调用构造函数")
+    }
+    this.element = element
+  }
+
+  Object.defineProperty(CustomHTMLElement.prototype, "html", {
+    enumerable: false,
+    configurable: true,
+    get: function() {
+      return this.element.innerHTML
+    },
+    set: function() {
+      this.element.innerHTML = value
+    }
+  })
+
+  return CustomHTMLELement
+}())
+```
+
+类方法和访问器属性也支持使用可计算名称
+
+类和对象字面量诸多的共同点中，除了方法，访问器属性及可计算名称上的共同点外，还需要另一个相似之处，也就是生成器方法。
+
+```js
+class MyClass {
+  *createIterator() {
+    yield 1
+    yield 2
+    yield 3
+  }
+}
+
+let instance = new MyClass()
+let iterator = instance.createIterator()
+
+class Collection {
+
+  constructor() {
+    this.items = []
+  }
+
+  *[Symbol.iterator]() {
+    yield *this.items.value()
+  }
+}
+
+var collection = new Collection()
+collection.items.push(1)
+collection.items.push(2)
+collection.items.push(3)
+
+for(let x of collection) {
+  console.log(x)  // 1 2 3
+}
+```
+
 
 
 
