@@ -827,7 +827,7 @@ console.log(iterator.next()) // {value: undefined, done: true}
 
 ## 第九章 JavaScript中的类
 
-ES5及之前没有类的概念，最相近的思路是创建一个自定义类型：首先创建一个构造函数，然后定义另一个方法并赋值给构造函数的原型，比如：
+ES5及之前没有类的概念，最相近的思路是创建一个自定义类型：首先创建一个**构造函数**，然后定义另一个方法并赋值给**构造函数的原型**，比如：
 
 ```js
 function PersonType(name) {
@@ -933,7 +933,6 @@ let instance = new MyClass()
 let iterator = instance.createIterator()
 
 class Collection {
-
   constructor() {
     this.items = []
   }
@@ -953,6 +952,88 @@ for(let x of collection) {
 }
 ```
 
+静态成员：ES5中将方法直接添加到构造函数中来模拟静态成员
+
+```js
+function PersonType(name) {
+  this.name = name
+}
+// 静态方法
+PersonType.create = function(name) {
+  return new PersonType(name)
+}
+// 实例方法
+PersonType.prototype.sayName = function() {
+  console.log(this.name)
+}
+var person = PersonType.create('xbl')
+```
+由于 `PersonType.create()` 使用的数据不依赖 `PersonType`的实例，因而其会被认为是一个静态方法，ES6中：
+
+```js
+class PersonClass {
+  constructor(name) {
+    this.name = name
+  }
+  sayName() {
+    console.log(this.name)
+  }
+  static create(name) {
+    return new PersonClass(name)
+  }
+}
+```
+
+需要注意的是，不可以在实例中访问静态成员，必须要直接在类中访问静态成员。
+
+ES5实现继承
+
+```js
+function Rectangle(length, width) {
+  this.length = length
+  this.width = width
+}
+Rectangle.prototype.getArea = function() {
+  return this.length * this.width
+}
+
+function Square(length) {
+  Rectangle.call(this, length, length)
+}
+
+Square.prototype = Object.create(Rectangle.prototype, {
+  constructor: {
+    value: Square,
+    enumerable: true,
+    writerable: true,
+    configurable: true
+  }
+})
+var square = new Square(3)
+
+console.log(square.getArea())
+console.log(square instanceof Square)
+console.log(square instanceof Rectangle)
+```
+
+ES6实现继承/派生类
+
+```js
+class Rectangle {
+  constructor(length, width) {
+    this.length = length
+    this.width = width
+  }
+  getArea() {
+    return this.length * this.width
+  }
+}
+
+class Square extends Rectangle {
+  
+}
+
+```
 
 
 
