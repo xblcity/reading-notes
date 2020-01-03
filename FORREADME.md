@@ -4,6 +4,14 @@
 
 > 记录一些重要的点，便于查阅，温故而知新
 
+## 2020年
+
+### 我要看的一些书
+
+- XX[Node.js实战 第二版 2018](books/node-in-action.md)
+
+- XX[Koa与Node.js开发实战 2019](books/koa-in-action.md)
+
 ## 2019年
 
 ### 我看过的一些书
@@ -17,10 +25,6 @@
 - [深入浅出node.js 朴灵 2013](/books/understanding-node.md)
 
 - [深入浅出Webpack 2018](/books/understanding-webpack.md)
-
-- [Node.js实战 第二版 2018](/books/node-in-action.md)
-
-- [Koa与Node.js开发实战 2019](/books/koa-in-action.md)
 
 ### 阅读文档
 
@@ -40,9 +44,7 @@
 
 - [四大维度解锁 Webpack 前端工程化](/video_courses/webpack.md)
 
-## 2020年
-
-### 未来可能会读的书
+## 未来可能会读的书
 
 - 网络
 
