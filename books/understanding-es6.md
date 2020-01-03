@@ -624,7 +624,7 @@ ES6生成器，可以使创建迭代器对象变得更简单
 
 ```js
 // 生成器
-function *createItertor() {
+function* createIterator() {
   yield 1
   yield 2
   yield 3
