@@ -1,4 +1,4 @@
-# reading-notes
+# :book:reading-notes
 
 > 看过的一些关于前端的纸质以及电子书的读书笔记
 
@@ -6,7 +6,13 @@
 
 [线上版本](https://reading.xblcity.com)
 
-## :book:2020年
+- [2020年](#zzz2020年)
+
+- [2019年](#zzz2019年)
+
+- [未来可能会读的书](#zzz未来可能会读的书)
+
+## :zzz:2020年
 
 ### 1.我要看的一些书
 
@@ -14,7 +20,7 @@
 
 - 待看~[Koa与Node.js开发实战 2019](https://github.com/xblcity/reading-notes/blob/master/books/koa-in-action.md)
 
-## :book:2019年
+## :zzz:2019年
 
 ### 1.我看过的一些书
 
@@ -46,7 +52,7 @@
 
 - [四大维度解锁 Webpack 前端工程化](https://github.com/xblcity/reading-notes/blob/master/video-courses/webpack.md)
 
-## :book:未来可能会读的书
+## :zzz:未来可能会读的书
 
 - 网络
 
