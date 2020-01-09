@@ -1062,11 +1062,47 @@ class Rectangle {
 }
 
 class Square extends Rectangle {
-  
+  Rectangle.call(this, length, length)
 }
 
+Square.prototype = Object.create(Rectangle.prototype, {
+  constructor: {
+    value: Square,
+    enumerable: true,
+    writable: true,
+    configurable: true
+  }
+})
+var square = new Square(3)
+
+console.log(square.getArea()) // 9
+console.log(square instanceof Square) // true
+console.log(square instanceof Rectangle) // true
 ```
 
+ES6中只需要super关键字就可以实现继承
+
+```js
+class Square extends Rectangle {
+  constructor(length) {
+    // 等价于 Rectangle.call(this,length,length)
+    super(length, length)
+  }
+}
+
+// 使用了extends却没有super(), super()会被默认创建
+```
+
+// Todo ===
+===
+
+## 第十章 改进的数组功能
+
+## 第十一章 Promise与异步编程
+
+## 第十二章 代理(Proxy)和反射(Reflection) API
+
+## 第十三章 用模块封装代码
 
 
 
