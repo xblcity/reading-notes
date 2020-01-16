@@ -12,7 +12,7 @@
 
 ## :zzz:2019年
 
-### 1.我看过的一些书
+### 我看过的一些书
 
 - [Javascript高级程序设计(第三版) Nicholas C. Zakas 2012](/books/professional-javascript.md)
 - [深入理解ES6 Nicholas C. Zakas 2017](/books/understanding-es6.md)
@@ -20,27 +20,16 @@
 - [深入浅出node.js 朴灵 2013](/books/understanding-node.md)
 - [深入浅出Webpack 2018](/books/understanding-webpack.md)
 
-## :zzz:2020年
-
-### 1.我要看的一些书
-
-- 待看~[Node.js实战 第二版 2018](books/node-in-action.md)
-- 待看~[Koa与Node.js开发实战 2019](books/koa-in-action.md)
-
-### 2.阅读文档
+### 阅读文档
 
 - [react英文文档16.10.2](/docs/react.md)
 
-### 3.我看过的一些小册子
+## :zzz:2020年
 
-- [前端面试之道](/booklet/fe-interview.md)
-- [前端性能优化原理与实践](/booklet/optimize-performance.md)
+### 我要看的一些书
 
-### 4.我看过的一些视频课
-
-- [移动Web App开发之实战美团外卖](/video_courses/webapp.md)
-- [Node.js入门到企业Web开发中的应用]()
-- [四大维度解锁 Webpack 前端工程化](/video_courses/webpack.md)
+- 待看~[Node.js实战 第二版 2018](books/node-in-action.md)
+- 待看~[Koa与Node.js开发实战 2019](books/koa-in-action.md)
 
 ## :zzz:未来可能会读的书
 

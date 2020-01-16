@@ -37,19 +37,6 @@ themeConfig :
       sidebarDepth: 2
       children:
         - /docs/react
-    - title: 小册子
-      collapsable: false
-      sidebarDepth: 2
-      children:
-        - /booklet/fe-interview
-        - /booklet/optimize-performance
-    - title: 视频课
-      collapsable: false
-      sidebarDepth: 2
-      children:
-        - /video-courses/webapp
-        - /video-courses/node-learn
-        - /video-courses/webpack
 
     
 
