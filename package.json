@@ -22,5 +22,10 @@
   "bugs": {
     "url": "https://github.com/xblcity/reading-notes/issues"
   },
-  "homepage": "https://github.com/xblcity/reading-notes#readme"
+  "homepage": "https://github.com/xblcity/reading-notes#readme",
+  "devDependencies": {
+    "@vuepress/plugin-back-to-top": "^1.2.0",
+    "vuepress": "^1.2.0",
+    "vuepress-plugin-helper-live2d": "^1.0.0"
+  }
 }

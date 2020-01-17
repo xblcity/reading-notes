@@ -11,6 +11,24 @@ head:
     -
       rel: icon
       href: /avatar.png
+plugins: 
+  - 
+    - '@vuepress/back-to-top'
+  - 
+    - vuepress-plugin-helper-live2d
+    - live2d:
+        enable: true
+        model: tororo
+        display:
+          position: right
+          width: 135
+          height: 300
+          hOffset: 65
+          vOffset: 0
+        mobile:
+          show: false
+        react:
+          opacity: 0.8
 themeConfig :
   logo: /avatar.png
   nav:
