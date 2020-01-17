@@ -21,10 +21,10 @@ plugins:
         model: tororo
         display:
           position: right
-          width: 135
+          width: 150
           height: 300
-          hOffset: 65
-          vOffset: 0
+          hOffset: 15
+          vOffset: 60
         mobile:
           show: false
         react:
