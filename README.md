@@ -25,6 +25,7 @@
 ### 阅读文档
 
 - [react英文文档16.10.2](https://github.com/xblcity/reading-notes/blob/master/docs/react.md)
+- [vue2.x中文文档](https://github.com/xblcity/reading-notes/blob/master/docs/vue.md)
 
 ## :zzz:2020年
 

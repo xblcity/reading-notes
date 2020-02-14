@@ -23,6 +23,7 @@
 ### 阅读文档
 
 - [react英文文档16.10.2](/docs/react.md)
+- [vue2.x中文文档](/docs/vue.md)
 
 ## :zzz:2020年
 
