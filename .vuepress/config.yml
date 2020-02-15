@@ -55,6 +55,7 @@ themeConfig :
       sidebarDepth: 2
       children:
         - /docs/react
+        - /docs/vue
 
     
 
