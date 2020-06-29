@@ -14,24 +14,20 @@
 
 ## :zzz:2019年
 
-### 我看过的一些书
-
-- [Javascript高级程序设计(第三版) Nicholas C. Zakas 2012](https://github.com/xblcity/reading-notes/blob/master/books/professional-javascript.md)
-- [深入理解ES6 Nicholas C. Zakas 2017](https://github.com/xblcity/reading-notes/blob/master/books/understanding-es6.md)
-- [你不知道的javascript(上) 2015](https://github.com/xblcity/reading-notes/blob/master/books/you-don't-know-js1.md)
-- [深入浅出node.js 朴灵 2013](https://github.com/xblcity/reading-notes/blob/master/books/understanding-node.md)
-- [深入浅出Webpack 2018](https://github.com/xblcity/reading-notes/blob/master/books/understanding-webpack.md)
-
-### 阅读文档
-
+- [Javascript高级程序设计(第三版) Nicholas C. Zakas 2012](https://github.com/xblcity/reading-notes/blob/master/books19/professional-javascript.md)
+- [深入理解ES6 Nicholas C. Zakas 2017](https://github.com/xblcity/reading-notes/blob/master/books19/understanding-es6.md)
+- [你不知道的javascript(上) 2015](https://github.com/xblcity/reading-notes/blob/master/books19/you-don't-know-js1.md)
+- [深入浅出node.js 朴灵 2013](https://github.com/xblcity/reading-notes/blob/master/books19/understanding-node.md)
+- [深入浅出Webpack 2018](https://github.com/xblcity/reading-notes/blob/master/books19/understanding-webpack.md)
 - [react英文文档16.10.2](https://github.com/xblcity/reading-notes/blob/master/docs/react.md)
 - [vue2.x中文文档](https://github.com/xblcity/reading-notes/blob/master/docs/vue.md)
 
 ## :zzz:2020年
 
+- [ES6 函数式编程入门经典 2018](https://github.com/xblcity/reading-notes/blob/master/books20/functional-javascript.md)
 - [react中文文档16.13.1](https://github.com/xblcity/reading-notes/blob/master/docs/react20.md)
 
-### 我要看的一些书
+## 准备看的一些书
 
 - 待看~[Node.js实战 第二版 2018](https://github.com/xblcity/reading-notes/blob/master/books/node-in-action.md)
 - 待看~[Koa与Node.js开发实战 2019](https://github.com/xblcity/reading-notes/blob/master/books/koa-in-action.md)
@@ -58,10 +54,6 @@
 
   - ~~JavaScript设计模式与开发实践 曾探 2015~~
 
-  - ~~编写可维护的JavaScript 2013~~
-
-  - ~~JavaScript面向对象精要 2015~~
-
   - ~~高性能网站建设指南(第二版) 2015~~
 
   - ~~高性能JavaScript 2011~~
@@ -71,6 +63,10 @@
   - ~~学习JavaScript数据结构与算法 2015~~
 
   - ~~JavaScript ES6函数式编程入门经典 2017~~
+
+  - ~~JavaScript面向对象精要 2015~~
+
+  - ~~编写可维护的JavaScript 2013~~
   
 - 前端工程师
 
