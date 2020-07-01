@@ -146,3 +146,32 @@ const ref = React.createRef();
 - 避免渲染多余 `DOM` 元素，支持 `key` 属性，`<></>`不支持 `key` 属性
 
 ## 高阶组件
+
+- 应用场景: 两个组件具备相同的逻辑，仅仅是 props 不同。可以抽成一个高阶组件
+
+注意事项
+
+- 不要改变原始组件，比如改变原始子组件 prototype 上面的生命周期函数
+- 透传与本身无关的 props
+- 接收两个参数，可以最大化组合，其中第二个参数才是组件，比如 withRouter 高阶组件
+- 通过设置 displayName 属性，方便在 dev tools 用于调试
+- 不要在 render 方法中使用 HOC，函数式组件不应该在函数内部使用 HOC，这两种都会导致 HOC 的重新挂载与卸载
+- 传递 ref 需要使用 React.forwardRef
+
+## 与第三方库协同
+
+- 在 `componentDidMount` 生命周期 注册第三方库实例，在组件卸载时销毁实例
+
+## 深入 JSX
+
+- JSX 只是 React.createElement()的语法糖
+- 因为 JSX 会编译为 React.createElement 调用形式，所以 React 库必须包含在 JSX 代码作用域内
+- 在 JSX 标签中使用 . 语法
+- 动态加载 不同组件
+- ...
+
+## 性能优化
+
+- 组件使用PureComponent props如果是对象，如果使用新的声明接收state并进行改变，
+- 使用不可变数据
+
