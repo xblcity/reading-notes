@@ -94,6 +94,8 @@ WHY & WHAT
 - 该共同所有者组件是否拥有该 state
 - 如果你找不到一个合适的位置来存放该 state，就可以直接创建一个新的组件来存放该 state，并将这一新组件置于高于共同所有者组件层级的位置。？
 
+> ==============高级指引================
+
 ## 无障碍
 
 ## 代码分割
@@ -172,6 +174,89 @@ const ref = React.createRef();
 
 ## 性能优化
 
-- 组件使用PureComponent props如果是对象，如果使用新的声明接收state并进行改变，
+- 组件使用 PureComponent, 浅比较策略？
 - 使用不可变数据
 
+## Portals
+
+?
+
+## Profiler
+
+?
+
+## 不适用 ES6
+
+- 需要用到`react-create-class`
+
+## 不使用 JSX 的 React
+
+- 每个 JSX 元素知识调用 React.crateElement(component, props, ...children)的语法糖，组件可以是字符串，或者是 Component 的子类，也可以是一个普通的函数
+
+## 协调(reconciliation)
+
+- react differ 策略
+- 对子节点递归，当没有 key 时，更新开销可能会比较大，比如在列表的头部插入一个新的节点
+
+## Refs and the DOM
+
+- 可以在 class 组件直接使用 ref 从而获取该 class 组件的实例，但是不能直接用于函数组件上，因为他们没有实例
+- 函数式组件可以使用 forwardRef 来接收 refs, 结合 useImperativeHandle 可以向外暴露 refs
+- 将 DON refs 暴露给父组件？ refs 暴露给子组件需要使用 React.forwardRef，或者可以通过 ref 回调函数的形式进行传递
+
+## Render
+
+- render-props 会抵消 React.PureComponent 的效果，因为浅比较都会得到 false，每次 render 都会产生一个新的函数，解决方法是定义实例方法
+
+## 静态类型检查
+
+- 使用 typescript
+
+## 严格模式
+
+- 有助于识别不安全的生命周期或者过时以及废弃的 api 等
+
+## 使用 PropTypes 类型检查
+
+- 需要使用 prop-types 第三方包
+
+## 非受控组件
+
+- 对于 Input 可以使用 ref.current.value 获取表单值
+- input type=file 始终是非受控组件，它的值只能由用户设置，而不能通过代码控制
+
+## Web Components
+
+- 谷歌推出的浏览器的原生组件
+
+> =======API REFERENCE=========
+
+## React
+
+- React 导出的一些 api
+
+## React.Component
+
+- class 组件声明周期及注意事项
+
+## ReactDOM
+
+## ReactDOMServer
+
+## DOM 元素
+
+- 与普通 html 的差异
+
+## 合成事件
+
+## Test Utilities
+
+## Test Renderer
+
+## Javascript环境要求
+
+## 术语表
+
+元素、组件、props、props.children、state、
+
+声明周期方法、受控&非受控组件、key
