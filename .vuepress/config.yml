@@ -35,13 +35,6 @@ themeConfig:
   sidebar:
     - title: 总览
       path: /
-    - title: :zzz:2020年
-      collapsable: false
-      sidebarDepth: 2
-      children:
-        - /books20/functional-javascript
-        - /books20/react20
-        - /books20/node-in-action
     - title: :zzz:2019年
       collapsable: false
       sidebarDepth: 2
@@ -53,3 +46,10 @@ themeConfig:
         - /books19/understanding-webpack
         - /books19/react
         - /books19/vue
+    - title: :zzz:2020年
+      collapsable: false
+      sidebarDepth: 2
+      children:
+        - /books20/functional-javascript
+        - /books20/react20
+        - /books20/node-in-action

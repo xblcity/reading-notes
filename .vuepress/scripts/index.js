@@ -4,7 +4,7 @@ const yaml = require("js-yaml");
 const chalk = require("chalk");
 const { handleContent } = require("./util.js");
 
-const preUrl = "https://github.com/reading-notes/blob/master";
+const preUrl = "https://github.com/xblcity/reading-notes/blob/master";
 const mdPath = path.resolve(__dirname, "../../README.md");
 
 const preContent = `# :book:reading-notes

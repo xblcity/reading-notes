@@ -12,21 +12,21 @@
 
 - [未来可能会读的书](#zzz未来可能会读的书)
 
-## :zzz:2020年
-     
-- [Javascript ES6 函数式编程入门经典](https://github.com/reading-notes/blob/master/books20/functional-javascript.md)
-- [React 文档总结思考](https://github.com/reading-notes/blob/master/books20/react20.md)
-- [Node.js实战 第二版 2018](https://github.com/reading-notes/blob/master/books20/node-in-action.md)
-    
 ## :zzz:2019年
      
-- [Javascript高级程序设计(第三版)读书笔记](https://github.com/reading-notes/blob/master/books19/professional-javascript.md)
-- [深入理解ES6](https://github.com/reading-notes/blob/master/books19/understanding-es6.md)
-- [你不知道的Javascript(上卷)](https://github.com/reading-notes/blob/master/books19/you-don't-know-js1.md)
-- [深入浅出node.js](https://github.com/reading-notes/blob/master/books19/understanding-node.md)
-- [深入浅出webpack](https://github.com/reading-notes/blob/master/books19/understanding-webpack.md)
-- [React Docs(英译中)](https://github.com/reading-notes/blob/master/books19/react.md)
-- [vue2.x文档](https://github.com/reading-notes/blob/master/books19/vue.md)
+- [Javascript高级程序设计(第三版)读书笔记](https://github.com/xblcity/reading-notes/blob/master/books19/professional-javascript.md)
+- [深入理解ES6](https://github.com/xblcity/reading-notes/blob/master/books19/understanding-es6.md)
+- [你不知道的Javascript(上卷)](https://github.com/xblcity/reading-notes/blob/master/books19/you-don't-know-js1.md)
+- [深入浅出node.js](https://github.com/xblcity/reading-notes/blob/master/books19/understanding-node.md)
+- [深入浅出webpack](https://github.com/xblcity/reading-notes/blob/master/books19/understanding-webpack.md)
+- [React Docs(英译中)](https://github.com/xblcity/reading-notes/blob/master/books19/react.md)
+- [vue2.x文档](https://github.com/xblcity/reading-notes/blob/master/books19/vue.md)
+    
+## :zzz:2020年
+     
+- [Javascript ES6 函数式编程入门经典](https://github.com/xblcity/reading-notes/blob/master/books20/functional-javascript.md)
+- [React 文档总结思考](https://github.com/xblcity/reading-notes/blob/master/books20/react20.md)
+- [Node.js实战 第二版 2018](https://github.com/xblcity/reading-notes/blob/master/books20/node-in-action.md)
     
 ## :zzz:未来可能会读的书
 
