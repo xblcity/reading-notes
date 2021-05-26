@@ -36,7 +36,7 @@ themeConfig:
   sidebar:
     - title: 总览
       path: /
-    - title: :zzz:2019年
+    - title: 2019年
       collapsable: false
       sidebarDepth: 2
       children:
@@ -47,7 +47,7 @@ themeConfig:
         - /books19/understanding-webpack
         - /books19/react
         - /books19/vue
-    - title: :zzz:2020年
+    - title: 2020年
       collapsable: false
       sidebarDepth: 2
       children:
