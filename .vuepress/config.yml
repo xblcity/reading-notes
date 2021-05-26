@@ -5,17 +5,13 @@ locales:
     lang: zh-CN
     title: 读书笔记
     description: 小白龙的前端读书笔记
-head: 
-  -
-    - link
-    -
-      rel: icon
+head:
+  - - link
+    - rel: icon
       href: /avatar.png
-plugins: 
-  - 
-    - '@vuepress/back-to-top'
-  - 
-    - vuepress-plugin-helper-live2d
+plugins:
+  - - "@vuepress/back-to-top"
+  - - vuepress-plugin-helper-live2d
     - live2d:
         enable: true
         model: tororo
@@ -29,34 +25,31 @@ plugins:
           show: false
         react:
           opacity: 0.8
-themeConfig :
+themeConfig:
   logo: /avatar.png
   nav:
     - text: 博客
-      link: https://blog.xblcity.com
+      link: https://xblcity.github.io/blog
     - text: Github
       link: https://github.com/xblcity/reading-notes
-  sidebar: 
+  sidebar:
     - title: 总览
       path: /
-    - title: 前端书籍
+    - title: :zzz:2020年
       collapsable: false
       sidebarDepth: 2
       children:
-        - /books/professional-javascript
-        - /books/understanding-es6
-        - /books/you-don't-know-js1
-        - /books/understanding-node
-        - /books/understanding-webpack
-        - /books/node-in-action
-        - /books/koa-in-action
-    - title: 文档
+        - /books20/functional-javascript
+        - /books20/react20
+        - /books20/node-in-action
+    - title: :zzz:2019年
       collapsable: false
       sidebarDepth: 2
       children:
-        - /docs/react
-        - /docs/vue
-
-    
-
-    
+        - /books19/professional-javascript
+        - /books19/understanding-es6
+        - /books19/you-don't-know-js1
+        - /books19/understanding-node
+        - /books19/understanding-webpack
+        - /books19/react
+        - /books19/vue

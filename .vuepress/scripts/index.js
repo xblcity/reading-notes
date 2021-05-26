@@ -1,4 +1,13 @@
-# :book:reading-notes
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
+const chalk = require("chalk");
+const { handleContent } = require("./util.js");
+
+const preUrl = "https://github.com/reading-notes/blob/master";
+const mdPath = path.resolve(__dirname, "../../README.md");
+
+const preContent = `# :book:reading-notes
 
 > 看过的一些关于前端的纸质以及电子书的读书笔记
 
@@ -11,23 +20,9 @@
 - [2020年](#zzz2020年)
 
 - [未来可能会读的书](#zzz未来可能会读的书)
+`;
 
-## :zzz:2020年
-     
-- [Javascript ES6 函数式编程入门经典](https://github.com/reading-notes/blob/master/books20/functional-javascript.md)
-- [React 文档总结思考](https://github.com/reading-notes/blob/master/books20/react20.md)
-- [Node.js实战 第二版 2018](https://github.com/reading-notes/blob/master/books20/node-in-action.md)
-    
-## :zzz:2019年
-     
-- [Javascript高级程序设计(第三版)读书笔记](https://github.com/reading-notes/blob/master/books19/professional-javascript.md)
-- [深入理解ES6](https://github.com/reading-notes/blob/master/books19/understanding-es6.md)
-- [你不知道的Javascript(上卷)](https://github.com/reading-notes/blob/master/books19/you-don't-know-js1.md)
-- [深入浅出node.js](https://github.com/reading-notes/blob/master/books19/understanding-node.md)
-- [深入浅出webpack](https://github.com/reading-notes/blob/master/books19/understanding-webpack.md)
-- [React Docs(英译中)](https://github.com/reading-notes/blob/master/books19/react.md)
-- [vue2.x文档](https://github.com/reading-notes/blob/master/books19/vue.md)
-    
+const endContent = `
 ## :zzz:未来可能会读的书
 
 - 网络
@@ -81,3 +76,16 @@
   - ~~WebGL编程指南 2014~~
 
   - ~~Three.js开发指南 2015~~
+`;
+
+try {
+  const configFile = path.resolve(__dirname, "../config.yml");
+  const doc = yaml.load(fs.readFileSync(configFile, "utf8"));
+  const docConfig = doc.themeConfig.sidebar;
+  if (docConfig) {
+    handleContent(docConfig, preUrl, mdPath, preContent, endContent, ".md");
+    console.log(chalk.blueBright("README创建完成!"));
+  }
+} catch (e) {
+  console.log(e);
+}
