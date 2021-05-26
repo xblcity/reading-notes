@@ -46,6 +46,8 @@
 
   - Javascript语言精粹(修订版) 2012
 
+  - Koa与Node.js开发实战 2019
+
   - JS 函数式编程指南 Gitbook 2019
 
   - ~~JavaScript设计模式与开发实践 曾探 2015~~
