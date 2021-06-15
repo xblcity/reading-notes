@@ -102,6 +102,6 @@
 
 `yarn dev`
 
-项目发布至`Github Page`:
+项目发布至`Github Page`(使用git bash客户端):
 
 `yarn deploy`
